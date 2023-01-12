@@ -31,19 +31,21 @@ namespace ctre_can = ctre::phoenix::motorcontrol::can;
 
 typedef struct actuator_interface_t {
     // Left drivetrain motors
-    std::unique_ptr<rev::CANSparkMax> left_motor_1;
-    std::unique_ptr<rev::CANSparkMax> left_motor_2;
-    std::unique_ptr<rev::CANSparkMax> left_motor_3;
+    std::unique_ptr<rev::CANSparkMax> left_front_drive;
+    std::unique_ptr<rev::CANSparkMax> left_back_drive;
+    std::unique_ptr<rev::CANSparkMax> left_front_steer;
+    std::unique_ptr<rev::CANSparkMax> left_back_steer;
 
     // Right drivetrain motors
-    std::unique_ptr<rev::CANSparkMax> right_motor_1;
-    std::unique_ptr<rev::CANSparkMax> right_motor_2;
-    std::unique_ptr<rev::CANSparkMax> right_motor_3;
+    std::unique_ptr<rev::CANSparkMax> right_front_drive;
+    std::unique_ptr<rev::CANSparkMax> right_back_drive;
+    std::unique_ptr<rev::CANSparkMax> right_front_steer;
+    std::unique_ptr<rev::CANSparkMax> right_back_steer;
 
-    // intake motors
-    std::unique_ptr<rev::CANSparkMax> intake_position_motor;
-    std::unique_ptr<rev::CANSparkMax> intake_motor;
-    std::unique_ptr<rev::CANSparkMax> indexer_motor;
+    // arm motors
+    std::unique_ptr<rev::CANSparkMax> arm_lift_motor;
+    std::unique_ptr<rev::CANSparkMax> arm_up_motor;
+    std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
 
     // Shooter motors
     std::unique_ptr<ctre_can::TalonFX> shooter_motor;
