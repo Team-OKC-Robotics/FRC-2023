@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ctre/phoenix/motorcontrol/can/TalonFX.h>
 #include <memory>
 #include <rev/CANSparkMax.h>
 
@@ -46,8 +45,4 @@ typedef struct actuator_interface_t {
     std::unique_ptr<rev::CANSparkMax> arm_lift_motor;
     std::unique_ptr<rev::CANSparkMax> arm_up_motor;
     std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
-
-    // Shooter motors
-    std::unique_ptr<ctre_can::TalonFX> shooter_motor;
-    std::unique_ptr<rev::CANSparkMax> trigger_motor;
 } ActuatorInterface;
