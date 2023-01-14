@@ -44,7 +44,7 @@ bool SetupSwervedriveInterface(
  * @return false
  */
 bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
-                          std::shared_ptr<IntakeHardwareInterface> *interface);
+                          std::shared_ptr<ArmHardwareInterface> *interface);
 
 /**
  * @brief Link the Shooter to the hardware interfaces.
