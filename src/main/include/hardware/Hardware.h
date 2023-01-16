@@ -3,8 +3,8 @@
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
 
-#include "hardware/ActuatorInterface.h"
-#include "hardware/SensorInterface.h"
+#include "hardware/Actuators.h"
+#include "hardware/Sensors.h"
 
 // Subsystem I/O
 #include "io/DrivetrainIO.h"

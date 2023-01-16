@@ -28,7 +28,7 @@ namespace ctre_can = ctre::phoenix::motorcontrol::can;
 #define SHOOTER_MOTOR 8
 #define TRIGGER_MOTOR 9
 
-typedef struct actuator_interface_t {
+typedef struct Actuators_t {
     // Left drivetrain motors
     std::unique_ptr<rev::CANSparkMax> left_front_drive;
     std::unique_ptr<rev::CANSparkMax> left_back_drive;
@@ -45,4 +45,4 @@ typedef struct actuator_interface_t {
     std::unique_ptr<rev::CANSparkMax> arm_lift_motor;
     std::unique_ptr<rev::CANSparkMax> arm_up_motor;
     std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
-} ActuatorInterface;
+} Actuators;
