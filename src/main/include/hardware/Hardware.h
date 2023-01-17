@@ -7,9 +7,6 @@
 #include "hardware/Sensors.h"
 
 // Subsystem I/O
-#include "io/DrivetrainIO.h"
-#include "io/IntakeIO.h"
-#include "io/ShooterIO.h"
 
 typedef struct hardware_t {
     // Actuators
@@ -55,10 +52,10 @@ bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
  */
 bool SetupClawInterface(
     std::unique_ptr<HardwareInterface> &hardware,
-    std::shared_ptr<ShooterHardwareInterface> *interface);
+    std::shared_ptr<ClawHardwareInterface> *interface);
 
  bool SetupVisionTrackingInterface(
     std::unique_ptr<HardwareInterface> &hardware,
-    std::shared_ptr<ShooterHardwareInterface> *interface);
+    std::shared_ptr<VisionTrackingHardwareInterface> *interface);
 
 
