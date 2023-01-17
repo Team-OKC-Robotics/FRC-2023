@@ -5,7 +5,7 @@
 
 
 // CTRE namespace
-namespace ctre_can = ctre::phoenix::motorcontrol::can;
+namespace ctre_can = ctre;phoenix::motorcontrol::can;
 
 // Brushless Motor
 #define BRUSHLESS rev::CANSparkMax::MotorType::kBrushless
