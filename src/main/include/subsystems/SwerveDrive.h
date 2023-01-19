@@ -55,6 +55,7 @@ public:
 
     bool TeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
+    bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
     bool TranslateAuto(frc::Pose2d pos);
     bool TurnToHeading(frc::Pose2d pos);
@@ -130,4 +131,7 @@ private:
 
     double heading_to_goal;
     double distance_to_goal;
+
+    double trackwidth;
+    double tracklength;
 };

@@ -8,15 +8,20 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
+    // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
-        0.5,
-        0.5,
-        0.5,
-        0.5
+        0.5, // drive max output
+        0.5, // drive open loop ramp rate
+        0.5, // steer max
+        0.5  // steer ramp rate
     };
     interface_->update_config = true;
 
-    
+    // so the WPILib stuff expects the X axis to run from the back to the front of the robot, so positive x is forwards
+    // hence tracklength is x disp
+    tracklength = RobotParams::GetParam("swerve.x_disp", 0.3); // in meters
+    trackwidth = RobotParams::GetParam("swerve.y_disp", 0.3); // in meters
+
     
     // !! IMPORTANT ASSUMPTION/PRACTICE/WHATEVER !!
     // the order of swerve stuff should always be in:
@@ -242,17 +247,21 @@ bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, con
     double right_front_turn = 0;
     double right_back_turn = 0;
 
+    // if turn is negative (i.e. left)
     if (turn < -0.1) {
+        // set the turning appropriately
         left_front_turn = -turn * 135;
         left_back_turn = -turn * 45;
         right_front_turn = -turn * 45;
         right_back_turn = -turn * 135;
     } else if (turn > 0.1) {
+        // if turning is positive (i.e. right), do likewise
         left_front_turn = turn * 45;
         left_back_turn = turn * 135;
         right_front_turn = turn * 135;
         right_back_turn = turn * 45;
     } else {
+        // otherwise, we don't want to turn
         left_front_turn = 0;
         left_back_turn = 0;
         right_front_turn = 0;
@@ -296,6 +305,37 @@ bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, con
     this->interface_->right_front_drive_motor_output = magnitude;
     this->interface_->right_back_drive_motor_output = magnitude;
     
+
+    return true;
+}
+
+bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn) {
+    std::vector<double> translation_vector = {strafe, drive};
+
+    //TODO convert `turn` to rad/sec
+    //TODO convert drive and strafe to m/s I think
+    // because tracklength/width are in meters
+
+    // copied from ChiefDelphi thread
+    //TODO post link here
+    double A = translation_vector[0] - turn * tracklength/2;
+    double B = translation_vector[0] + turn * tracklength/2;
+    double C = translation_vector[1] - turn * trackwidth/2;
+    double D = translation_vector[1] - turn * trackwidth/2;
+
+    // speed
+    double left_front_speed = sqrt(pow(B, 2) + pow(D, 2));
+    double left_back_speed = sqrt(pow(A, 2) + pow(D, 2));
+    double right_front_speed = sqrt(pow(B, 2) + pow(C, 2));
+    double right_back_speed = sqrt(pow(A, 2) + pow(C, 2));
+
+    // turn
+    double left_front_turn = atan2(B, D)  *  180/pi;
+    double left_back_turn = atan2(A, D)  *  180/pi;
+    double right_front_turn = atan2(B, C)  *  180/pi;
+    double right_back_turn = atan2(A, C)  *  180/pi;
+
+    //TODO need to convert from [-180, 180] to [0, 360]
 
     return true;
 }
