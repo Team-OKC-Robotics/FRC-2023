@@ -32,7 +32,7 @@ class RobotContainer {
 
   void ConfigureButtonBindings();
 
-      std::shared_ptr<frc::Joystick> gamepad1_;
+    std::shared_ptr<frc::Joystick> gamepad1_;
     std::shared_ptr<frc::Joystick> gamepad2_;
 
     std::shared_ptr<frc2::JoystickButton> driver_A_button_;

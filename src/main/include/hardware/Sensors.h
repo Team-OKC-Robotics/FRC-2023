@@ -12,7 +12,7 @@
 
 #define BALL_DETECTOR 9
 
-typedef struct sensors_t {
+typedef struct Sensors {
     // navX IMU
     std::unique_ptr<AHRS> ahrs;
 

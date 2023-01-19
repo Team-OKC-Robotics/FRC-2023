@@ -1,6 +1,6 @@
 #pragma once
 
-#include <frc/drive/DifferentialDrive.h>
+
 #include <frc/motorcontrol/MotorControllerGroup.h>
 
 #include "hardware/Actuators.h"
@@ -12,13 +12,10 @@ typedef struct hardware_t {
     // Actuators
     std::unique_ptr<Actuators> actuators;
 
-    // Drivetrain specific hardware abstractions.
-    std::unique_ptr<frc::DifferentialDrive> diff_drive;
-
     // Sensors
     std::unique_ptr<Sensors> sensors;
 
-} HardwareInterface;
+} Hardware;
 
 // Subsystem hardware setup functions
 
@@ -29,7 +26,7 @@ typedef struct hardware_t {
  * @return true
  * @return false
  */
-bool SetupSwervedriveInterface(
+bool SetupSwerveDriveInterface(
     std::unique_ptr<HardwareInterface> &hardware,
     std::shared_ptr<DrivetrainHardwareInterface> *interface);
 
@@ -41,7 +38,7 @@ bool SetupSwervedriveInterface(
  * @return false
  */
 bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
-                          std::shared_ptr<ArmHardwareInterface> *interface);
+                          std::shared_ptr<ArmHardware> *interface);
 
 /**
  * @brief Link the Shooter to the hardware interfaces.
@@ -52,10 +49,10 @@ bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
  */
 bool SetupClawInterface(
     std::unique_ptr<HardwareInterface> &hardware,
-    std::shared_ptr<ClawHardwareInterface> *interface);
+    std::shared_ptr<ClawHardware> *interface);
 
  bool SetupVisionTrackingInterface(
     std::unique_ptr<HardwareInterface> &hardware,
-    std::shared_ptr<VisionTrackingHardwareInterface> *interface);
+    std::shared_ptr<VisionTrackingHardware> *interface);
 
 
