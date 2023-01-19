@@ -16,5 +16,7 @@ Arm(ArmSoftwareInterface *interface)
     void Periodic() override;
 private:
     ArmSoftwareInterface *const interface_;
-    frc2::PIDController *Arm_pid;
+    std::shared_ptr<frc::PIDController> Arm_pid;
+    std::shared_ptr<frc::PIDController> Inches_pid;
+    std::shared_ptr<frc::PIDController> Int_pid;
 };
