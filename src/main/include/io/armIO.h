@@ -26,6 +26,8 @@ typedef struct arm_software_interface_t {
     double arm_lift_power;
     double arm_up_power;
     double arm_extend_power;
+    double arm_encoder;
+    double arm_extend_encoder;
 } ArmSoftwareInterface;
 
 class ArmIO : public frc2::SubsystemBase {
