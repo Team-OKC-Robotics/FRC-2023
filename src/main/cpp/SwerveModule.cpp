@@ -117,14 +117,20 @@ bool SwerveModule::SetAngle(double angle) {
     return true;
 }
 
+bool SwerveModule::SetDistance(double distance) {
+    this->drive_pid->SetSetpoint(distance);
+
+    return true;
+}
+
 bool SwerveModule::GetDriveOutput(double *output) {
     OKC_CHECK(this->drive_pid != nullptr);
 
     // set setpoint
-    this->drive_pid->SetSetpoint(this->state.speed.value());
+    // this->drive_pid->SetSetpoint(this->state.speed.value());
 
     // calculate output
-    *output = this->drive_pid->Calculate(this->drive_enc_vel + *output);
+    // *output = this->drive_pid->Calculate(this->drive_enc_vel + *output);
 
     return true;
 }
@@ -195,4 +201,8 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     this->drive_enc_vel = drive_vel / 6.75 * 3.14159265358979 * 4;
 
     return true;
+}
+
+double SwerveModule::GetAngle() {
+    return this->steer_pid->GetSetpoint();
 }

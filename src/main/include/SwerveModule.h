@@ -48,6 +48,9 @@ public:
     
     bool SetDesiredState(frc::SwerveModuleState state);
     bool SetAngle(double angle);
+    bool SetDistance(double distance);
+
+    double GetAngle();
     
     bool GetDriveOutput(double *output); // PID
     bool GetSteerOutput(double *output); // PID, optimize angle
