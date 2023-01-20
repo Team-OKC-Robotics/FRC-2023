@@ -4,8 +4,7 @@
 #include <rev/CANSparkMax.h>
 
 
-// CTRE namespace
-namespace ctre::phoenix::motorcontrol::can;
+
 
 // Brushless Motor
 #define BRUSHLESS rev::CANSparkMax::MotorType::kBrushless

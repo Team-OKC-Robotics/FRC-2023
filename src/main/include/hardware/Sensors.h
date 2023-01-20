@@ -22,4 +22,4 @@ typedef struct Sensors {
 
     // Shooter ball detector
     std::unique_ptr<frc::DigitalInput> ball_detector;
-} sensors_t;
+} Sensors;
