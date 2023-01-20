@@ -145,6 +145,18 @@ void SwerveDrive::SimulationPeriodic() {
     // SimulationPeriodic
 }
 
+
+
+
+
+
+
+
+
+
+
+
+// okay, these are probably for shuffleboard, but they're not being used right now
 bool SwerveDrive::SetSpeedModifierDrive(const double &speed_mod) {
     speed_modifier_drive = speed_mod;
 
@@ -184,6 +196,22 @@ bool SwerveDrive::SetMaxOutputSteer(const double &max_output) {
     interface_->drive_config.max_output_steer = max_output;
     return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 bool SwerveDrive::TeleOpDrive(const double &drive, const double &strafe, const double &turn) {
     // get outputs from the kinematics object based on joystick inputs
@@ -280,12 +308,6 @@ bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, con
     OKC_CALL(this->right_front_module->SetAngle(right_front_turn));
     OKC_CALL(this->right_back_module->SetAngle(right_back_turn));
 
-    OKC_CALL(this->left_front_module->SetAngle(0));
-    OKC_CALL(this->left_back_module->SetAngle(0));
-    OKC_CALL(this->right_front_module->SetAngle(0));
-    OKC_CALL(this->right_back_module->SetAngle(0));
-
-
     OKC_CALL(this->left_front_module->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
     OKC_CALL(this->left_back_module->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
@@ -310,18 +332,16 @@ bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, con
 }
 
 bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn) {
-    std::vector<double> translation_vector = {strafe, drive};
-
     //TODO convert `turn` to rad/sec
     //TODO convert drive and strafe to m/s I think
     // because tracklength/width are in meters
 
     // copied from ChiefDelphi thread
     //TODO post link here
-    double A = translation_vector[0] - turn * tracklength/2;
-    double B = translation_vector[0] + turn * tracklength/2;
-    double C = translation_vector[1] - turn * trackwidth/2;
-    double D = translation_vector[1] - turn * trackwidth/2;
+    double A = strafe - turn * tracklength/2;
+    double B = strafe + turn * tracklength/2;
+    double C = drive - turn * trackwidth/2;
+    double D = drive + turn * trackwidth/2;
 
     // speed
     double left_front_speed = sqrt(pow(B, 2) + pow(D, 2));
@@ -329,83 +349,116 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double right_front_speed = sqrt(pow(B, 2) + pow(C, 2));
     double right_back_speed = sqrt(pow(A, 2) + pow(C, 2));
 
-    // turn
-    double left_front_turn = atan2(B, D)  *  180/pi;
-    double left_back_turn = atan2(A, D)  *  180/pi;
-    double right_front_turn = atan2(B, C)  *  180/pi;
-    double right_back_turn = atan2(A, C)  *  180/pi;
 
-    //TODO need to convert from [-180, 180] to [0, 360]
+    // turn
+    double left_front_turn = atan2(B, D)  *  180.0/pi;
+    double left_back_turn = atan2(A, D)  *  180.0/pi;
+    double right_front_turn = atan2(B, C)  *  180.0/pi;
+    double right_back_turn = atan2(A, C)  *  180.0/pi;
+
+    // std::cout << left_front_turn << std::endl;
+
+    if (left_front_turn < 0) {
+        left_front_turn += 360;
+    }
+
+    if (left_back_turn < 0) {
+        left_back_turn += 360;
+    }
+
+    if (right_front_turn < 0) {
+        right_front_turn += 360;
+    }
+    
+    if (right_back_turn < 0) {
+        right_back_turn += 360;
+    }
+    
+    OKC_CALL(this->left_front_module->SetAngle(left_front_turn));
+    OKC_CALL(this->left_back_module->SetAngle(left_back_turn));
+    OKC_CALL(this->right_front_module->SetAngle(right_front_turn));
+    OKC_CALL(this->right_back_module->SetAngle(right_back_turn));
+
+    OKC_CALL(this->left_front_module->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+    OKC_CALL(this->left_back_module->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+    OKC_CALL(this->right_front_module->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+    OKC_CALL(this->right_back_module->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
+    this->interface_->left_front_drive_motor_output = left_front_speed;
+    this->interface_->left_back_drive_motor_output = left_back_speed;
+    this->interface_->right_front_drive_motor_output = right_front_speed;
+    this->interface_->right_back_drive_motor_output = right_back_speed;
+
 
     return true;
 }
 
-bool SwerveDrive::InitAuto(frc::Pose2d pos) {
+
+
+bool SwerveDrive::InitAuto(frc::Pose2d pos, bool keep_heading) {
+    this->auto_lock_heading = keep_heading;
+
     //  1. figure out angle between here and there
     this->heading_to_goal = atan((position->X().value() - pos.X().value()) / (position->Y().value() - pos.Y().value()));
 
     //  2. figure out distance
     this->distance_to_goal = sqrt(pow(position->X().value() + pos.X().value(), 2) + pow(position->Y().value() + pos.Y().value(), 2));
 
-    return true;
-}
-
-bool SwerveDrive::DriveToGoal(frc::Pose2d pos) {
-    // 1. set steering to goal angle
-    // 2. PID the drive power until we're at the position
-
-    // it's just distance formula between given pos and our odometry position
-    // double drive_power = this->dist_pid.Calculate(sqrt(pow(position.X().value() + pos.X(), 2) + pow(position.Y().value() + pos.Y(), 2)));
-    double drive_power = 0;
-
-    OKC_CALL(left_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(drive_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(left_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(drive_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(right_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(drive_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(right_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(drive_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
+    // initialization has passed, go ahead and start the autonomous
+    auto_state = INIT;
 
     return true;
 }
 
-bool SwerveDrive::TurnToHeading(frc::Pose2d pos) {
-    // 2. PID the drive power until we're at the heading
-    // this->heading_pid.SetSetpoint(pos.Rotation().Degrees());
-    // double steer_power = this->heading_pid.Calculate(position.Rotation().Degrees());
+bool SwerveDrive::RunAuto() {
+    if (auto_state == INIT) {
+        // if keep_heading skip
+        if (this->auto_lock_heading) {
+            auto_state = ROTATE;
+        // else:
+        } else {
+            //  rotate wheels to the 45/135 position to rotate the robot
+            //  heading_pid to the NavX
+            //TODO
 
-    double steer_power = 0;
+            // done, go to ROTATE
+            // if (this->heading_pid->AtSetpoint()) {
+                // auto_state = ROTATE;
+            // }
+        }
+    } else if (auto_state == ROTATE) {
+        this->left_front_module->SetAngle(heading_to_goal);
+        this->left_back_module->SetAngle(heading_to_goal);
+        this->right_front_module->SetAngle(heading_to_goal);
+        this->right_back_module->SetAngle(heading_to_goal);
+        // rotate wheels to face target
+        // if not keep_heading, then they should all face forwards
+    } else if (auto_state == TRANSLATE) {
+        // if dist = 0 (or close enough) then skip to ROTATE_FINAL
+        // drive_pid the distance
+        
+    } else {
+        // we shouldn't have gotten here, throw an error
+        return false;
+    }
 
-    // 1. set steering to 45 (well, for half of them) degrees (cut the corners of the robot, basically)
-    // left front needs to be 135 degrees (because x axis goes from robot back through robot front positive)
-    OKC_CALL(left_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(135)))));
-    // left back needs to be 45 degrees
-    OKC_CALL(left_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(45)))));
-    // right front is 45
-    OKC_CALL(right_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(45)))));
-    // right back is 135
-    OKC_CALL(right_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(135)))));
+    //TODO do I need to call Update() on the modules?
+
+    // set motor outputs
+    OKC_CALL(this->left_front_module->GetDriveOutput(&this->interface_->left_front_drive_motor_output));
+    OKC_CALL(this->left_back_module->GetDriveOutput(&this->interface_->left_back_drive_motor_output));
+    OKC_CALL(this->right_front_module->GetDriveOutput(&this->interface_->right_front_drive_motor_output));
+    OKC_CALL(this->right_back_module->GetDriveOutput(&this->interface_->right_back_drive_motor_output));
+
+    OKC_CALL(this->left_front_module->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+    OKC_CALL(this->left_back_module->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+    OKC_CALL(this->right_front_module->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+    OKC_CALL(this->right_back_module->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
     return true;
 }
 
-bool SwerveDrive::TranslateAutoLockHeading(frc::Pose2d pos) {
-    // 1. set steering to goal angle
-    // 2. PID the drive power until we're at the position
-    // that's literally it
-
-    // this->heading_pid.SetSetpoint(this->heading_to_goal);
-    // double steer_power = this->heading_pid.Calculate(position.Rotation().Degrees());
-
-    double steer_power = 0;
-
-    OKC_CALL(left_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(left_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(right_front_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-    OKC_CALL(right_back_module->SetDesiredState(frc::SwerveModuleState(units::meters_per_second_t(steer_power), frc::Rotation2d(units::degree_t(heading_to_goal)))));
-
-
-    return true;
-}
-
-bool SwerveDrive::TranslateAuto(frc::Pose2d pos) {
+// bool SwerveDrive::TranslateAuto(frc::Pose2d pos) {
     //TODO
     // given: initial pos, final pos
     //  1. figure out angle between here and there
@@ -425,20 +478,20 @@ bool SwerveDrive::TranslateAuto(frc::Pose2d pos) {
      * 7. at_setpoint = true;
      */
 
-    double heading_to_goal = atan((position->X().value() - pos.X().value()) / (position->Y().value() - pos.Y().value()));
-    double distance_to_goal = sqrt(pow(position->X().value() + pos.X().value(), 2) + pow(position->Y().value() + pos.Y().value(), 2));
+//     double heading_to_goal = atan((position->X().value() - pos.X().value()) / (position->Y().value() - pos.Y().value()));
+//     double distance_to_goal = sqrt(pow(position->X().value() + pos.X().value(), 2) + pow(position->Y().value() + pos.Y().value(), 2));
 
-    //TODO
-    //TODO
+//     //TODO
+//     //TODO
 
-    double heading_to_goal_heading = pos.Rotation().Degrees().value() - position->Rotation().Degrees().value();
+//     double heading_to_goal_heading = pos.Rotation().Degrees().value() - position->Rotation().Degrees().value();
 
-    //TODO
+//     //TODO
 
-    at_setpoint = true;
+//     at_setpoint = true;
 
-    return true;
-}
+//     return true;
+// }
 
 bool SwerveDrive::GetHeading(double *heading) {
     OKC_CHECK(heading != nullptr);
@@ -597,6 +650,11 @@ bool SwerveDrive::UpdateShuffleboard() {
     OKC_CALL(SwerveDriveUI::nt_left_back_front_steer->SetDouble(this->interface_->left_back_steer_motor_enc * 360));
     OKC_CALL(SwerveDriveUI::nt_right_front_front_steer->SetDouble(this->interface_->right_front_steer_motor_enc * 360));
     OKC_CALL(SwerveDriveUI::nt_right_back_front_steer->SetDouble(this->interface_->right_back_steer_motor_enc * 360));
+
+    OKC_CALL(SwerveDriveUI::nt_left_front_steer_setpoint->SetDouble(this->left_front_module->GetAngle()));
+    OKC_CALL(SwerveDriveUI::nt_left_back_steer_setpoint->SetDouble(this->left_back_module->GetAngle()));
+    OKC_CALL(SwerveDriveUI::nt_right_front_steer_setpoint->SetDouble(this->right_front_module->GetAngle()));
+    OKC_CALL(SwerveDriveUI::nt_right_back_steer_setpoint->SetDouble(this->right_back_module->GetAngle()));
 
     // Heading UI
     double heading_tmp = 0.0;

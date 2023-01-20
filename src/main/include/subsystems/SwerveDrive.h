@@ -20,11 +20,10 @@
 #include "io/SwerveDriveIO.h"
 #include "SwerveModule.h"
 
-enum AutoStage {
-    TURN_TO_GOAL,
-    DRIVE_TO_GOAL,
-    TURN_TO_FINAL_HEADING,
-    FINISHED
+enum AutoState {
+    INIT,
+    ROTATE,
+    TRANSLATE,
 };
 
 class SwerveDrive : public frc2::SubsystemBase {
@@ -57,14 +56,8 @@ public:
     bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
-    bool TranslateAuto(frc::Pose2d pos);
-    bool TurnToHeading(frc::Pose2d pos);
-    bool InitAuto(frc::Pose2d pos);
-    bool TurnToGoal(frc::Pose2d pos);
-    bool SetDrive(const double &power);
-    bool DriveToGoal(frc::Pose2d pos);
-    bool TurnToGoalHeading(frc::Pose2d pos);
-    bool TranslateAutoLockHeading(frc::Pose2d pos);
+    bool InitAuto(frc::Pose2d pos, bool keep_heading);
+    bool RunAuto();
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -134,4 +127,8 @@ private:
 
     double trackwidth;
     double tracklength;
+
+    AutoState auto_state;
+    bool auto_lock_heading;
+    double pi = 3.14159;
 };
