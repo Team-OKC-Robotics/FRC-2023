@@ -3,8 +3,8 @@
 #include <IO/armIO.h>
 
 
-class Arm : public frc2::SubsystemBase {
-public:
+class Arm : private frc2::SubsystemBase {
+private:
 Arm(ArmSoftwareInterface *interface)
         : interface_(interface){}
     ~Arm() {}
@@ -14,9 +14,29 @@ Arm(ArmSoftwareInterface *interface)
     bool SetExtend(double inches);
     bool init(); 
     void Periodic() override;
-private:
-    ArmSoftwareInterface *const interface_;
-    std::shared_ptr<frc::PIDController> Arm_pid;
-    std::shared_ptr<frc::PIDController> Inches_pid;
-    std::shared_ptr<frc::PIDController> Int_pid;
-};
+    bool Subsystem::SetPosition(const double &position) {
+    this.position_ = position;
+    return true;
+     }
+
+    class Arm::Arm : public frc2::SubsystemBase 
+        public;
+
+        // Note: this is public in the header file
+    bool Subsystem::SetPosition(const double &position) {
+    this.position_ = position;
+    return true;
+}
+
+void Subsystem::Periodic() { 
+    // The subsystem does different things based on what mode it is put in by the user.
+    switch(mode) {
+        case Manual:
+            OKC_CALL(SetUserPower());
+            break;
+        case AutoPosition: 
+           OKC_CALL(GoToPosition());
+            break;
+        default:
+             break;
+    }
