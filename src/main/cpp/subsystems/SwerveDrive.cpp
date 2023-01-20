@@ -152,30 +152,6 @@ void SwerveDrive::SimulationPeriodic() {
     // SimulationPeriodic
 }
 
-
-
-
-
-
-
-
-
-
-
-
-// okay, these are probably for shuffleboard, but they're not being used right now
-bool SwerveDrive::SetSpeedModifierDrive(const double &speed_mod) {
-    speed_modifier_drive = speed_mod;
-
-    return true;
-}
-
-bool SwerveDrive::SetSpeedModifierSteer(const double &speed_mod) {
-    speed_modifier_steer = speed_mod;
-    
-    return true;
-}
-
 bool SwerveDrive::SetOpenLoopRampDrive(const double &open_loop_ramp) {
     OKC_CHECK(interface_ != nullptr);
 
@@ -189,36 +165,6 @@ bool SwerveDrive::SetOpenLoopRampSteer(const double &open_loop_ramp) {
     interface_->drive_config.open_loop_ramp_rate_steer = open_loop_ramp;
     return true;
 }
-
-bool SwerveDrive::SetMaxOutputDrive(const double &max_output) {
-    OKC_CHECK(interface_ != nullptr);
-
-    interface_->drive_config.max_output_drive = max_output;
-    return true;
-}
-
-bool SwerveDrive::SetMaxOutputSteer(const double &max_output) {
-    OKC_CHECK(interface_ != nullptr);
-
-    interface_->drive_config.max_output_steer = max_output;
-    return true;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 bool SwerveDrive::TeleOpDrive(const double &drive, const double &strafe, const double &turn) {
     // get outputs from the kinematics object based on joystick inputs
@@ -246,95 +192,6 @@ bool SwerveDrive::TeleOpDrive(const double &drive, const double &strafe, const d
     OKC_CALL(right_back_module->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
     // if we've made it here, we haven't errored, so return true
-    return true;
-}
-
-/**
- * In case the WPILib kinematics stuff doesn't work out
- */
-bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn) {
-    // given: drive power, strafe power, turn power
-    //  1. figure out what angle the drive and strafe thing is at
-    //  2. figure out how much turn power there is
-    //  3. figure out magnitude of drive/strafe
-    //  4. figure out magnitude of turn
-    //  5. add turn stuff together
-    //  6. set steer encoders to turn stuff
-    //  7. set drive power to drive magnitude
-    
-    // so that's:
-    //  1. atan(strafe / drive)
-    //  2. turn/45 // degrees. when turn is 1, the value should be 45 degrees. when turn is 0, the value should be 0 degrees. so that's 1:45, so just div by 45?
-    //  3. sqrt(drive**2 + strafe**2)
-    //  4. I think this is just straight [turn]
-    //  5. steer = turn+angle_from_step_1
-    //  6. PID
-    //  7. set_output->(result_of_step_3)
-    
-    double drive_strafe_angle = atan(strafe / drive); // TODO figure out how this is gonna work with  negative/positive/turning/stuff
-    double drive_strafe_magnitude = sqrt(pow(drive, 2) + pow(strafe, 2));
-    drive_strafe_magnitude = copysign(drive_strafe_magnitude, drive);
-    double turn_magnitude = turn;
-    double magnitude = (drive_strafe_magnitude + turn_magnitude) / 2;
-
-    double left_front_turn = 0;
-    double left_back_turn = 0;
-    double right_front_turn = 0;
-    double right_back_turn = 0;
-
-    // if turn is negative (i.e. left)
-    if (turn < -0.1) {
-        // set the turning appropriately
-        left_front_turn = -turn * 135;
-        left_back_turn = -turn * 45;
-        right_front_turn = -turn * 45;
-        right_back_turn = -turn * 135;
-    } else if (turn > 0.1) {
-        // if turning is positive (i.e. right), do likewise
-        left_front_turn = turn * 45;
-        left_back_turn = turn * 135;
-        right_front_turn = turn * 135;
-        right_back_turn = turn * 45;
-    } else {
-        // otherwise, we don't want to turn
-        left_front_turn = 0;
-        left_back_turn = 0;
-        right_front_turn = 0;
-        right_back_turn = 0;
-    }
-
-
-    left_front_turn += drive_strafe_angle;
-    left_back_turn += drive_strafe_angle;
-    right_front_turn += drive_strafe_angle;
-    right_back_turn += drive_strafe_angle;
-
-    // turn angle
-    OKC_CALL(this->left_front_module->SetAngle(left_front_turn));
-    OKC_CALL(this->left_back_module->SetAngle(left_back_turn));
-    OKC_CALL(this->right_front_module->SetAngle(right_front_turn));
-    OKC_CALL(this->right_back_module->SetAngle(right_back_turn));
-
-    OKC_CALL(this->left_front_module->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
-    OKC_CALL(this->left_back_module->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
-    OKC_CALL(this->right_front_module->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
-    OKC_CALL(this->right_back_module->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
-
-    if (abs(drive_strafe_magnitude) < 0.1) {
-        this->interface_->left_front_drive_motor_output = 0;
-        this->interface_->left_back_drive_motor_output = 0;
-        this->interface_->right_front_drive_motor_output = 0;
-        this->interface_->right_back_drive_motor_output = 0;
-        return true;
-    }
-
-    // drive power
-    this->interface_->left_front_drive_motor_output = magnitude;
-    this->interface_->left_back_drive_motor_output = magnitude;
-    this->interface_->right_front_drive_motor_output = magnitude;
-    this->interface_->right_back_drive_motor_output = magnitude;
-    
-
     return true;
 }
 
@@ -436,7 +293,7 @@ bool SwerveDrive::RunAuto() {
 
             //  heading_pid to the NavX
             double *heading;
-            this->GetHeading(heading);
+            OKC_CALL(this->GetHeading(heading));
             double drive_output = this->heading_pid->Calculate(*heading);
 
             // done, go to ROTATE
@@ -445,17 +302,17 @@ bool SwerveDrive::RunAuto() {
             }
         }
     } else if (auto_state == ROTATE) {
-        this->left_front_module->SetAngle(heading_to_goal);
-        this->left_back_module->SetAngle(heading_to_goal);
-        this->right_front_module->SetAngle(heading_to_goal);
-        this->right_back_module->SetAngle(heading_to_goal);
+        OKC_CALL(this->left_front_module->SetAngle(heading_to_goal));
+        OKC_CALL(this->left_back_module->SetAngle(heading_to_goal));
+        OKC_CALL(this->right_front_module->SetAngle(heading_to_goal));
+        OKC_CALL(this->right_back_module->SetAngle(heading_to_goal));
         // rotate wheels to face target
         // if not keep_heading, then they should all face forwards
     } else if (auto_state == TRANSLATE) {
         // if dist = 0 (or close enough) then skip to ROTATE_FINAL
         // drive_pid the distance
         //TODO
-        
+
     } else {
         // we shouldn't have gotten here, throw an error
         return false;
@@ -526,32 +383,6 @@ bool SwerveDrive::GetDriveEncoderAverage(double *avg) {
     return true;
 }
 
-bool SwerveDrive::GetLeftSteerEncoderAverage(double *avg) {
-    OKC_CHECK(interface_ != nullptr);
-
-    double tmp = 0;
-    
-    tmp += interface_->right_front_steer_motor_enc;
-    tmp += interface_->right_back_steer_motor_enc;
-
-    *avg = (tmp / 2);
-
-    return true;
-}
-
-bool SwerveDrive::GetRightSteerEncoderAverage(double *avg) {
-    OKC_CHECK(interface_ != nullptr);
-
-    double tmp = 0;
-    
-    tmp += interface_->right_front_steer_motor_enc;
-    tmp += interface_->right_back_steer_motor_enc;
-
-    *avg = (tmp / 2);
-
-    return true;
-}
-
 bool SwerveDrive::AtSetpoint(bool *at) {
     OKC_CHECK(interface_ != nullptr);
 
@@ -580,13 +411,6 @@ bool SwerveDrive::ResetDriveEncoders() {
     OKC_CHECK(interface_ != nullptr);
 
     interface_->reset_drive_encoders = true;
-    return true;
-}
-
-bool SwerveDrive::ResetSteerEncoders() {
-    OKC_CHECK(interface_ != nullptr);
-
-    interface_->reset_steer_encoders = true;
     return true;
 }
 
