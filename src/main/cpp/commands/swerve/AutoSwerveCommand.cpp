@@ -1,9 +1,10 @@
 
 #include "commands/swerve/AutoSwerveCommand.h"
 
-AutoSwerveCommand::AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d f_pos) {
+AutoSwerveCommand::AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d f_pos, bool keep_init_heading) {
     swerve_ = swerve;
     end_pos = f_pos;
+    keep_heading = keep_init_heading;
 
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());
@@ -16,15 +17,18 @@ void AutoSwerveCommand::Initialize() {
     VOKC_CALL(swerve_->ResetDriveEncoders());
     VOKC_CALL(swerve_->ResetSteerEncoders());
     VOKC_CALL(swerve_->ResetPIDs());
+
+    VOKC_CALL(swerve_->InitAuto(end_pos, keep_heading));
 }
 
 void AutoSwerveCommand::Execute() {
     VOKC_CHECK(swerve_ != nullptr);
 
-    VOKC_CALL(swerve_->TranslateAuto(end_pos));
+    VOKC_CALL(swerve_->RunAuto());
 }
 
 void AutoSwerveCommand::End(bool executed) {
+    //TODO
     return;
 }
 
