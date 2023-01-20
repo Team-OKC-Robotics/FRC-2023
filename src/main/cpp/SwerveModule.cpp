@@ -132,6 +132,14 @@ bool SwerveModule::GetDriveOutput(double *output) {
     // calculate output
     // *output = this->drive_pid->Calculate(this->drive_enc_vel + *output);
 
+    *output = this->drive_pid->Calculate(this->drive_enc);
+
+    return true;
+}
+
+bool SwerveModule::GetDriveError(double *error) {
+    *error = this->drive_pid->GetPositionError();
+
     return true;
 }
 
@@ -173,7 +181,8 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     
     // 6.75:1 L2 gear ratio
     // wheel is 4 inch diameter wheel
-    this->drive_enc = drive_ / 6.75 * 3.14159265358979 * 4;
+    // .0254 to convert to meters
+    this->drive_enc = drive_ / 6.75 * 3.14159265358979 * 4 * .0254;
 
 
     // steering gear ratio of 12.8:1
@@ -203,6 +212,8 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     return true;
 }
 
-double SwerveModule::GetAngle() {
-    return this->steer_pid->GetSetpoint();
+bool SwerveModule::GetAngle(double *angle) {
+    *angle = this->steer_pid->GetSetpoint();
+
+    return true;
 }

@@ -50,7 +50,8 @@ public:
     bool SetAngle(double angle);
     bool SetDistance(double distance);
 
-    double GetAngle();
+    bool GetAngle(double *angle);
+    bool GetDriveError(double *error);
     
     bool GetDriveOutput(double *output); // PID
     bool GetSteerOutput(double *output); // PID, optimize angle
