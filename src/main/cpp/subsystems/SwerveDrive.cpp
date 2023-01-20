@@ -265,7 +265,7 @@ bool SwerveDrive::DumbTeleOpDrive(const double &drive, const double &strafe, con
     //  7. set_output->(result_of_step_3)
     
     double drive_strafe_angle = atan(strafe / drive); // TODO figure out how this is gonna work with  negative/positive/turning/stuff
-    double drive_strafe_magnitude = sqrt(pow(drive, 2) + pow(strafe, 2)); // TODO don't forget to copy the signs because just squaring gets rid of negatives
+    double drive_strafe_magnitude = sqrt(pow(drive, 2) + pow(strafe, 2));
     drive_strafe_magnitude = copysign(drive_strafe_magnitude, drive);
     double turn_magnitude = turn;
     double magnitude = (drive_strafe_magnitude + turn_magnitude) / 2;
@@ -458,41 +458,6 @@ bool SwerveDrive::RunAuto() {
     return true;
 }
 
-// bool SwerveDrive::TranslateAuto(frc::Pose2d pos) {
-    //TODO
-    // given: initial pos, final pos
-    //  1. figure out angle between here and there
-    //  2. figure out distance
-    //  3. turn to angle
-    //  4. drive the distance
-    //  5. figure out difference between current and final angle
-    //  6. turn to final angle
-    //  7. set AtSetpoint to true
-    /**
-     * 1. atan((position.x - pos.x) / (position.y - pos.y))
-     * 2. sqrt((poxition.x - pos.x) ** 2  +  (position.y - pos.y) ** 2)
-     * 3. PID
-     * 4. #2
-     * 5. pos.rot - getHeading()
-     * 6. PID
-     * 7. at_setpoint = true;
-     */
-
-//     double heading_to_goal = atan((position->X().value() - pos.X().value()) / (position->Y().value() - pos.Y().value()));
-//     double distance_to_goal = sqrt(pow(position->X().value() + pos.X().value(), 2) + pow(position->Y().value() + pos.Y().value(), 2));
-
-//     //TODO
-//     //TODO
-
-//     double heading_to_goal_heading = pos.Rotation().Degrees().value() - position->Rotation().Degrees().value();
-
-//     //TODO
-
-//     at_setpoint = true;
-
-//     return true;
-// }
-
 bool SwerveDrive::GetHeading(double *heading) {
     OKC_CHECK(heading != nullptr);
     OKC_CHECK(interface_ != nullptr);
@@ -571,7 +536,11 @@ bool SwerveDrive::GetRightSteerEncoderAverage(double *avg) {
 bool SwerveDrive::AtSetpoint(bool *at) {
     OKC_CHECK(interface_ != nullptr);
 
-    //TODO
+    if (auto_state == COMPLETE) {
+        *at = true;
+    } else {
+        *at = false;
+    }
 
     return true;
 }

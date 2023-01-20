@@ -24,6 +24,7 @@ enum AutoState {
     INIT,
     ROTATE,
     TRANSLATE,
+    COMPLETE
 };
 
 class SwerveDrive : public frc2::SubsystemBase {
