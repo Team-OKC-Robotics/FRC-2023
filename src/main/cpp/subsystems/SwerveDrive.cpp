@@ -22,6 +22,10 @@ bool SwerveDrive::Init() {
     tracklength = RobotParams::GetParam("swerve.x_disp", 0.3); // in meters
     trackwidth = RobotParams::GetParam("swerve.y_disp", 0.3); // in meters
 
+    double headingP = RobotParams::GetParam("swerve.heading_pid.kP", 0.0);
+    double headingI = RobotParams::GetParam("swerve.heading_pid.kI", 0.0);
+    double headingD = RobotParams::GetParam("swerve.heading_pid.kD", 0.0);
+
     
     // !! IMPORTANT ASSUMPTION/PRACTICE/WHATEVER !!
     // the order of swerve stuff should always be in:
@@ -94,6 +98,9 @@ bool SwerveDrive::Init() {
     // our internal position object
     position = std::make_shared<frc::Pose2d>();
     OKC_CHECK(position != nullptr);
+
+    // PID controllers
+    heading_pid = std::make_shared<frc::PIDController>(headingP, headingI, headingD);
 
     // setpoint
     at_setpoint = false;
@@ -404,6 +411,9 @@ bool SwerveDrive::InitAuto(frc::Pose2d pos, bool keep_heading) {
     //  2. figure out distance
     this->distance_to_goal = sqrt(pow(position->X().value() + pos.X().value(), 2) + pow(position->Y().value() + pos.Y().value(), 2));
 
+    // set heading PID setpoint
+    this->heading_pid->SetSetpoint(this->heading_to_goal);
+
     // initialization has passed, go ahead and start the autonomous
     auto_state = INIT;
 
@@ -412,19 +422,27 @@ bool SwerveDrive::InitAuto(frc::Pose2d pos, bool keep_heading) {
 
 bool SwerveDrive::RunAuto() {
     if (auto_state == INIT) {
-        // if keep_heading skip
+        // if keep_heading skip turning the robot
         if (this->auto_lock_heading) {
             auto_state = ROTATE;
-        // else:
+        
+        // else turn the robot
         } else {
             //  rotate wheels to the 45/135 position to rotate the robot
+            OKC_CALL(this->left_front_module->SetAngle(135));
+            OKC_CALL(this->left_back_module->SetAngle(45));
+            OKC_CALL(this->right_front_module->SetAngle(135));
+            OKC_CALL(this->right_back_module->SetAngle(45));
+
             //  heading_pid to the NavX
-            //TODO
+            double *heading;
+            this->GetHeading(heading);
+            double drive_output = this->heading_pid->Calculate(*heading);
 
             // done, go to ROTATE
-            // if (this->heading_pid->AtSetpoint()) {
-                // auto_state = ROTATE;
-            // }
+            if (this->heading_pid->AtSetpoint()) {
+                auto_state = ROTATE;
+            }
         }
     } else if (auto_state == ROTATE) {
         this->left_front_module->SetAngle(heading_to_goal);
@@ -436,6 +454,7 @@ bool SwerveDrive::RunAuto() {
     } else if (auto_state == TRANSLATE) {
         // if dist = 0 (or close enough) then skip to ROTATE_FINAL
         // drive_pid the distance
+        //TODO
         
     } else {
         // we shouldn't have gotten here, throw an error
@@ -550,6 +569,8 @@ bool SwerveDrive::ResetPIDs() {
     OKC_CALL(left_back_module->Reset());
     OKC_CALL(right_front_module->Reset());
     OKC_CALL(right_back_module->Reset());
+
+    this->heading_pid->Reset();
 
     return true;
 }

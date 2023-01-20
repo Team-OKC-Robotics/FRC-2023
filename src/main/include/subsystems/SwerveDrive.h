@@ -132,4 +132,7 @@ private:
     AutoState auto_state;
     bool auto_lock_heading;
     double pi = 3.14159;
+
+    // pid controllers
+    std::shared_ptr<frc::PIDController> heading_pid;
 };

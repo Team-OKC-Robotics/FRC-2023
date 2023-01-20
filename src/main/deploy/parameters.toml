@@ -29,6 +29,11 @@ kP = 0.0001
 kI = 0.0
 kD = 0.0
 
+[swerve.heading_pid]
+kP = 0.01
+kI = 0.0
+kD = 0.0
+
 [swerve.offset]
 left_front_offset = 210.0
 left_back_offset = 76.4
