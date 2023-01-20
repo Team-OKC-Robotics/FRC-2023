@@ -108,7 +108,6 @@ bool SwerveDrive::Init() {
 
     // Reset everything
     OKC_CALL(ResetDriveEncoders());
-    OKC_CALL(ResetSteerEncoders());
     OKC_CALL(ResetGyro());
     return true;
 }

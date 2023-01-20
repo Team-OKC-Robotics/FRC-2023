@@ -15,7 +15,6 @@ void AutoSwerveCommand::Initialize() {
     VOKC_CHECK(swerve_ != nullptr);
 
     VOKC_CALL(swerve_->ResetDriveEncoders());
-    VOKC_CALL(swerve_->ResetSteerEncoders());
     VOKC_CALL(swerve_->ResetPIDs());
 
     VOKC_CALL(swerve_->InitAuto(end_pos, keep_heading));
