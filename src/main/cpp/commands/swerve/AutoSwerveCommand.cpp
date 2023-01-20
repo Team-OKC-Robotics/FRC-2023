@@ -37,10 +37,10 @@ bool AutoSwerveCommand::IsFinished() {
         return true; // then don't try to do anything on it because it will fail
     }
 
-    bool *at;
+    bool at = false;
 
     // if the swerve drive is at its setpoint
-    if (swerve_->AtSetpoint(at)) {
+    if (swerve_->AtSetpoint(&at)) {
         return true; // end the command
     }
 
