@@ -15,15 +15,15 @@ bool ArmIO::ProcessIO() {
     OKC_CHECK(hw_interface_ != nullptr);
 
     // Set the software outputs
-    // If the intake configuration needs to be updated, update it.
-    if (sw_interface_->update_config) {
+    //If the intake configuration needs to be updated, update it.
+        if (sw_interface_->update_config) {
         OKC_CALL(UpdateArmConfig(sw_interface_->arm_config));
 
-        // Lower the update flag
+        //Lower the update flag
         sw_interface_->update_config = false;
     }
 
-    // If the encoder should be reset, reset it
+     //If the encoder should be reset, reset it
     if (sw_interface_->reset_encoders) {
         OKC_CALL(ResetEncoders());
 
