@@ -18,3 +18,6 @@ this->Claw_pid->SetSetpoint (inches);
     this->interface_->claw_lift_power = this->Claw_pid->Calculate(this->interface_->claw_encoder);
 
     }
+bool Claw::Reset(){
+    //nothing
+}

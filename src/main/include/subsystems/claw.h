@@ -23,6 +23,7 @@ class ExampleSubsystem : public frc2::SubsystemBase {
 
   bool init();
   bool SetPosition(double inches);
+  bool Reset();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
