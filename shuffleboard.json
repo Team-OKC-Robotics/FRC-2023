@@ -283,8 +283,34 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/SwerveDrive/l f steer output",
+              "_title": "Shuffleboard/SwerveDrive/l f steer output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
+      }
+    },
+    {
+      "title": "swerve steer",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
       }
     }
   ],
