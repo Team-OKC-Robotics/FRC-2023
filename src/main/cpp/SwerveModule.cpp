@@ -152,7 +152,12 @@ bool SwerveModule::GetSteerOutput(double *output) {
     // set setpoint
     // this->steer_pid->SetSetpoint(this->state.angle.Degrees().value());
 
+    // if (location == RIGHT_FRONT || location == RIGHT_BACK) {
+        // *output = -this->steer_pid->Calculate(this->steer_enc);
+    // } else {
     *output = this->steer_pid->Calculate(this->steer_enc);
+    OKC_CALL(TeamOKC::Clamp(-0.2, 0.2, output));
+    // }
 
     return true;
 }
@@ -214,6 +219,12 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
 
 bool SwerveModule::GetAngle(double *angle) {
     *angle = this->steer_pid->GetSetpoint();
+
+    return true;
+}
+
+bool SwerveModule::GetSteerEncoderReading(double *reading) {
+    *reading = this->steer_enc;
 
     return true;
 }

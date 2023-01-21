@@ -35,6 +35,9 @@ namespace SwerveDriveUI {
     nt::GenericEntry *const nt_right_front_steer_setpoint = nt_tab.Add("right front setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_right_back_steer_setpoint = nt_tab.Add("right back setpoint", 0.0).GetEntry();
 
+    // output
+    nt::GenericEntry *const nt_left_front_steer_output = nt_tab.Add("l f steer output", 0.0).GetEntry();
+
     // Gyro
     nt::GenericEntry *const nt_heading = nt_tab.Add("Heading", 0.0).GetEntry();
     nt::GenericEntry *const nt_reset_gyro =

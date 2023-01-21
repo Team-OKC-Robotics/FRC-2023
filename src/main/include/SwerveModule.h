@@ -52,6 +52,7 @@ public:
 
     bool GetAngle(double *angle);
     bool GetDriveError(double *error);
+    bool GetSteerEncoderReading(double *reading);
     
     bool GetDriveOutput(double *output); // PID
     bool GetSteerOutput(double *output); // PID, optimize angle

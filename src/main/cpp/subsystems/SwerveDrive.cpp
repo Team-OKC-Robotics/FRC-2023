@@ -8,6 +8,10 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
+    left_front_setpoint_log = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/setpoint");
+    left_front_output_log = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/output");
+    left_front_steer_enc_log = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/steer_enc");
+
     // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
         0.5, // drive max output
@@ -500,10 +504,26 @@ bool SwerveDrive::UpdateShuffleboard() {
     OKC_CALL(this->right_back_module->GetAngle(&angle_tmp));
     OKC_CALL(SwerveDriveUI::nt_right_back_steer_setpoint->SetDouble(angle_tmp));
 
+    OKC_CALL(SwerveDriveUI::nt_left_front_steer_output->SetDouble(this->interface_->left_front_steer_motor_output));
+
     // Heading UI
     double heading_tmp = 0.0;
     OKC_CALL(this->GetHeading(&heading_tmp));
     OKC_CALL(SwerveDriveUI::nt_heading->SetDouble(heading_tmp));
+
+    // === LOGGING ===
+    // OKC_CALL(left_front_module->GetAngle(&encoder_tmp));
+    // left_front_setpoint_log.Append(encoder_tmp);
+    // left_front_output_log.Append(interface_->left_front_steer_motor_output);
+    // OKC_CALL(left_front_module->GetSteerEncoderReading(&encoder_tmp));
+    // left_front_steer_enc_log.Append(encoder_tmp);
+
+    OKC_CALL(right_front_module->GetAngle(&encoder_tmp));
+    left_front_setpoint_log.Append(encoder_tmp);
+    left_front_output_log.Append(interface_->right_front_steer_motor_output);
+    OKC_CALL(right_front_module->GetSteerEncoderReading(&encoder_tmp));
+    left_front_steer_enc_log.Append(encoder_tmp);
+
 
     // If competition mode isn't set to true, then allow the PID gains to be
     // tuned.
