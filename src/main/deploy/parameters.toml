@@ -25,17 +25,17 @@ kD = 0.0
 
 [swerve.steer_pid]
 # kP = 0.00005
-kP = 0.0001
+kP = 0.004
 kI = 0.0
 kD = 0.0
 
 [swerve.heading_pid]
-kP = 0.01
+kP = 0.0
 kI = 0.0
 kD = 0.0
 
 [swerve.offset]
-left_front_offset = 210.0
-left_back_offset = 76.4
-right_front_offset = 6
-right_back_offset = 230.0
+left_front_offset = 209.0
+left_back_offset = 72.5
+right_front_offset = 236.1
+right_back_offset = 11.3
