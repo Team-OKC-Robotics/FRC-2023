@@ -5,6 +5,7 @@
 RobotContainer::RobotContainer() {
     // Load robot parameters
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
+    frc::DataLogManager::Start();
 
     // Initialize the hardware interface.
     hardware_ = std::make_unique<HardwareInterface>();

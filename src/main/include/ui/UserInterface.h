@@ -41,6 +41,9 @@ namespace SwerveDriveUI {
     extern nt::GenericEntry *const nt_right_front_steer_setpoint;
     extern nt::GenericEntry *const nt_right_back_steer_setpoint;
 
+    // Output
+    extern nt::GenericEntry *const nt_left_front_steer_output;
+
     // Gyro
     extern nt::GenericEntry *const nt_heading;
     extern nt::GenericEntry *const nt_reset_gyro;

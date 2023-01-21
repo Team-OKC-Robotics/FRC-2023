@@ -19,6 +19,8 @@
 #include "Utils.h"
 #include "io/SwerveDriveIO.h"
 #include "SwerveModule.h"
+#include "Logging.h"
+#include "wpi/DataLog.h"
 
 enum AutoState {
     INIT,
@@ -135,4 +137,8 @@ private:
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid;
+
+    wpi::log::DoubleLogEntry left_front_setpoint_log;
+    wpi::log::DoubleLogEntry left_front_output_log;
+    wpi::log::DoubleLogEntry left_front_steer_enc_log;
 };

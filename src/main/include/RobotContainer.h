@@ -32,6 +32,8 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
 
+#include "Logging.h"
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
