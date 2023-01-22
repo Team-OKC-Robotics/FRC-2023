@@ -156,7 +156,7 @@ bool SwerveModule::GetSteerOutput(double *output) {
         // *output = -this->steer_pid->Calculate(this->steer_enc);
     // } else {
     *output = this->steer_pid->Calculate(this->steer_enc);
-    OKC_CALL(TeamOKC::Clamp(-0.2, 0.2, output));
+    OKC_CALL(TeamOKC::Clamp(-0.4, 0.4, output));
     // }
 
     return true;
