@@ -24,7 +24,7 @@ void TeleOpSwerveCommand::Execute() {
 
     // VOKC_CALL(swerve_->TeleOpDrive(drive_power, strafe_power, turn_power));
     // VOKC_CALL(swerve_->DumbTeleOpDrive(-drive_power, strafe_power, turn_power));
-    VOKC_CALL(swerve_->VectorTeleOpDrive(-drive_power, strafe_power, turn_power));
+    VOKC_CALL(swerve_->VectorTeleOpDrive(drive_power/2, -strafe_power/2, turn_power*5));
 }
 
 void TeleOpSwerveCommand::End(bool interrupted) {
