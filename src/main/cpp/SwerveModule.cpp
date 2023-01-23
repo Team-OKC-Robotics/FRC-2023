@@ -180,6 +180,13 @@ bool SwerveModule::SetSteerPID(double kP, double kI, double kD) {
     return true;
 }
 
+bool SwerveModule::AtSteerSetpoint(bool *at) {
+    //TODO null pointer checks
+    *at = this->steer_pid->AtSetpoint();
+
+    return true;
+}
+
 
 bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double steer_vel) {
     // update the SwerveModulePosition with the given sensor readings

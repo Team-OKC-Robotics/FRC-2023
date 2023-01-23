@@ -312,16 +312,33 @@ bool SwerveDrive::RunAuto() {
         }
     // if we're to the turning stage
     } else if (auto_state == ROTATE) {
-        OKC_CALL(this->left_front_module->SetAngle(heading_to_goal));
-        OKC_CALL(this->left_back_module->SetAngle(heading_to_goal));
-        OKC_CALL(this->right_front_module->SetAngle(heading_to_goal));
-        OKC_CALL(this->right_back_module->SetAngle(heading_to_goal));
         // rotate wheels to face target
-        // if not keep_heading, then they should all face forwards
+        if (this->auto_lock_heading) {
+            OKC_CALL(this->left_front_module->SetAngle(heading_to_goal));
+            OKC_CALL(this->left_back_module->SetAngle(heading_to_goal));
+            OKC_CALL(this->right_front_module->SetAngle(heading_to_goal));
+            OKC_CALL(this->right_back_module->SetAngle(heading_to_goal));
+        } else {
+            // if not keep_heading, then they should all face forwards
+            OKC_CALL(this->left_front_module->SetAngle(0.0));
+            OKC_CALL(this->left_back_module->SetAngle(0.0));
+            OKC_CALL(this->right_front_module->SetAngle(0.0));
+            OKC_CALL(this->right_back_module->SetAngle(0.0));
+        }
+
+        bool left_steer_complete = false;
+        bool right_steer_complete = false;
+        OKC_CALL(this->left_front_module->AtSteerSetpoint(&left_steer_complete));
+        OKC_CALL(this->right_back_module->AtSteerSetpoint(&right_steer_complete));
+        // if we've reached the setpoint
+        if (left_steer_complete && right_steer_complete) {
+            // proceed to next stage
+            auto_state = TRANSLATE;
+        }
     } else if (auto_state == TRANSLATE) {
-        // if we're close enough to the goal then we probably don't have to drive and this was just to turn
         double error = 0.0;
         OKC_CALL(this->left_front_module->GetDriveError(&error));
+        // if we're close enough to the goal then we probably don't have to drive and this was just to turn
         if (abs(distance_to_goal) < 0.1 || abs(error) < 0.1) {
             auto_state = COMPLETE;
 
@@ -330,6 +347,11 @@ bool SwerveDrive::RunAuto() {
             this->interface_->left_back_drive_motor_output = 0.0;
             this->interface_->right_front_drive_motor_output = 0.0;
             this->interface_->right_back_drive_motor_output = 0.0;
+
+            this->interface_->left_front_steer_motor_output = 0.0;
+            this->interface_->left_back_steer_motor_output = 0.0;
+            this->interface_->right_front_steer_motor_output = 0.0;
+            this->interface_->right_back_steer_motor_output = 0.0;
             return true;
         }
 
@@ -351,7 +373,6 @@ bool SwerveDrive::RunAuto() {
     //TODO do I need to call Update() on the modules? periodic should still technically get called, I think
 
     // set motor outputs
-
     OKC_CALL(this->left_front_module->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
     OKC_CALL(this->left_back_module->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module->GetSteerOutput(&this->interface_->right_front_steer_motor_output));

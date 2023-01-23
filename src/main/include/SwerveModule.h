@@ -60,6 +60,8 @@ public:
     bool SetDrivePID(double kP, double kI, double kD);
     bool SetSteerPID(double kP, double kI, double kD);
 
+    bool AtSteerSetpoint(bool *at);
+
     bool Update(double drive_enc, double steer_enc, double drive_vel, double steer_vel);
     bool Reset();
 
