@@ -22,11 +22,6 @@ RobotContainer::RobotContainer() {
 
     // Link swerve dirve software to the I/O
     swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
-
-    VOKC_CHECK(swerve_drive_hw_ != nullptr);
-    VOKC_CHECK(swerve_drive_sw_ != nullptr);
-    VOKC_CHECK(swerve_drive_io_ != nullptr);
-    VOKC_CHECK(swerve_drive_ != nullptr);
     
     VOKC_CALL(swerve_drive_->Init());
 
