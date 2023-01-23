@@ -68,6 +68,9 @@ bool SwerveModule::Init(Location loc) {
 }
 
 bool SwerveModule::Reset() {
+    VOKC_CHECK(this->drive_pid_ != nullptr);
+    VOKC_CHECK(this->steer_pid_ != nullptr);
+
     // reset PIDs
     this->drive_pid_->Reset();
     this->steer_pid_->Reset();
@@ -77,34 +80,32 @@ bool SwerveModule::Reset() {
     return true;
 }
 
-bool SwerveModule::GetLocationOnRobot(frc::Translation2d *trans_) {
-    // OKC_CHECK(this->trans_ != nullptr);
+bool SwerveModule::GetLocationOnRobot(frc::Translation2d *trans) {
+    OKC_CHECK(trans != nullptr);
 
-    *trans_ = this->trans_;
-
-    return true;
-}
-
-bool SwerveModule::GetSwerveModulePosition(frc::SwerveModulePosition *pos_) {
-    // OKC_CHECK(this->pos_ != nullptr);
-
-    *pos_ = this->pos_;
+    *trans = this->trans_;
 
     return true;
 }
 
-bool SwerveModule::GetSwerveModuleState(frc::SwerveModuleState *state_) {
-    // OKC_CHECK(this->state_ != nullptr);
+bool SwerveModule::GetSwerveModulePosition(frc::SwerveModulePosition *pos) {
+    OKC_CHECK(pos != nullptr);
 
-    *state_ = this->state_;
+    *pos = this->pos_;
+
+    return true;
+}
+
+bool SwerveModule::GetSwerveModuleState(frc::SwerveModuleState *state) {
+    OKC_CHECK(state != nullptr);
+
+    *state = this->state_;
     
     return true;
 }
 
-bool SwerveModule::SetDesiredState(frc::SwerveModuleState state_) {
-    // OKC_CHECK(this->state_ != nullptr);
-
-    this->state_ = state_;
+bool SwerveModule::SetDesiredState(frc::SwerveModuleState state) {
+    this->state_ = state;
 
     return true;
 }
