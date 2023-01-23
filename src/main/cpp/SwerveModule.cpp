@@ -11,8 +11,8 @@ bool SwerveModule::Init(Location loc) {
 
     // steer PID gains
     double steer_kP = RobotParams::GetParam("swerve.steer_pid.kP", 0.0);
-    double steer_kI = RobotParams::GetParam("swerve.steer_pid.kI", 0.001);
-    double steer_kD = RobotParams::GetParam("swerve.steer_pid.kD", 0.0001);
+    double steer_kI = RobotParams::GetParam("swerve.steer_pid.kI", 0.0);
+    double steer_kD = RobotParams::GetParam("swerve.steer_pid.kD", 0.0);
 
     // create our PIDs
     drive_pid_ = std::make_shared<frc::PIDController>(drive_kP, drive_kI, drive_kD);
