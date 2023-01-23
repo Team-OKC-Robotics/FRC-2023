@@ -35,6 +35,7 @@ std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
+    VOKC_CHECK(swerve_teleop_command_ != nullptr);
     return swerve_teleop_command_;
 }
 
@@ -178,7 +179,6 @@ bool RobotContainer::InitCommands() {
     m_autonomousCommand_ = nullptr;
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
-    OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     return true;
 }
