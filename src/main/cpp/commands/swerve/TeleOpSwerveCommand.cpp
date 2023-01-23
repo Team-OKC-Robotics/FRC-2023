@@ -18,13 +18,13 @@ void TeleOpSwerveCommand::Execute() {
     VOKC_CHECK(swerve_ != nullptr);
     VOKC_CHECK(gamepad_ != nullptr);
 
-    double drive_power = -this->gamepad_->GetRawAxis(1);
-    double strafe_power = this->gamepad_->GetRawAxis(0);
-    double turn_power = this->gamepad_->GetRawAxis(2);
+    double drive_power_ = -this->gamepad_->GetRawAxis(1);
+    double strafe_power_ = this->gamepad_->GetRawAxis(0);
+    double turn_power_ = this->gamepad_->GetRawAxis(2);
 
     // VOKC_CALL(swerve_->TeleOpDrive(drive_power, strafe_power, turn_power));
     // VOKC_CALL(swerve_->DumbTeleOpDrive(-drive_power, strafe_power, turn_power));
-    VOKC_CALL(swerve_->VectorTeleOpDrive(drive_power/2, -strafe_power/2, turn_power*5));
+    VOKC_CALL(swerve_->VectorTeleOpDrive(drive_power_/2, -strafe_power_/2, turn_power_*2));
 }
 
 void TeleOpSwerveCommand::End(bool interrupted) {

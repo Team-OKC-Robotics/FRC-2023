@@ -19,7 +19,7 @@ public:
      *
      * @param swerve The swerve drive used by this command.
      */
-    explicit AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d end_pos, bool keep_init_heading);
+    explicit AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d end_pos, bool keep_heading);
 
     void Initialize() override;
     void Execute() override;
@@ -28,6 +28,6 @@ public:
 
 private:
     std::shared_ptr<SwerveDrive> swerve_;
-    frc::Pose2d end_pos;
-    bool keep_heading = false;
+    frc::Pose2d end_pos_;
+    bool keep_heading_ = false;
 };

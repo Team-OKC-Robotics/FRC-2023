@@ -85,60 +85,59 @@ private:
     SwerveDriveSoftwareInterface *const interface_;
 
     // swerve modules
-    std::shared_ptr<SwerveModule> left_front_module;
-    std::shared_ptr<SwerveModule> left_back_module;
-    std::shared_ptr<SwerveModule> right_front_module;
-    std::shared_ptr<SwerveModule> right_back_module;
+    std::shared_ptr<SwerveModule> left_front_module_;
+    std::shared_ptr<SwerveModule> left_back_module_;
+    std::shared_ptr<SwerveModule> right_front_module_;
+    std::shared_ptr<SwerveModule> right_back_module_;
 
     // swerve module positions
-    std::shared_ptr<frc::Translation2d> left_front_loc;
-    std::shared_ptr<frc::Translation2d> left_back_loc;
-    std::shared_ptr<frc::Translation2d> right_front_loc;
-    std::shared_ptr<frc::Translation2d> right_back_loc;
+    std::shared_ptr<frc::Translation2d> left_front_loc_;
+    std::shared_ptr<frc::Translation2d> left_back_loc_;
+    std::shared_ptr<frc::Translation2d> right_front_loc_;
+    std::shared_ptr<frc::Translation2d> right_back_loc_;
 
     // swerve module states
-    std::shared_ptr<frc::SwerveModulePosition> left_front_pos;
-    std::shared_ptr<frc::SwerveModulePosition> left_back_pos;
-    std::shared_ptr<frc::SwerveModulePosition> right_front_pos;
-    std::shared_ptr<frc::SwerveModulePosition> right_back_pos;    
+    std::shared_ptr<frc::SwerveModulePosition> left_front_pos_;
+    std::shared_ptr<frc::SwerveModulePosition> left_back_pos_;
+    std::shared_ptr<frc::SwerveModulePosition> right_front_pos_;
+    std::shared_ptr<frc::SwerveModulePosition> right_back_pos_;    
 
     // swerve module positions
-    std::shared_ptr<wpi::array<frc::SwerveModulePosition, 4>> positions;
+    std::shared_ptr<wpi::array<frc::SwerveModulePosition, 4>> positions_;
 
     // kinematics
-    std::shared_ptr<frc::SwerveDriveKinematics<4>> swerve_kinematics;
+    std::shared_ptr<frc::SwerveDriveKinematics<4>> swerve_kinematics_;
 
     // odometry
-    std::shared_ptr<frc::SwerveDriveOdometry<4>> swerve_odometry;
+    std::shared_ptr<frc::SwerveDriveOdometry<4>> swerve_odometry_;
 
     // position
-    std::shared_ptr<frc::Pose2d> position;
+    std::shared_ptr<frc::Pose2d> position_;
 
     // Speed modifier (the joystick input is multiplied by this value)
-    double speed_modifier_drive = 0.75;
-    double speed_modifier_steer = 0.75;
+    double speed_modifier_drive_ = 0.75;
+    double speed_modifier_steer_ = 0.75;
 
     // max output
-    double max_output_drive = 1;
-    double max_output_steer = 1;
+    double max_output_drive_ = 1;
+    double max_output_steer_ = 1;
 
     // if the robot has reached the autonomous setpoint
-    bool at_setpoint = false;
+    bool at_setpoint_ = false;
 
-    double heading_to_goal;
-    double distance_to_goal;
+    double heading_to_goal_;
+    double distance_to_goal_;
 
-    double trackwidth;
-    double tracklength;
+    double trackwidth_;
+    double tracklength_;
 
-    AutoState auto_state;
-    bool auto_lock_heading;
-    double pi = 3.14159;
+    AutoState auto_state_;
+    bool auto_lock_heading_;
 
     // pid controllers
-    std::shared_ptr<frc::PIDController> heading_pid;
+    std::shared_ptr<frc::PIDController> heading_pid_;
 
-    wpi::log::DoubleLogEntry left_front_setpoint_log;
-    wpi::log::DoubleLogEntry left_front_output_log;
-    wpi::log::DoubleLogEntry left_front_steer_enc_log;
+    wpi::log::DoubleLogEntry left_front_setpoint_log_;
+    wpi::log::DoubleLogEntry left_front_output_log_;
+    wpi::log::DoubleLogEntry left_front_steer_enc_log_;
 };
