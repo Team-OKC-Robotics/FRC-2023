@@ -12,18 +12,18 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(this->InitHardware(hardware_));
 
     // == swerve drive ==
-    VOKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw));
+    VOKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw_));
 
     // Initialize the software interface
     swerve_drive_sw_ = std::make_shared<SwerveDriveSoftwareInterface>();
 
     // Link SwerveDriveIO to hardware / software
-    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw.get(), swerve_drive_sw_.get());
+    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw_.get(), swerve_drive_sw_.get());
 
     // Link swerve dirve software to the I/O
     swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
 
-    VOKC_CHECK(swerve_drive_hw != nullptr);
+    VOKC_CHECK(swerve_drive_hw_ != nullptr);
     VOKC_CHECK(swerve_drive_sw_ != nullptr);
     VOKC_CHECK(swerve_drive_io_ != nullptr);
     VOKC_CHECK(swerve_drive_ != nullptr);
@@ -48,7 +48,7 @@ void RobotContainer::ConfigureButtonBindings() {
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
     // An example command will be run in autonomous
-    return m_autonomousCommand;
+    return m_autonomousCommand_;
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
@@ -174,7 +174,7 @@ bool RobotContainer::InitCommands() {
 
     // Placeholder autonomous command.
     //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
-    m_autonomousCommand = nullptr;
+    m_autonomousCommand_ = nullptr;
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
     OKC_CHECK(swerve_teleop_command_ != nullptr);

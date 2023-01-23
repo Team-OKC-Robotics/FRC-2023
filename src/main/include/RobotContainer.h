@@ -64,7 +64,7 @@ private:
 
     // Robot Hardware
     std::unique_ptr<HardwareInterface> hardware_;
-    std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw;
+    std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
 
 
     // Hardware I/O interfaces
@@ -92,7 +92,7 @@ private:
     /**
      * Commands
      */
-    std::shared_ptr<AutoSwerveCommand> m_autonomousCommand;
+    std::shared_ptr<AutoSwerveCommand> m_autonomousCommand_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
