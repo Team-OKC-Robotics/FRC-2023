@@ -62,6 +62,9 @@ private:
     bool InitGamepads();
     void ConfigureButtonBindings();
 
+    // subsystem initialization
+    bool InitSwerve();
+
     // Robot Hardware
     std::unique_ptr<HardwareInterface> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;

@@ -11,19 +11,7 @@ RobotContainer::RobotContainer() {
     hardware_ = std::make_unique<HardwareInterface>();
     VOKC_CALL(this->InitHardware(hardware_));
 
-    // == swerve drive ==
-    VOKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw_));
-
-    // Initialize the software interface
-    swerve_drive_sw_ = std::make_shared<SwerveDriveSoftwareInterface>();
-
-    // Link SwerveDriveIO to hardware / software
-    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw_.get(), swerve_drive_sw_.get());
-
-    // Link swerve dirve software to the I/O
-    swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
-    
-    VOKC_CALL(swerve_drive_->Init());
+    VOKC_CALL(this->InitSwerve());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -144,6 +132,24 @@ bool RobotContainer::InitSensors(const ActuatorInterface &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
+    return true;
+}
+
+bool RobotContainer::InitSwerve() {
+    // == swerve drive ==
+    VOKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw_));
+
+    // Initialize the software interface
+    swerve_drive_sw_ = std::make_shared<SwerveDriveSoftwareInterface>();
+
+    // Link SwerveDriveIO to hardware / software
+    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw_.get(), swerve_drive_sw_.get());
+
+    // Link swerve dirve software to the I/O
+    swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
+    
+    VOKC_CALL(swerve_drive_->Init());
+    
     return true;
 }
 
