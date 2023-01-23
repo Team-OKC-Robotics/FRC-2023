@@ -56,6 +56,11 @@ bool SwerveDriveIO::ProcessIO() {
     OKC_CHECK(hw_interface_->right_front_drive_motor != nullptr);
     OKC_CHECK(hw_interface_->right_back_drive_motor != nullptr);
 
+    OKC_CHECK(hw_interface_->left_front_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->left_back_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->right_front_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->right_back_steer_motor != nullptr);
+
     // Set the drive outputs.
     // hw_interface_->left_front_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->left_front_drive_motor_output));
     // hw_interface_->left_back_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->left_back_drive_motor_output));
@@ -79,6 +84,7 @@ bool SwerveDriveIO::ProcessIO() {
    
     // Get the hardware sensor values.
     // navX IMU:
+    OKC_CHECK(hw_interface_->ahrs != nullptr);
     sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
 
     // Encoders
@@ -123,6 +129,11 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     OKC_CHECK(hw_interface_->left_back_drive_motor != nullptr);
     OKC_CHECK(hw_interface_->right_front_drive_motor != nullptr);
     OKC_CHECK(hw_interface_->right_back_drive_motor != nullptr);
+
+    OKC_CHECK(hw_interface_->left_front_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->left_back_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->right_front_steer_motor != nullptr);
+    OKC_CHECK(hw_interface_->right_back_steer_motor != nullptr);
 
     // Get the configuration
     double open_loop_ramp_drive = config.open_loop_ramp_rate_drive;
@@ -170,7 +181,11 @@ bool SwerveDriveIO::ResetDriveEncoders() {
 bool SwerveDriveIO::ResetSteerEncoders() {
     OKC_CHECK(hw_interface_ != nullptr);
 
-    //TODO
+    OKC_CHECK(hw_interface_->left_front_steer_vel_encoder != nullptr);
+    OKC_CHECK(hw_interface_->left_back_steer_vel_encoder != nullptr);
+    OKC_CHECK(hw_interface_->right_back_steer_vel_encoder != nullptr);
+    OKC_CHECK(hw_interface_->right_front_steer_vel_encoder != nullptr);
+
     hw_interface_->left_front_steer_vel_encoder->SetPosition(0);
     hw_interface_->left_back_steer_vel_encoder->SetPosition(0);
     hw_interface_->right_back_steer_vel_encoder->SetPosition(0);
