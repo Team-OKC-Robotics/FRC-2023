@@ -156,12 +156,8 @@ bool SwerveModule::GetSteerOutput(double *output) {
     // set setpoint
     // this->steer_pid_->SetSetpoint(this->state_.angle.Degrees().value());
 
-    // if (location == RIGHT_FRONT || location == RIGHT_BACK) {
-        // *output = -this->steer_pid_->Calculate(this->steer_enc);
-    // } else {
     *output = this->steer_pid_->Calculate(this->steer_enc_);
     OKC_CALL(TeamOKC::Clamp(-0.4, 0.4, output));
-    // }
 
     return true;
 }
@@ -211,11 +207,6 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     } else if (this->steer_enc_ < 0) {
         this->steer_enc_ += 360;
     }
-
-    // if (this->location == RIGHT_FRONT) {
-    //     std::cout << this->steer_enc << std::endl;
-    //     std::cout << this->steer_pid_->GetSetpoint() << std::endl;
-    // }
 
     this->pos_ = frc::SwerveModulePosition(units::meter_t(drive_enc_), frc::Rotation2d(units::degree_t(steer_enc_)));
 

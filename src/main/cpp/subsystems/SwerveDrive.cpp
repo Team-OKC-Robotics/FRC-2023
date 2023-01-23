@@ -224,8 +224,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double right_front_turn = atan2(B, C)  *  180.0/M_PI;
     double right_back_turn = atan2(A, C)  *  180.0/M_PI;
 
-    // std::cout << left_front_turn << std::endl;
-
     if (left_front_turn < 0) {
         left_front_turn += 360;
     }
@@ -534,12 +532,6 @@ bool SwerveDrive::UpdateShuffleboard() {
     OKC_CALL(SwerveDriveUI::nt_heading->SetDouble(heading_tmp));
 
     // === LOGGING ===
-    // OKC_CALL(left_front_module_->GetAngle(&encoder_tmp));
-    // left_front_setpoint_log.Append(encoder_tmp);
-    // left_front_output_log.Append(interface_->left_front_steer_motor_output);
-    // OKC_CALL(left_front_module_->GetSteerEncoderReading(&encoder_tmp));
-    // left_front_steer_enc_log.Append(encoder_tmp);
-
     OKC_CALL(right_front_module_->GetAngle(&encoder_tmp));
     left_front_setpoint_log_.Append(encoder_tmp);
     left_front_output_log_.Append(interface_->right_front_steer_motor_output);
