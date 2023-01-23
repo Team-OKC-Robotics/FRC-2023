@@ -162,7 +162,6 @@ bool SwerveModule::GetSteerOutput(double *output) {
 }
 
 bool SwerveModule::SetDrivePID(double kP, double kI, double kD) {
-    //TODO null pointer checks
     OKC_CHECK(this->drive_pid_ != nullptr);
 
     this->drive_pid_->SetPID(kP, kI, kD);
@@ -171,7 +170,6 @@ bool SwerveModule::SetDrivePID(double kP, double kI, double kD) {
 }
 
 bool SwerveModule::SetSteerPID(double kP, double kI, double kD) {
-    //TODO null pointer checks
     OKC_CHECK(this->steer_pid_ != nullptr);
 
     this->steer_pid_->SetPID(kP, kI, kD);
@@ -180,7 +178,8 @@ bool SwerveModule::SetSteerPID(double kP, double kI, double kD) {
 }
 
 bool SwerveModule::AtSteerSetpoint(bool *at) {
-    //TODO null pointer checks
+    OKC_CHECK(at != nullptr);
+    OKC_CHECK(this->steer_pid_ != nullptr);
     *at = this->steer_pid_->AtSetpoint();
 
     return true;
