@@ -193,3 +193,17 @@ bool SwerveDriveIO::ResetSteerEncoders() {
 
     return true;
 }
+
+bool SwerveDriveIO::ProcessInputs() {
+    OKC_CHECK(sw_interface_ != nullptr);
+    OKC_CHECK(hw_interface_ != nullptr);
+
+    return true;
+}
+
+bool SwerveDriveIO::SetOutputs() {
+    OKC_CHECK(sw_interface_ != nullptr);
+    OKC_CHECK(hw_interface_ != nullptr);
+
+    return true;
+}

@@ -133,6 +133,9 @@ private:
     bool ResetDriveEncoders();
     bool ResetSteerEncoders();
 
+    bool ProcessInputs();
+    bool SetOutputs();
+
     SwerveDriveHardwareInterface *const hw_interface_;
     SwerveDriveSoftwareInterface *const sw_interface_;
 };
