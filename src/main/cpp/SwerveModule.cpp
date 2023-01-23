@@ -21,6 +21,11 @@ bool SwerveModule::Init(Location loc) {
     OKC_CHECK(this->steer_pid_ != nullptr);
     steer_pid_->EnableContinuousInput(0, 360);
 
+    // units and conversions and numbers and stuff
+    L2_GEAR_RATIO_ = RobotParams::GetParam("swerve.l2_gear_ratio", 0.0);
+    WHEEL_DIAMETER_ = RobotParams::GetParam("swerve.wheel_diameter", 0.0);
+    INCHES_TO_METERS_ = RobotParams::GetParam("swerve.inches_to_meters", 0.0254);
+
     // create a default swerve module state_ with no speed or angle
     state_ = frc::SwerveModuleState(units::meters_per_second_t(0.0), frc::Rotation2d());
 
@@ -192,14 +197,13 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     // 6.75:1 L2 gear ratio
     // wheel is 4 inch diameter wheel
     // .0254 to convert to meters
-    this->drive_enc_ = drive_ / 6.75 * 3.14159265358979 * 4 * .0254;
+    this->drive_enc_ = drive_ / L2_GEAR_RATIO_ * M_PI * WHEEL_DIAMETER_ * INCHES_TO_METERS_;
 
 
     // steering gear ratio of 12.8:1
-    //TODO fix steer encoder readings (like, converting from raw voltage value or whatever to this)
-    //okay so it actually returns rotations now I think?
     // steer_enc = steer_enc / 12.8;
     // this->steer_enc = (double) abs(steer_ / 12.8 * 360.0);
+    // this converts to degrees with 0 (and 360) being the front of the robot
     this->steer_enc_ = (steer_ * 360) - offset_;
 
     if (this->steer_enc_ > 360) {
@@ -217,7 +221,7 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
 
     // velocity readings
     this->steer_enc_vel_ = steer_vel;
-    this->drive_enc_vel_ = drive_vel / 6.75 * 3.14159265358979 * 4;
+    this->drive_enc_vel_ = drive_vel / L2_GEAR_RATIO_ * M_PI * WHEEL_DIAMETER_ * INCHES_TO_METERS_;
 
     return true;
 }

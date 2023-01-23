@@ -83,4 +83,8 @@ private:
     double steer_enc_vel_;
 
     double offset_;
+
+    double L2_GEAR_RATIO_;
+    double WHEEL_DIAMETER_;
+    double INCHES_TO_METERS_;
 };
