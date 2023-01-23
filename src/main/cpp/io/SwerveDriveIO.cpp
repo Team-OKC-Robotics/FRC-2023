@@ -39,8 +39,12 @@ bool SwerveDriveIO::ProcessIO() {
         sw_interface_->reset_steer_encoders = false;
     }
 
+
+    // ===/flags===
+
     // If the navX should be reset, reset it.
     if (sw_interface_->reset_gyro) {
+        OKC_CHECK(hw_interface_ != nullptr);
         hw_interface_->ahrs->Reset();
 
         // Lower the navX reset flag
