@@ -116,12 +116,14 @@ bool SwerveModule::SetDesiredState(frc::SwerveModuleState state) {
 }
 
 bool SwerveModule::SetAngle(double angle) {
+    OKC_CHECK(this->steer_pid_ != nullptr);
     this->steer_pid_->SetSetpoint(angle);
 
     return true;
 }
 
 bool SwerveModule::SetDistance(double distance) {
+    OKC_CHECK(this->drive_pid_ != nullptr);
     this->drive_pid_->SetSetpoint(distance);
 
     return true;
@@ -142,6 +144,8 @@ bool SwerveModule::GetDriveOutput(double *output) {
 }
 
 bool SwerveModule::GetDriveError(double *error) {
+    OKC_CHECK(this->drive_pid_ != nullptr);
+
     *error = this->drive_pid_->GetPositionError();
 
     return true;
@@ -202,9 +206,15 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     // this converts to degrees with 0 (and 360) being the front of the robot
     this->steer_enc_ = (steer_ * 360) - offset_;
 
+    // subtracting the offset can lead to values that are outside the 0-360 degree range
+    // this wraps the angle back into the 0-360 range
+    // if the angle is past 360
     if (this->steer_enc_ > 360) {
+        // put it back in range
         this->steer_enc_ -=360;
+    // if the angle is less than 360
     } else if (this->steer_enc_ < 0) {
+        // bring it back into the range
         this->steer_enc_ += 360;
     }
 
@@ -218,12 +228,17 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
 }
 
 bool SwerveModule::GetAngle(double *angle) {
+    OKC_CHECK(angle != nullptr);
+    OKC_CHECK(this->steer_pid_ != nullptr);
+
     *angle = this->steer_pid_->GetSetpoint();
 
     return true;
 }
 
 bool SwerveModule::GetSteerEncoderReading(double *reading) {
+    OKC_CHECK(reading != nullptr);
+
     *reading = this->steer_enc_;
 
     return true;
