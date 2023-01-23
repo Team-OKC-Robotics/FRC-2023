@@ -18,10 +18,8 @@ bool SwerveModule::Init(Location loc) {
     drive_pid_ = std::make_shared<frc::PIDController>(drive_kP, drive_kI, drive_kD);
     steer_pid_ = std::make_shared<frc::PIDController>(steer_kP, steer_kI, steer_kD);
 
-    steer_pid_->EnableContinuousInput(0, 360);
-
-    OKC_CHECK(this->drive_pid_ != nullptr);
     OKC_CHECK(this->steer_pid_ != nullptr);
+    steer_pid_->EnableContinuousInput(0, 360);
 
     // create a default swerve module state_ with no speed or angle
     state_ = frc::SwerveModuleState(units::meters_per_second_t(0.0), frc::Rotation2d());
