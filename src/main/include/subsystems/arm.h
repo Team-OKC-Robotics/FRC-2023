@@ -6,7 +6,7 @@
 class Arm : private frc2::SubsystemBase {
 private:
 Arm(ArmSoftwareInterface *interface)
-        : interface_(interface){}
+        : interface_(interface), Arm_pid(), Inches_pid() {}
     ~Arm() {}
 
     bool Function(int number);

@@ -4,7 +4,9 @@
 #include "subsystems/Arm.h"
 
 bool Arm::init(){ 
-    Arm_pid = std::make_shared< frc::PIDController>();
+    Arm_pid = std::make_shared<frc::PIDController>(0, 0, 0);
+
+    Inches_pid = std::make_shared<frc::PIDController>(0,0,0);
     return true;
 }
 
