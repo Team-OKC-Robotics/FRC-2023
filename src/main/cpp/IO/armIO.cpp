@@ -16,7 +16,7 @@ bool ArmIO::ProcessIO() {
 
     // Set the software outputs
     //If the intake configuration needs to be updated, update it.
-        if (sw_interface_->update_config) {
+    if (sw_interface_->update_config) {
         OKC_CALL(UpdateArmConfig(sw_interface_->arm_config));
 
         //Lower the update flag
@@ -33,7 +33,7 @@ bool ArmIO::ProcessIO() {
 
     // if the encoder should be set to a specific value
     if (sw_interface_->set_encoder_to_val) {
-        OKC_CALL(SetEncoder(sw_interface_->encoder_val_to_set))
+        OKC_CALL(SetEncoder(sw_interface_->encoder_val_to_set));
 
         sw_interface_->set_encoder_to_val = false;
     }

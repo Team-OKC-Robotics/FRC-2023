@@ -35,20 +35,19 @@ typedef struct arm_software_interface_t {
     double arm_encoder;
     double arm_extend_encoder;
     double arm_position_motor;
-    double arm_config;
+    bool arm_config; 
+    double encoder_val_to_set;
 
-    bool arm_software_interface_t::update_config;
-    bool arm_software_interface_t::arm_config; 
-    bool arm_software_interface_t::encoder_val_to_set;
-    bool arm_software_interface_t::reset_encoders;
-    bool arm_software_interface_t::set_encoder_to_val; 
-    bool arm_software_interface_t::deployed_limit_switch_val;
-    bool arm_software_interface_t::deploy_limit_switch;
-    bool arm_software_interface_t::retracted_limit_switch_val;
-    bool arm_software_interface_t::retracted_limit_switch;
-    bool arm_software_interface_t::arm_postion_encoder_val;
-    bool arm_software_interface_t::open_loop_ramp;
-    bool arm_software_interface_t::max_indexer_current;
+    bool update_config;
+    bool reset_encoders;
+    bool set_encoder_to_val; 
+    bool deployed_limit_switch_val;
+    bool deploy_limit_switch;
+    bool retracted_limit_switch_val;
+    bool retracted_limit_switch;
+    double arm_postion_encoder_val;
+    double open_loop_ramp;
+    double max_indexer_current;
     
 
 
