@@ -11,7 +11,8 @@
 
 
 typedef struct Arm_config_t {
-    
+    double open_loop_ramp_rate;
+    double max_indexer_current;
 } ArmConfig;
 
 typedef struct arm_hardware_interface_t {
@@ -35,7 +36,7 @@ typedef struct arm_software_interface_t {
     double arm_encoder;
     double arm_extend_encoder;
     double arm_position_motor;
-    bool arm_config; 
+    ArmConfig arm_config; 
     double encoder_val_to_set;
 
     bool update_config;
@@ -45,7 +46,7 @@ typedef struct arm_software_interface_t {
     bool deploy_limit_switch;
     bool retracted_limit_switch_val;
     bool retracted_limit_switch;
-    double arm_postion_encoder_val;
+    double arm_position_encoder_val;
     double open_loop_ramp;
     double max_indexer_current;
     
