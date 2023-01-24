@@ -62,7 +62,7 @@ bool ArmIO::UpdateArmConfig(ArmConfig &config) {
 
     // Apply the configuration
     // Open Loop Ramp Rate
-    hw_interface_->arm_motor->SetOpenLoopRampRate(open_loop_ramp);
+    hw_interface_->arm_up_motor->SetOpenLoopRampRate(open_loop_ramp);
     hw_interface_->indexer_motor->SetOpenLoopRampRate(open_loop_ramp);
     
     // Java code has this commented out as well, I'm assuming because it was meesing something up.
