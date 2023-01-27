@@ -1,6 +1,3 @@
-/// @brief
-/// @return 
-
 #include "subsystems/Arm.h"
 
 bool Arm::init(){ 
