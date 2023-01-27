@@ -1,3 +1,5 @@
+#pragma once
+
 #include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
 #include <IO/armIO.h>
