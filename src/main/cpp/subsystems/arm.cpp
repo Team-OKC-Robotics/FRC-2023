@@ -18,7 +18,9 @@ this->Inches_pid->SetSetpoint (inches);
    
     return true;
 }
-
+bool Arm::IncrementPreset(double Preset){
+    this-> Arm_pid->SetIncrenment (preset);
+}
 
 void Arm::Periodic(){
     this->interface_->arm_lift_power = this->Arm_pid->Calculate(this->interface_->arm_encoder);

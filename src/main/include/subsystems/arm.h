@@ -16,8 +16,10 @@ Arm(ArmSoftwareInterface *interface)
     bool SetExtend(double inches);
     bool init(); 
     void Periodic() override;
+    bool IncrementPreset(double Preset); 
 private:
     ArmSoftwareInterface *const interface_;
     std::shared_ptr<frc::PIDController> Arm_pid;
     std::shared_ptr<frc::PIDController> Inches_pid;
+    double preset; 
 };
