@@ -1,44 +1,23 @@
 #pragma once
 
-#include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
-#include <IO/armIO.h>
+#include <frc2/command/SubsystemBase.h>
+#include <io/ArmIO.h>
+#include <memory>
 
-
-class Arm : private frc2::SubsystemBase {
-private:
-Arm(ArmSoftwareInterface *interface)
-        : interface_(interface), Arm_pid(), Inches_pid() {}
+class Arm : public frc2::SubsystemBase {
+public:
+    Arm(ArmSoftwareInterface *interface) : interface_(interface) {}
     ~Arm() {}
 
-    bool Function(int number);
     bool SetDegrees(double degrees);
     bool SetExtend(double inches);
-    bool init(); 
+    bool Init();
     void Periodic() override;
-    bool Subsystem::SetPosition(const double &position) {
-    this.position_ = position;
-    return true;
-     }
 
-    class Arm::Arm : public frc2::SubsystemBase 
-        public;
-
-        // Note: this is public in the header file
-    bool Subsystem::SetPosition(const double &position) {
-    this.position_ = position;
-    return true;
-}
-
-void Subsystem::Periodic() { 
-    // The subsystem does different things based on what mode it is put in by the user.
-    switch(mode) {
-        case Manual:
-            OKC_CALL(SetUserPower());
-            break;
-        case AutoPosition: 
-           OKC_CALL(GoToPosition());
-            break;
-        default:
-             break;
-    }
+private:
+    ArmSoftwareInterface *const interface_;
+    std::shared_ptr<frc::PIDController> arm_pid_;
+    std::shared_ptr<frc::PIDController> inches_pid_;
+    double preset_;
+};
