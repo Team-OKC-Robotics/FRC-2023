@@ -22,8 +22,8 @@ bool SwerveModule::Init(Location loc) {
     steer_pid_->EnableContinuousInput(0, 360);
 
     // units and conversions and numbers and stuff
-    L2_GEAR_RATIO_ = RobotParams::GetParam("swerve.l2_gear_ratio", 0.0);
-    WHEEL_DIAMETER_ = RobotParams::GetParam("swerve.wheel_diameter", 0.0);
+    L2_GEAR_RATIO_ = RobotParams::GetParam("swerve.l2_gear_ratio", 6.75);
+    WHEEL_DIAMETER_ = RobotParams::GetParam("swerve.wheel_diameter", 4);
     INCHES_TO_METERS_ = RobotParams::GetParam("swerve.inches_to_meters", 0.0254);
 
     // create a default swerve module state_ with no speed or angle
