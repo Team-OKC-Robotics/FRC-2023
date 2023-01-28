@@ -67,16 +67,6 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->right_front_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_STEER_MOTOR, BRUSHLESS);
     actuators_interface->right_back_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_BACK_STEER_MOTOR, BRUSHLESS);
 
-    OKC_CHECK(actuators_interface->left_front_drive_motor != nullptr);
-    OKC_CHECK(actuators_interface->left_back_drive_motor != nullptr);
-    OKC_CHECK(actuators_interface->right_front_drive_motor != nullptr);
-    OKC_CHECK(actuators_interface->right_back_drive_motor != nullptr);
-
-    OKC_CHECK(actuators_interface->left_front_steer_motor != nullptr);
-    OKC_CHECK(actuators_interface->left_back_steer_motor != nullptr);
-    OKC_CHECK(actuators_interface->right_front_steer_motor != nullptr);
-    OKC_CHECK(actuators_interface->right_back_steer_motor != nullptr);
-
     return true;
 }
 
