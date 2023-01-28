@@ -22,8 +22,6 @@ public:
     explicit AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d end_pos, bool keep_heading);
 
     void Initialize() override;
-    void Execute() override;
-    void End(bool executed) override;
     bool IsFinished() override;
 
 private:

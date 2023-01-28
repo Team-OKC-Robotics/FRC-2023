@@ -91,8 +91,6 @@ TEST_F(SwerveDriveTest, LockAutonomousDrive) {
 
     ASSERT_TRUE(swerve_->InitAuto(pos, true)); // lock heading
 
-    ASSERT_TRUE(swerve_->RunAuto());
-
     //do some janky periodic() stuff maybe? just get it to go through all the states
     //TODO
 }
@@ -102,8 +100,6 @@ TEST_F(SwerveDriveTest, UnlockedAutoDrive) {
     frc::Pose2d pos = frc::Pose2d();
 
     ASSERT_TRUE(swerve_->InitAuto(pos, false)); // turn to heading first before driving
-
-    ASSERT_TRUE(swerve_->RunAuto());
 
     //do some janky periodic() stuff maybe? just get it to go through all the states
     //TODO

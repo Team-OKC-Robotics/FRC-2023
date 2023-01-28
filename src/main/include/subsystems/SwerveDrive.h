@@ -60,7 +60,8 @@ public:
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
     bool InitAuto(frc::Pose2d pos, bool keep_heading);
-    bool RunAuto();
+
+    bool UpdateModules();
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -132,6 +133,7 @@ private:
     double tracklength_;
 
     AutoState auto_state_;
+    bool in_auto = false;
     bool auto_lock_heading_;
 
     // pid controllers
