@@ -6,7 +6,8 @@
 
 #include <frc2/command/Command.h>
 
-
+#include "frc/Joystick.h"
+#include "frc2/command/button/JoystickButton.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -38,8 +39,6 @@ class RobotContainer {
 
     std::shared_ptr<frc2::JoystickButton> manip_a_button_;
     std::shared_ptr<frc2::JoystickButton> manip_b_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_back_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_start_button_;
     std::shared_ptr<frc2::JoystickButton> manip_left_stick_button_;
     std::shared_ptr<frc2::JoystickButton> manip_right_stick_button;
 
@@ -69,7 +68,6 @@ class RobotContainer {
     std::shared_ptr<frc2::JoystickButton> manip_start_button_;
     std::shared_ptr<frc2::JoystickButton> manip_mode_button_;
 
-};
 };
 
 

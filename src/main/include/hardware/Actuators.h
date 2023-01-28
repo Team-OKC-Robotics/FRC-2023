@@ -2,10 +2,8 @@
 
 #include <memory>
 #include <rev/CANSparkMax.h>
+#include "frc/DigitalInput.h"
 
-
-// CTRE namespace
-namespace ctre_can = ctre::phoenix::motorcontrol::can;
 
 // Brushless Motor
 #define BRUSHLESS rev::CANSparkMax::MotorType::kBrushless
@@ -48,5 +46,5 @@ typedef struct actuator_interface_t {
 
     // Claw things
     std::unique_ptr<rev::CANSparkMax> claw_motor;
-    std::unique_ptr<FRC::DigitalInput> claw_IR_sensor;
+    std::unique_ptr<frc::DigitalInput> claw_IR_sensor;
 } ActuatorInterface;

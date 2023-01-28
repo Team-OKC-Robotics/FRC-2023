@@ -16,7 +16,7 @@ typedef struct claw_config_t {
 
 typedef struct claw_hardware_interface_t {
     rev::CANSparkMax *const claw_open_and_close_motor;
-    rev:SparkMaxRelativeEncoder *const claw_open_and_close_encoder;
+    rev::SparkMaxRelativeEncoder *const claw_open_and_close_encoder;
 } ClawHardwareInterface;
 
 typedef struct claw_software_interface_t {

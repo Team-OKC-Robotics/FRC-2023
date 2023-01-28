@@ -1,17 +1,15 @@
-<<<<<<< HEAD
-=======
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
->>>>>>> c15cb656c009cc713f5a1d80074841e5558f53b3
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
 
-class ClawSubsystem : public frc2::SubsystemBase {
+class Claw : public frc2::SubsystemBase {
  public:
-  ClawSubsystem();
+  Claw();
+  ~Claw();
 
   bool Init();
   
@@ -19,6 +17,7 @@ class ClawSubsystem : public frc2::SubsystemBase {
   bool ResetPositionPID();
 
   bool SetPosition();
+  bool Reset();
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
