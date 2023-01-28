@@ -1,23 +1,15 @@
-#pragma once
+#include "subsytems/claw.h"
 
-#include <frc2/command/SubsystemBase.h>
-#include "subsystems/claw.h"
-
-bool Claw::init() { 
-    Claw_pid = std::make_shared<frc::PIDController>();
+bool Claw::Init(){
     return true;
 }
 
-bool Claw::SetPosition(double inches){ 
-this->Claw_pid->SetSetpoint (inches);
-
+bool Claw::ResetPositionEncoder(){
     return true;
 }
-
-   void Arm::Periodic(){
-    this->interface_->claw_lift_power = this->Claw_pid->Calculate(this->interface_->claw_encoder);
-
-    }
-bool Claw::Reset(){
-    //nothing
+bool Claw::ResetPositionPID(){
+    return true;
+}
+bool Claw::SetPosition(){
+    return true;
 }
