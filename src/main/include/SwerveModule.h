@@ -46,7 +46,7 @@ public:
 
     bool GetLocationOnRobot(frc::Translation2d *loc);
     
-    bool SetDesiredState(frc::SwerveModuleState state);
+    bool SetDesiredState(const frc::SwerveModuleState &state);
     bool SetAngle(double angle);
     bool SetDistance(double distance);
 
