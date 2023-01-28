@@ -1,7 +1,5 @@
 #include "RobotContainer.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-
 RobotContainer::RobotContainer() {
     // Load robot parameters
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
