@@ -46,8 +46,7 @@ typedef struct actuator_interface_t {
     std::unique_ptr<rev::CANSparkMax> arm_up_motor;
     std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
 
-    // claw
-    std::unique_ptr<wpi::Servo> claw_servo;
-    std::unique_ptr<frc::DigitalInput> IR_sensor;
-
+    // Claw things
+    std::unique_ptr<rev::CANSparkMax> claw_motor;
+    std::unique_ptr<FRC::DigitalInput> claw_IR_sensor;
 } ActuatorInterface;
