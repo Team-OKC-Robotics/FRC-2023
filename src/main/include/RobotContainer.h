@@ -10,7 +10,7 @@
 #include "Utils.h"
 
 // Hardware
-#include "hardware/HardwareInterface.h"
+#include "hardware/Hardware.h"
 
 // I/O Subsystems
 #include "io/SwerveDriveIO.h"
@@ -50,10 +50,10 @@ public:
 
 private:
     // Hardware Initialization
-    bool InitHardware(std::unique_ptr<HardwareInterface> &hardware);
-    bool InitActuators(ActuatorInterface *actuators_interface);
-    bool InitSensors(const ActuatorInterface &actuators,
-                     SensorInterface *sensor_interface);
+    bool InitHardware(std::unique_ptr<Hardware> &hardware);
+    bool InitActuators(Actuators *actuators_interface);
+    bool InitSensors(const Actuators &actuators,
+                     Sensors *sensor_interface);
 
     // Command initialization
     bool InitCommands();
@@ -66,7 +66,7 @@ private:
     bool InitSwerve();
 
     // Robot Hardware
-    std::unique_ptr<HardwareInterface> hardware_;
+    std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
 
 

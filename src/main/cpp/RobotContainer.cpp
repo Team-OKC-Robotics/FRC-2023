@@ -6,7 +6,7 @@ RobotContainer::RobotContainer() {
     frc::DataLogManager::Start();
 
     // Initialize the hardware interface.
-    hardware_ = std::make_unique<HardwareInterface>();
+    hardware_ = std::make_unique<Hardware>();
     VOKC_CALL(this->InitHardware(hardware_));
 
     VOKC_CALL(this->InitSwerve());
@@ -38,12 +38,12 @@ std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
 }
 
 bool RobotContainer::InitHardware(
-    std::unique_ptr<HardwareInterface> &hardware) {
+    std::unique_ptr<Hardware> &hardware) {
     OKC_CHECK(hardware != nullptr);
 
     // Initialize sub-hardware interfaces.
-    hardware->actuators = std::make_unique<ActuatorInterface>();
-    hardware->sensors = std::make_unique<SensorInterface>();
+    hardware->actuators = std::make_unique<Actuators>();
+    hardware->sensors = std::make_unique<Sensors>();
 
     // Initialize the actuators.
     OKC_CALL(this->InitActuators(hardware->actuators.get()));
@@ -54,7 +54,7 @@ bool RobotContainer::InitHardware(
     return true;
 }
 
-bool RobotContainer::InitActuators(ActuatorInterface *actuators_interface) {
+bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     OKC_CHECK(actuators_interface != nullptr);
 
     actuators_interface->left_front_drive_motor = std::make_unique<rev::CANSparkMax>(LEFT_FRONT_DRIVE_MOTOR, BRUSHLESS);
@@ -80,8 +80,8 @@ bool RobotContainer::InitActuators(ActuatorInterface *actuators_interface) {
     return true;
 }
 
-bool RobotContainer::InitSensors(const ActuatorInterface &actuators,
-                                 SensorInterface *sensor_interface) {
+bool RobotContainer::InitSensors(const Actuators &actuators,
+                                 Sensors *sensor_interface) {
     OKC_CHECK(sensor_interface != nullptr);
 
     // Initialize navX.
