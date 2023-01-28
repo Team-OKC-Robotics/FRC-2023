@@ -57,7 +57,7 @@ bool SwerveModule::Init(Location loc) {
             break;
         case Location::RIGHT_BACK:
             trans_ = frc::Translation2d(frc::Translation2d(units::meter_t(-x_disp), units::meter_t(-y_disp)));
-            offset_ = RobotParams::GetParam("swerve.offset.left_front_offset", 0);
+            offset_ = RobotParams::GetParam("swerve.offset.right_back_offset", 0);
             break;
         default:
             // we shouldn't have reached here, so throw an error
@@ -109,7 +109,7 @@ bool SwerveModule::GetSwerveModuleState(frc::SwerveModuleState *state) {
     return true;
 }
 
-bool SwerveModule::SetDesiredState(frc::SwerveModuleState state) {
+bool SwerveModule::SetDesiredState(const frc::SwerveModuleState &state) {
     this->state_ = state;
 
     return true;
@@ -132,11 +132,13 @@ bool SwerveModule::SetDistance(double distance) {
 bool SwerveModule::GetDriveOutput(double *output) {
     OKC_CHECK(this->drive_pid_ != nullptr);
 
+    // FOR FUTURE WPILib SWERVE KINEMATICS SUPPORT:
     // set setpoint
     // this->drive_pid_->SetSetpoint(this->state_.speed.value());
 
     // calculate output
     // *output = this->drive_pid_->Calculate(this->drive_enc_vel + *output);
+    // </wpilib support>
 
     *output = this->drive_pid_->Calculate(this->drive_enc_);
 
@@ -154,11 +156,13 @@ bool SwerveModule::GetDriveError(double *error) {
 bool SwerveModule::GetSteerOutput(double *output) {
     OKC_CHECK(this->steer_pid_ != nullptr);
 
-    // optimize angle
+    // FOR FUTURE WPILib SWERVE KINEMATICS SUPPORT:
+     // optimize angle
     // this->state_ = frc::SwerveModuleState::Optimize(this->state_, frc::Rotation2d(units::degree_t(this->pos_.angle.Degrees())));
 
     // set setpoint
     // this->steer_pid_->SetSetpoint(this->state_.angle.Degrees().value());
+    // </support>
 
     *output = this->steer_pid_->Calculate(this->steer_enc_);
     OKC_CALL(TeamOKC::Clamp(-0.4, 0.4, output));
