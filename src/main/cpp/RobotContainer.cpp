@@ -35,7 +35,7 @@ std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
-    VOKC_CHECK(swerve_teleop_command_ != nullptr);
+    // VOKC_CHECK(swerve_teleop_command_ != nullptr);
     return swerve_teleop_command_;
 }
 
@@ -138,7 +138,7 @@ bool RobotContainer::InitSensors(const ActuatorInterface &actuators,
 
 bool RobotContainer::InitSwerve() {
     // == swerve drive ==
-    VOKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw_));
+    OKC_CALL(SetupSwerveDriveInterface(hardware_, swerve_drive_hw_));
 
     // Initialize the software interface
     swerve_drive_sw_ = std::make_shared<SwerveDriveSoftwareInterface>();
@@ -149,7 +149,7 @@ bool RobotContainer::InitSwerve() {
     // Link swerve dirve software to the I/O
     swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
     
-    VOKC_CALL(swerve_drive_->Init());
+    OKC_CALL(swerve_drive_->Init());
     
     return true;
 }

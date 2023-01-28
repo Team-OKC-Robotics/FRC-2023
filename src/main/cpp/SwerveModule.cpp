@@ -73,8 +73,8 @@ bool SwerveModule::Init(Location loc) {
 }
 
 bool SwerveModule::Reset() {
-    VOKC_CHECK(this->drive_pid_ != nullptr);
-    VOKC_CHECK(this->steer_pid_ != nullptr);
+    OKC_CHECK(this->drive_pid_ != nullptr);
+    OKC_CHECK(this->steer_pid_ != nullptr);
 
     // reset PIDs
     this->drive_pid_->Reset();
