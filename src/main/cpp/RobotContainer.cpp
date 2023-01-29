@@ -74,17 +74,19 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
                                  Sensors *sensor_interface) {
     OKC_CHECK(sensor_interface != nullptr);
 
-    // Initialize navX.
-    try {
-        sensor_interface->ahrs = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
-    } catch (std::exception &ex) {
-        std::string what_string = ex.what();
-        std::string err_msg("Error instantiating navX MXP:  " + what_string);
-        const char *p_err_msg = err_msg.c_str();
+    #ifdef __FRC_ROBORIO__
+        // Initialize navX.
+        try {
+            sensor_interface->ahrs = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
+        } catch (std::exception &ex) {
+            std::string what_string = ex.what();
+            std::string err_msg("Error instantiating navX MXP:  " + what_string);
+            const char *p_err_msg = err_msg.c_str();
 
-        // Print the error message.
-        OKC_CHECK_MSG(false, p_err_msg);
-    }
+            // Print the error message.
+            OKC_CHECK_MSG(false, p_err_msg);
+        }
+    #endif
 
     OKC_CHECK(actuators.left_front_drive_motor != nullptr);
     OKC_CHECK(actuators.left_back_drive_motor != nullptr);
