@@ -2,9 +2,9 @@
 
 #include <frc2/command/SubsystemBase.h>
 
-class ClawSubsystem : public frc2::SubsystemBase {
+class Claw : public frc2::SubsystemBase {
  public:
-  ClawSubsystem();
+  Claw();
 
   bool Init();
   
