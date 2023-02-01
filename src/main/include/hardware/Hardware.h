@@ -5,6 +5,8 @@
 
 #include "hardware/Actuators.h"
 #include "hardware/Sensors.h"
+#include "Utils.h"
+#include "io/SwerveDriveIO.h"
 
 // Subsystem I/O
 
@@ -20,15 +22,15 @@ typedef struct hardware_t {
 // Subsystem hardware setup functions
 
 /**
- * @brief Link the Drivetrain to the hardware interfaces.
+ * @brief Link the Swerve drive to the hardware interfaces.
  *
  * @param interface
  * @return true
  * @return false
  */
-// bool SetupSwerveDriveInterface(
-//    std::unique_ptr<HardwareInterface> &hardware,
-//     std::shared_ptr<DrivetrainHardwareInterface> *interface);
+bool SetupSwerveDriveInterface(
+    std::unique_ptr<Hardware> &hardware,
+    std::shared_ptr<SwerveDriveHardwareInterface> &interface);
 
 /**
  * @brief Link the Intake to the hardware interfaces.
@@ -54,5 +56,3 @@ typedef struct hardware_t {
 // bool SetupVisionTrackingInterface(
 //    std::unique_ptr<HardwareInterface> &hardware,
 //    std::shared_ptr<VisionTrackingHardware> *interface);
-
-

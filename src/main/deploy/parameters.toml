@@ -1,0 +1,49 @@
+
+title = "OKC Robotics 2023 Parameters"
+competition = false
+
+[ui]
+gamepad1_id = 0
+gamepad2_id = 2
+
+[robot]
+neo_550_ticks_per_rev = 42
+neo_ticks_per_rev = 42
+falcon_ticks_per_rev = 2048
+
+[swerve]
+# assumes our modules are located in a square, everything should be the same distance from the center
+# units are in meters
+x_disp = 0.216
+y_disp = 0.216
+# stuff for swerve modules and odometry and stuff
+l2_gear_ratio = 6.75
+wheel_diameter = 4.0
+inches_to_meters = 0.0254 # yo unexpected 254!
+drive_max_output = 0.5
+drive_open_loop = 0.5
+steer_max_output = 0.5
+steer_open_loop = 0.5
+
+[swerve.drive_pid]
+kP = 0.0
+kI = 0.1
+# kI = 0.0
+kD = 0.0
+
+[swerve.steer_pid]
+# kP = 0.00005
+kP = 0.004
+kI = 0.0
+kD = 0.0
+
+[swerve.heading_pid]
+kP = 0.0004
+kI = 0.0
+kD = 0.0
+
+[swerve.offset]
+left_front_offset = 210.0
+left_back_offset = 79.0
+right_front_offset = 9.2
+right_back_offset = 330.0
