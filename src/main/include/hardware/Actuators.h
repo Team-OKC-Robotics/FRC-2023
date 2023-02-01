@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <rev/CANSparkMax.h>
-
+#include "frc/DigitalInput.h"
 
 
 // Brushless Motor
@@ -41,5 +41,5 @@ typedef struct actuators_t {
 
     // Claw things
     std::unique_ptr<rev::CANSparkMax> claw_motor;
-    std::unique_ptr<FRC::DigitalInput> claw_IR_sensor;
+    std::unique_ptr<frc::DigitalInput> claw_IR_sensor;
 } Actuators;
