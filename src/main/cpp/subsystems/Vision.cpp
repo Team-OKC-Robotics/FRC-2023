@@ -6,33 +6,33 @@ bool Vision::Init() {
     return true;
 }
 
-void Periodic() {
+void Vision::Periodic() {
 
 }
 
-void SimulationPeriodic() {
+void Vision::SimulationPeriodic() {
 
 }
 
-bool GetConeError(double *error) {
-    *error = interface_->cone_error;
+bool Vision::GetConeError(double *error) {
+    *error = interface_->cone; // cone error
 
     return true;
 }
 
-bool GetConeDistance(double *distance) {
-
+bool Vision::GetConeDistance(double *distance) {
+    return true;
 }
 
-bool GetCubeAngle(double *angle) {
-
+bool Vision::GetCubeAngle(double *angle) {
+    return true;
 }
 
-bool GetCubeDistance(double *distance) {
-
+bool Vision::GetCubeDistance(double *distance) {
+    return true;
 }
 
-bool ResetSubsystem() {
+bool Vision::ResetSubsystem() {
     interface_->reset_subsystem = true;
 
     return true;
