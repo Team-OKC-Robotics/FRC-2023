@@ -12,13 +12,8 @@
 
 #define OKC_CHECK(check)                                                       \
     if (!(check)) {                                                            \
-<<<<<<< HEAD
         std::cerr << "[" << __FILE__ << "(" << __LINE__ << ")] - OKC_CHECK("   \
                   << #check << ")" << std::endl;                               \
-=======
-        std::cerr << "OKC_CHECK FAIL [" << __FILE__ << ":" << __LINE__         \
-                  << "] - " << __SHOW_LINE_INFO__ << std::endl;                \
->>>>>>> FRC-2023/feat/actual_claw
         return false;                                                          \
     }
 
