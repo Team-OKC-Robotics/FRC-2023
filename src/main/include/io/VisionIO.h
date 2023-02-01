@@ -1,7 +1,13 @@
 #pragma once
 
 #include "frc/Relay.h"
-#include "photonlib.h"
+#include <photonlib/PhotonCamera.h>
+#include <frc2/command/SubsystemBase.h>
+
+typedef struct vision_config_t {
+    double pipeline;
+    //TODO    
+} VisionConfig;
 
 typedef struct vision_hardware_interface_t {
     photonlib::PhotonCamera *const camera;
@@ -16,6 +22,7 @@ typedef struct vision_software_interface_t {
 
     // Reset flags
     bool reset_subsystem;
+    bool update_config;
 } VisionSoftwareInterface;
 
 class VisionIO : public frc2::SubsystemBase {
