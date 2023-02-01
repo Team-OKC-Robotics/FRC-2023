@@ -6,17 +6,20 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/DigitalInput.h>
 #include <rev/CANSparkMax.h>
+#include <rev/RelativeEncoder.h>
 
 #include "Utils.h"
 
 
 typedef struct claw_config_t {
-    
+    double open_loop_ramp_rate;
+    double max_output;
+    double current_limit;    
 } ClawConfig;
 
 typedef struct claw_hardware_interface_t {
     rev::CANSparkMax *const claw_open_and_close_motor;
-    rev:SparkMaxRelativeEncoder *const claw_open_and_close_encoder;
+    rev::RelativeEncoder *const claw_open_and_close_encoder;
 } ClawHardwareInterface;
 
 typedef struct claw_software_interface_t {
