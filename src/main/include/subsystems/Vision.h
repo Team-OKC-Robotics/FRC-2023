@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "frc2/SubsystemBase.h"
+#include <frc2/command/SubsystemBase.h>
+#include "io/VisionIO.h"
 
 class Vision : public frc2::SubsystemBase {
 public:
