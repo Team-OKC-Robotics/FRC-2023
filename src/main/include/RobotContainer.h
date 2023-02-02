@@ -1,15 +1,38 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
-#include <frc2/command/Command.h>
+#include <frc/Errors.h>
 
+#include <memory>
+#include <vector>
 
+#include "Parameters.h"
+#include "RobotContainer.h"
+#include "Utils.h"
 
+// Hardware
+#include "hardware/Hardware.h"
+
+// I/O Subsystems
+#include "io/SwerveDriveIO.h"
+#include "subsystems/SwerveDrive.h"
+
+// Subsystems
+#include "subsystems/SwerveDrive.h"
+
+// Gamepad
+#include "ui/GamepadMap.h"
 #include <frc/Joystick.h>
 #include <frc2/command/button/JoystickButton.h>
+
+/// Commands
+// swerve
+#include "commands/swerve/TeleOpSwerveCommand.h"
+#include "commands/swerve/AutoSwerveCommand.h"
+
+#include <frc2/command/Command.h>
+#include <frc2/command/SubsystemBase.h>
+
+#include "Logging.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -19,54 +42,63 @@
  * commands, and button mappings) should be declared here.
  */
 class RobotContainer {
- public:
-  RobotContainer();
+public:
+    RobotContainer();
 
-  frc2::Command* GetAutonomousCommand();
+    std::shared_ptr<frc2::Command> GetAutonomousCommand();
+    std::shared_ptr<frc2::Command> GetDriveCommand();
 
- private:
-  // The robot's subsystems and commands are defined here...
- 
+private:
+    // Hardware Initialization
+    bool InitHardware(std::unique_ptr<Hardware> &hardware);
+    bool InitActuators(Actuators *actuators_interface);
+    bool InitSensors(const Actuators &actuators,
+                     Sensors *sensor_interface);
 
-  void ConfigureButtonBindings();
+    // Command initialization
+    bool InitCommands();
 
+    // Gamepad initialization
+    bool InitGamepads();
+    void ConfigureButtonBindings();
+
+    // subsystem initialization
+    bool InitSwerve();
+
+    // Robot Hardware
+    std::unique_ptr<Hardware> hardware_;
+    std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
+
+
+    // Hardware I/O interfaces
+    std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
+
+    // Robot software interfaces.
+    std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
+
+    // Subsystems
+    std::shared_ptr<SwerveDrive> swerve_drive_;
+
+    /**
+     * User interfaces
+     * - Gamepads
+     * - Joystick Buttons
+     */
     std::shared_ptr<frc::Joystick> gamepad1_;
-    std::shared_ptr<frc::Joystick> gamepad2_;
 
-    std::shared_ptr<frc2::JoystickButton> driver_A_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_B_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_X_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_Y_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_RB_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_LB_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_RT_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_LT_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_a_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_b_button_;
     std::shared_ptr<frc2::JoystickButton> driver_back_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_start_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_mode_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
+    std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
-    std::shared_ptr<frc2::JoystickButton> manip_a_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_b_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_back_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_start_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_left_stick_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_right_stick_button;
+    /**
+     * Commands
+     */
+    std::shared_ptr<AutoSwerveCommand> m_autonomousCommand_;
 
-    std::shared_ptr<frc2::JoystickButton> manip_trigger_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_left_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_bottom_right_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_top_right_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_botton_left_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_top_left_button_;
-
-    std::shared_ptr<frc2::JoystickButton> manip_seven_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_eight_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_nine_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_ten_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_eleven_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_twelve_button_;
-
-
+    // swerve drive
+    std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
 };
 
 
