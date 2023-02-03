@@ -26,6 +26,9 @@
 #include "Utils.h"
 #include "io/SwerveDriveIO.h"
 
+#include "frc/filter/SlewRateLimiter.h"
+#include "units/base.h"
+
 enum Location {
     LEFT_FRONT,
     LEFT_BACK,
@@ -69,6 +72,8 @@ private:
     std::shared_ptr<frc::PIDController> drive_pid_;
     std::shared_ptr<frc::PIDController> steer_pid_;
 
+    // frc::SlewRateLimiter<units::scalar> steer_filter;
+
     frc::SwerveModuleState state_;
     frc::SwerveModulePosition pos_;
 
@@ -83,6 +88,8 @@ private:
     double steer_enc_vel_;
 
     double offset_;
+
+    double steer_max_output;
 
     double L2_GEAR_RATIO_;
     double WHEEL_DIAMETER_;
