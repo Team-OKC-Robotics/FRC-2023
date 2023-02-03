@@ -65,7 +65,11 @@ bool SwerveModule::Init(Location loc) {
             return false;
     }
 
-    // reset subsystem to initial state_
+    // steer_filter = frc::SlewRateLimiter<units::scalar>(units::scalar_t(0.1));
+
+    steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
+
+    // reset subsystem to initial state
     this->Reset();
 
     // Init passed succesffully, return true
@@ -165,6 +169,7 @@ bool SwerveModule::GetSteerOutput(double *output) {
     // </support>
 
     *output = this->steer_pid_->Calculate(this->steer_enc_);
+    // OKC_CALL(TeamOKC::Clamp(-steer_max_output, steer_max_output, output));
     OKC_CALL(TeamOKC::Clamp(-0.4, 0.4, output));
 
     return true;
