@@ -1,4 +1,3 @@
-
 title = "OKC Robotics 2023 Parameters"
 competition = false
 
@@ -22,7 +21,7 @@ wheel_diameter = 4.0
 inches_to_meters = 0.0254 # yo unexpected 254!
 drive_max_output = 0.5
 drive_open_loop = 0.5
-steer_max_output = 0.5
+steer_max_output = 0.4
 steer_open_loop = 0.5
 
 [swerve.drive_pid]
@@ -32,9 +31,10 @@ kI = 0.1
 kD = 0.0
 
 [swerve.steer_pid]
-# kP = 0.00005
+# kP = 0.0045
 kP = 0.004
 kI = 0.0
+# kD = 0.00005
 kD = 0.0
 
 [swerve.heading_pid]
@@ -46,4 +46,4 @@ kD = 0.0
 left_front_offset = 210.0
 left_back_offset = 79.0
 right_front_offset = 9.2
-right_back_offset = 330.0
+right_back_offset = 153.0
