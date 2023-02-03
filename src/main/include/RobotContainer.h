@@ -18,6 +18,7 @@
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/Arm.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
@@ -28,6 +29,10 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoSwerveCommand.h"
+// arm
+#include "commands/arm/IncrementArmPresetPositionCommand.h"
+#include "commands/arm/SetArmAngleCommand.h"
+#include "commands/arm/SetArmExtensionCommand.h"
 
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
@@ -47,6 +52,7 @@ public:
 
     std::shared_ptr<frc2::Command> GetAutonomousCommand();
     std::shared_ptr<frc2::Command> GetDriveCommand();
+    std::shared_ptr<frc2::Command> GetArmCommand();
 
 private:
     // Hardware Initialization
@@ -78,7 +84,7 @@ private:
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
-
+    std::shared_ptr<Arm> arm_h;
     /**
      * User interfaces
      * - Gamepads
@@ -99,6 +105,12 @@ private:
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
+
+    // arm
+    std::shared_ptr<SetArmAngleCommand> set_arm_ten_degrees;
+    std::shared_ptr<SetArmExtensionCommand> set_arm_extension; 
+    std::shared_ptr<IncrementArmPresetPositionCommand> increment_arm_position; 
+
 };
 
 

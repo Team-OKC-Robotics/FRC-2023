@@ -170,5 +170,12 @@ bool RobotContainer::InitCommands() {
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
+    set_arm_extension = std::make_shared<SetArmExtensionCommand>(gamepad1_ );
+
+    set_arm_ten_degrees = std::make_shared<SetArmAngleCommand>(gamepad1_);
+
+    increment_arm_position = std::make_shared<IncrementArmPresetPositionCommand>(gamepad1_);
+
+
     return true;
 }
