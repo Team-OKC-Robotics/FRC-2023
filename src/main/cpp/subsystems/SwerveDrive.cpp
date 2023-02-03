@@ -352,10 +352,63 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
 
 
     // turn
-    double left_front_turn = atan2(B, D)  *  180.0/M_PI;
-    double left_back_turn = atan2(A, D)  *  180.0/M_PI;
-    double right_front_turn = atan2(B, C)  *  180.0/M_PI;
-    double right_back_turn = atan2(A, C)  *  180.0/M_PI;
+    // double left_front_turn = atan2(B, D)  *  180.0/M_PI;
+    // double left_back_turn = atan2(A, D)  *  180.0/M_PI;
+    // double right_front_turn = atan2(B, C)  *  180.0/M_PI;
+    // double right_back_turn = atan2(A, C)  *  180.0/M_PI;
+
+    double right_front_turn = atan2(B, D)  *  180.0/M_PI;
+    double right_back_turn = atan2(A, D)  *  180.0/M_PI;
+    double left_front_turn = atan2(B, C)  *  180.0/M_PI;
+    double left_back_turn = atan2(A, C)  *  180.0/M_PI;
+
+
+    if (left_front_turn < 0) {
+        left_front_turn += 360;
+    }
+
+    if (left_back_turn < 0) {
+        left_back_turn += 360;
+    }
+
+    if (right_front_turn < 0) {
+        right_front_turn += 360;
+    }
+    
+    if (right_back_turn < 0) {
+        right_back_turn += 360;
+    }
+
+    double left_front_angle = 0.0;
+    double left_back_angle = 0.0;
+    double right_front_angle = 0.0;
+    double right_back_angle = 0.0;
+
+    left_front_module_->GetAngle(&left_front_angle);
+    left_back_module_->GetAngle(&left_front_angle);
+    right_front_module_->GetAngle(&left_front_angle);
+    right_back_module_->GetAngle(&left_front_angle);
+
+    if (abs(left_front_angle - left_front_turn) > 90) {
+        left_front_turn -= 180;
+        left_front_speed *= -1;
+    }
+
+    if (abs(left_back_angle - left_back_turn) > 90) {
+        left_back_turn -= 180;
+        left_back_speed *= -1;
+    }
+
+    if (abs(right_front_angle - right_front_turn) > 90) {
+        right_front_turn -= 180;
+        right_front_speed *= -1;
+    }
+
+    if (abs(right_back_angle - right_back_turn) > 90) {
+        right_back_turn -= 180;
+        right_back_speed *= -1;
+    }
+
 
     if (left_front_turn < 0) {
         left_front_turn += 360;
