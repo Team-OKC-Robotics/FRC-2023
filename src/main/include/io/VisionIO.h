@@ -2,6 +2,10 @@
 
 #include "frc/Relay.h"
 
+#include <photonlib/PhotonCamera.h>
+
+#include <frc2/command/SubsystemBase.h>
+
 typedef struct vision_hardware_interface_t {
 photonlib::PhotonCamera *const camera;
 frc::Relay *const LEDs;
@@ -15,15 +19,18 @@ typedef struct vision_hardware_interface_t {
     bool reset_subsystem;
 } VisionSoftwareInterface;
 
+bool Visionconfig::UpdateVisionConfig {
+ return true;
+}
 class VisionIO : public frc2::SubsystemBase {
     public:
     VisionIO(VisionHardwareInterface *hw_intereface,
                   VisionSoftwareInterface *sw_interface)
-                  :hw_interface_(hw_interface), sw_interface_(sw_interface) {}
+                  :hw_interface_(hw_interface_), sw_interface_(sw_interface) {}
 
                   void Periodic() override;
 
-                  void SimulationPeriodic()P override;
+                  void SimulationPeriodic() override;
 
                   bool ProcessIO();
 
@@ -33,5 +40,5 @@ class VisionIO : public frc2::SubsystemBase {
                 bool ProcessInputs();
                 bool SetOutputs();
                 VisionHardwareInterface *const hw_interface_;
-                VisionSoftwareInterface (const sw_interface_;)
+                VisionSoftwareInterface *const sw_interface_;
 };
