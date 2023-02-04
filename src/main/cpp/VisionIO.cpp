@@ -1,9 +1,12 @@
-#include "VisionIO.h"
+#include "IO/VisionIO.h"
 void VisionIO::Periodic() {
 ProcessIO();
 }
 void VisionIO::SimulationPeriodic() {
 
+}
+bool Visionconfig::UpdateVisionConfig {
+    return true;
 }
 bool VisionIO::ProcessIO() {
 if (sw_interface_->update_config0) {
@@ -26,5 +29,5 @@ bool VisionIOL::ProcessInputs() {
 sw_interface->error = hw_interface_->camera;
 }
 bool VisionIO::SetOutputs () {
-
+return true;
 }
