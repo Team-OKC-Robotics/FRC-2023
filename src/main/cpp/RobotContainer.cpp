@@ -24,7 +24,17 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
     VOKC_CHECK(driver_a_button_ != nullptr);
     VOKC_CHECK(driver_b_button_ != nullptr);
-    VOKC_CHECK(driver_back_button_ != nullptr);
+    VOKC_CHECK(driver_back_button_ != nullptr)
+
+    // Configure your button bindings here
+    driver_back_button_->OnTrue(set_arm_extension.get());
+    
+    driver_a_button_->OnTrue(increment_arm_position.get())
+        //.OnFalse(teleop_drive_command_.get());
+    
+    driver_b_button_->OnTrue(set_arm_ten_degrees.get())
+       // .OnFalse(teleop_drive_command_.get());
+
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
