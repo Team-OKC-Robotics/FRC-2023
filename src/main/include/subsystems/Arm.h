@@ -5,6 +5,10 @@
 #include <io/ArmIO.h>
 #include <memory>
 
+enum ArmMode{
+    Manual,
+    Auto
+};
 class Arm : public frc2::SubsystemBase {
 public:
     Arm(ArmSoftwareInterface *interface) : interface_(interface) {}
@@ -14,10 +18,24 @@ public:
     bool SetExtend(double inches);
     bool Init();
     void Periodic() override;
+    bool SetManualLiftPower(double power);
+    bool SetManualUpPower(double power);
+    bool SetManualExtendPower(double power);
+
+    bool SetControlMode(const ArmMode &mode);
+    bool ManualControl();
+    
+
 
 private:
     ArmSoftwareInterface *const interface_;
     std::shared_ptr<frc::PIDController> arm_pid_;
     std::shared_ptr<frc::PIDController> inches_pid_;
     double preset_;
+   
+    ArmMode mode_;
+    
+    double lift_power_;
+    double up_power_;
+    double extend_power_;
 };

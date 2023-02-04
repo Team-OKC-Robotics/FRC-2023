@@ -7,6 +7,7 @@
 #include "hardware/Sensors.h"
 #include "Utils.h"
 #include "io/SwerveDriveIO.h"
+#include "io/ArmIO.h"
 
 // Subsystem I/O
 
@@ -39,8 +40,8 @@ bool SetupSwerveDriveInterface(
  * @return true
  * @return false
  */
-//bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
- //                         std::shared_ptr<ArmHardware> *interface);
+bool SetupArmInterface(std::unique_ptr<Hardware> &hardware,
+                        std::shared_ptr<ArmHardwareInterface> &interface);
 
 /**
  * @brief Link the Shooter to the hardware interfaces.

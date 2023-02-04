@@ -34,6 +34,18 @@
 
 #include "Logging.h"
 
+//subsytems
+#include "subsystems/Arm.h"
+#include "subsystems/SwerveDrive.h"
+
+//I/O Subsystems
+
+#include "io/ArmIO.h"
+
+#include "commands/arm/ManualArmCommand.h"
+ 
+
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -64,20 +76,26 @@ private:
 
     // subsystem initialization
     bool InitSwerve();
+    bool InitArm();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
+    std::shared_ptr<ArmHardwareInterface> arm_hw_;
+
 
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
+    std::shared_ptr<ArmIO> arm_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
+    std::shared_ptr<ArmSoftwareInterface> arm_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
+    std::shared_ptr<Arm> arm_;
 
     /**
      * User interfaces
@@ -85,6 +103,8 @@ private:
      * - Joystick Buttons
      */
     std::shared_ptr<frc::Joystick> gamepad1_;
+    std::shared_ptr<frc::Joystick> gamepad2_;
+
 
     std::shared_ptr<frc2::JoystickButton> driver_a_button_;
     std::shared_ptr<frc2::JoystickButton> driver_b_button_;
@@ -99,6 +119,9 @@ private:
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
+
+    //arm
+    std::shared_ptr<ManualArmCommand> manual_arm_command_;
 };
 
 

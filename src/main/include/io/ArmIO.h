@@ -15,13 +15,10 @@ typedef struct arm_config_t {
 } ArmConfig;
 
 typedef struct arm_hardware_interface_t {
-    std::unique_ptr<rev::CANSparkMax> arm_lift_motor;
-    std::unique_ptr<rev::CANSparkMax> arm_up_motor;
-    std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
-    std::unique_ptr<rev::CANSparkMax> arm_position_motor;
-    std::unique_ptr<rev::CANSparkMax> indexer_motor;
-    std::unique_ptr<rev::CANSparkMax> retracted_limit_switch;
-    std::unique_ptr<rev::CANSparkMax> deploy_limit_switch;
+    rev::CANSparkMax *const  arm_lift_motor;
+    rev::CANSparkMax *const arm_up_motor;
+    rev::CANSparkMax *const arm_extend_motor;
+ 
 } ArmHardwareInterface;
 
 typedef struct arm_software_interface_t {
