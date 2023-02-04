@@ -20,7 +20,7 @@ typedef struct vision_hardware_interface_t {
 } VisionSoftwareInterface;
 
 bool Visionconfig::UpdateVisionConfig {
- return true;
+return true;
 }
 class VisionIO : public frc2::SubsystemBase {
     public:
