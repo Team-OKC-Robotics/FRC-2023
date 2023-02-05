@@ -25,8 +25,8 @@ void ManualArmCommand::Execute() {
     double extend_power_ = this->gamepad_->GetRawAxis(2);
 
     VOKC_CALL(arm_->SetManualLiftPower(lift_power_));
-    VOKC_CALL(arm_->SetManualUpPower(up_power_));
-    VOKC_CALL(arm_->SetManualExtendPower(extend_power_));
+    VOKC_CALL(arm_->SetManualUpPower(-lift_power_));
+    // VOKC_CALL(arm_->SetManualExtendPower(extend_power_));
 
     
 }
