@@ -34,4 +34,7 @@ typedef struct sensors_t {
     std::unique_ptr<rev::SparkMaxRelativeEncoder> right_front_steer_vel_encoder;
     std::unique_ptr<rev::SparkMaxRelativeEncoder> right_back_steer_vel_encoder;
 
+    // arm encoders
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_lift_encoder;
+
 } Sensors;
