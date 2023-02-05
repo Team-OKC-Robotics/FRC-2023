@@ -4,7 +4,7 @@
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
     
-    //VOKC_CALL(ProcessIO());
+    VOKC_CALL(ProcessIO());
 }
 
 void ArmIO::SimulationPeriodic() {
@@ -42,10 +42,13 @@ bool ArmIO::ProcessIO() {
     //     hw_interface_->retracted_limit_switch->Get(); //???
 
     // intake position encoder
-    
-        hw_interface_->arm_up_motor->Set(sw_interface_->arm_up_power);
-        hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
-        hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+    OKC_CHECK(hw_interface_->arm_extend_motor != nullptr);
+    OKC_CHECK(hw_interface_->arm_up_motor != nullptr);
+    hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+    hw_interface_->arm_up_motor->Set(sw_interface_->arm_up_power);
+    hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+
+    sw_interface_->arm_lift_encoder_val = hw_interface_->arm_lift_encoder->GetPosition();
 
     return true;
 }

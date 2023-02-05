@@ -18,6 +18,8 @@ typedef struct arm_hardware_interface_t {
     rev::CANSparkMax *const  arm_lift_motor;
     rev::CANSparkMax *const arm_up_motor;
     rev::CANSparkMax *const arm_extend_motor;
+
+    rev::RelativeEncoder *const arm_lift_encoder;
  
 } ArmHardwareInterface;
 
@@ -32,6 +34,8 @@ typedef struct arm_software_interface_t {
     double arm_position_motor;
     ArmConfig arm_config;
     double encoder_val_to_set;
+
+    double arm_lift_encoder_val;
 
     bool update_config;
     bool reset_encoders;

@@ -129,6 +129,10 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
+    sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
+
+    OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
+
     return true;
 }
 
@@ -167,7 +171,7 @@ bool RobotContainer::InitArm() {
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
     int gamepad1_id = RobotParams::GetParam("gamepad1_id", 0);
-    int gamepad2_id = RobotParams::GetParam("gamepad2_id", 2);
+    int gamepad2_id = RobotParams::GetParam("gamepad2_id", 1);
 
     gamepad1_ = std::make_shared<frc::Joystick>(gamepad1_id);
     gamepad2_ = std::make_shared<frc::Joystick>(gamepad2_id);
