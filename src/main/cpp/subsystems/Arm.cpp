@@ -4,6 +4,10 @@ bool Arm::Init() {
     arm_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
 
     inches_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
+
+    arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
+    arm_lift_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_enc");
+
     return true;
 }
 bool Arm::SetControlMode(const ArmMode &mode){
@@ -43,6 +47,10 @@ bool Arm::ManualControl() {
     interface_->arm_lift_power = lift_power_;
     interface_->arm_up_power = up_power_;
     interface_->arm_extend_power = extend_power_;
+
+    arm_lift_output_log_.Append(interface_->arm_lift_power);
+    arm_lift_enc_log_.Append(interface_->arm_lift_encoder_val);
+
 
     return true;
 }
