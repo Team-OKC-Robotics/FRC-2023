@@ -21,6 +21,10 @@
 #define RIGHT_FRONT_STEER_MOTOR 6
 #define RIGHT_BACK_STEER_MOTOR 8
 
+#define ARM_LIFT_MOTOR 9
+#define ARM_UP_MOTOR 10
+#define ARM_EXTEND_MOTOR 11
+
 
 typedef struct actuators_t {
     // Left drivetrain motors
@@ -39,4 +43,5 @@ typedef struct actuators_t {
     std::unique_ptr<rev::CANSparkMax> arm_lift_motor;
     std::unique_ptr<rev::CANSparkMax> arm_up_motor;
     std::unique_ptr<rev::CANSparkMax> arm_extend_motor;
+
 } Actuators;

@@ -3,6 +3,7 @@
 
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
+    
     VOKC_CALL(ProcessIO());
 }
 
@@ -31,23 +32,23 @@ bool ArmIO::ProcessIO() {
         sw_interface_->reset_encoders = false;
     }
 
-    // if the encoder should be set to a specific value
-    if (sw_interface_->set_encoder_to_val) {
-        OKC_CALL(SetEncoder(sw_interface_->encoder_val_to_set));
-
-        sw_interface_->set_encoder_to_val = false;
-    }
+    
 
     // Get the hardware sensor values.
     // limit switches
-    sw_interface_->deployed_limit_switch_val =
-        hw_interface_->deploy_limit_switch->Get(); //???
-    sw_interface_->retracted_limit_switch_val =
-        hw_interface_->retracted_limit_switch->Get(); //???
+    // sw_interface_->deployed_limit_switch_val =
+    //     hw_interface_->deploy_limit_switch->Get(); //???
+    // sw_interface_->retracted_limit_switch_val =
+    //     hw_interface_->retracted_limit_switch->Get(); //???
 
     // intake position encoder
-    sw_interface_->arm_position_encoder_val =
-        hw_interface_->arm_position_motor->GetEncoder().GetPosition();
+    OKC_CHECK(hw_interface_->arm_extend_motor != nullptr);
+    OKC_CHECK(hw_interface_->arm_up_motor != nullptr);
+    hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+    hw_interface_->arm_up_motor->Set(sw_interface_->arm_up_power);
+    hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+
+    sw_interface_->arm_lift_encoder_val = hw_interface_->arm_lift_encoder->GetPosition();
 
     return true;
 }
@@ -64,7 +65,8 @@ bool ArmIO::UpdateArmConfig(ArmConfig &config) {
     // Apply the configuration
     // Open Loop Ramp Rate
     hw_interface_->arm_lift_motor->SetOpenLoopRampRate(open_loop_ramp);
-    hw_interface_->indexer_motor->SetOpenLoopRampRate(open_loop_ramp);
+    hw_interface_->arm_up_motor->SetOpenLoopRampRate(open_loop_ramp);
+    hw_interface_->arm_extend_motor->SetOpenLoopRampRate(open_loop_ramp);
 
     // Java code has this commented out as well, I'm assuming because it was
     // meesing something up. well, the intake works (probably, been a while
@@ -73,15 +75,19 @@ bool ArmIO::UpdateArmConfig(ArmConfig &config) {
     // hw_interface_->intake_position_motor->SetOpenLoopRampRate(open_loop_ramp);
 
     // current limiting, so the neo 550 on the indexer doesn't stall and smoke
-    hw_interface_->indexer_motor->SetSmartCurrentLimit(max_indexer_current);
+    hw_interface_->arm_lift_motor->SetSmartCurrentLimit(max_indexer_current);
+    hw_interface_->arm_up_motor->SetSmartCurrentLimit(max_indexer_current);
+    hw_interface_->arm_extend_motor->SetSmartCurrentLimit(max_indexer_current);
 
     return true;
 }
-
+//HACK: this is a hack
 bool ArmIO::ResetEncoders() {
     OKC_CHECK(hw_interface_ != nullptr);
 
-    hw_interface_->arm_position_motor->GetEncoder().SetPosition(0.0);
+    hw_interface_->arm_lift_motor->GetEncoder().SetPosition(0.0);
+    hw_interface_->arm_up_motor->GetEncoder().SetPosition(0.0);
+    hw_interface_->arm_extend_motor->GetEncoder().SetPosition(0.0);
 
     // we currently don't use the encoder for these other two motors, so we
     // don't need to reset them yet. yet.
@@ -91,10 +97,3 @@ bool ArmIO::ResetEncoders() {
     return true;
 }
 
-bool ArmIO::SetEncoder(double &val) {
-    OKC_CHECK(hw_interface_ != nullptr);
-
-    hw_interface_->arm_position_motor->GetEncoder().SetPosition(val);
-
-    return true;
-}

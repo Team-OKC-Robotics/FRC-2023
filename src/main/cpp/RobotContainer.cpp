@@ -10,6 +10,9 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(this->InitHardware(hardware_));
 
     VOKC_CALL(this->InitSwerve());
+    VOKC_CALL(this->InitArm());
+
+    
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -67,6 +70,9 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->right_front_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_STEER_MOTOR, BRUSHLESS);
     actuators_interface->right_back_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_BACK_STEER_MOTOR, BRUSHLESS);
 
+    actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
+    actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
+    actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
     return true;
 }
 
@@ -123,6 +129,10 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
+    sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
+
+    OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
+
     return true;
 }
 
@@ -144,11 +154,28 @@ bool RobotContainer::InitSwerve() {
     return true;
 }
 
+bool RobotContainer::InitArm() {
+    OKC_CALL(SetupArmInterface(hardware_, arm_hw_));
+
+    arm_sw_ = std::make_shared<ArmSoftwareInterface>();
+
+    arm_io_ = std::make_shared<ArmIO>(arm_hw_.get(), arm_sw_.get());
+    
+    arm_ = std::make_shared<Arm>(arm_sw_.get());
+
+    OKC_CALL(arm_->Init());
+
+    return true;
+}
+
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
     int gamepad1_id = RobotParams::GetParam("gamepad1_id", 0);
+    int gamepad2_id = RobotParams::GetParam("gamepad2_id", 1);
 
     gamepad1_ = std::make_shared<frc::Joystick>(gamepad1_id);
+    gamepad2_ = std::make_shared<frc::Joystick>(gamepad2_id);
+
 
     // Initialize the joystick buttons
     driver_a_button_ =
@@ -169,6 +196,9 @@ bool RobotContainer::InitCommands() {
     m_autonomousCommand_ = nullptr;
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+
+    manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
+    arm_->SetDefaultCommand(*manual_arm_command_);
 
     return true;
 }

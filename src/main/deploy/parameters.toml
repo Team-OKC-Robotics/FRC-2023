@@ -4,7 +4,7 @@ competition = false
 
 [ui]
 gamepad1_id = 0
-gamepad2_id = 2
+gamepad2_id = 1
 
 [robot]
 neo_550_ticks_per_rev = 42
