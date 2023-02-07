@@ -1,4 +1,4 @@
-#pragma once
+
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
@@ -14,14 +14,15 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
     arm_ = arm;
     increment_ = increment;
 
-    if (increment_ != nullptr) {
-        this->AddRequirements(arm_.get());
-    }
-}
+    
+
+
 
 void IncrementArmPresetPositionCommand::Execute() {
     VOKC_CHECK(arm_ != nullptr);
-    VOKC_CALL(arm_->IncrementPreset(increment_));
+    VOKC_CALL(arm_->SetPreset(increment_))
+
+
 }
 
 bool IncrementArmPresetPositionCommand::IsFinished() {
