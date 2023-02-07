@@ -122,6 +122,15 @@ private:
 
     //arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
+<<<<<<< Updated upstream
+=======
+
+    std::shared_ptr<IncrementArmPresetCommand> increment_arm_preset_command;
+
+    std::shared_ptr<SetArmAngleCommand> set_arm_angle_command;
+
+    std::shared_ptr<SetArmExtensionCommand> set_arm_angle_command; 
+>>>>>>> Stashed changes
 };
 
 
