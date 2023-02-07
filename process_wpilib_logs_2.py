@@ -4,7 +4,20 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 # big list to contain all the individual logs
-logs = []
+logs = {}
+
+# logs = {
+#   "swerve/left-front":[
+#       ["setpoint", "output", "sensor-reading"]
+#       [[timestamps], [data]],
+#       [[timestamps], [data]],
+#       # so on so forth
+#   ],
+#   "arm/lift":[
+#       ["setpoint", "output"]
+#       [[timestamps], [data]]
+#   ]
+# }
 
 #TODO
 # pretend this is a CSV file
@@ -27,9 +40,10 @@ for index, line in enumerate(log):
         continue
     
     #TODO do something about actually processing the data
+    if 
 
 # plot all the data
-for log in logs:
+for key, data in logs:
     plt.figure()
     plt.plot(log[0], log[1])
     plt.xlabel("time (seconds)")
