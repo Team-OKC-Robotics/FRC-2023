@@ -123,7 +123,7 @@ private:
     double last_strafe = 0.0;
     double last_turn = 0.0;
 
-    double control_decay = 0.2;
+    double control_decay = 0.1;
 
     // max output
     double max_output_drive_ = 1;
