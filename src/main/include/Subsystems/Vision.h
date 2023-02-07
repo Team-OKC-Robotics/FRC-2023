@@ -1,11 +1,13 @@
 #pragma once
 
-#include "frc2/Subsystembase.h"
+#include "frc2/command/Subsystembase.h"
+
+#include "io/VisionIO.h"
 
 class Vision : public frc2::Subsystem {
     public:
     Vision(VisionSoftwareInterface *interface)
-        : interface_(inetrface) {}
+        : interface_(interface) {}
 
 
         bool Init();

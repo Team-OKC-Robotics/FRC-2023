@@ -1,32 +1,31 @@
-#include "IO/VisionIO.h"
+#include "io/VisionIO.h"
 void VisionIO::Periodic() {
 ProcessIO();
 }
 void VisionIO::SimulationPeriodic() {
 
 }
-bool Visionconfig::UpdateVisionConfig {
-    return true;
-}
+
 bool VisionIO::ProcessIO() {
-if (sw_interface_->update_config0) {
+if (sw_interface_->update_config) {
     UpdateVisionConfig(sw_interface_->vision_config);
     sw_interface_->update_config = false;
 }
 ProcessInputs();
 SetOutputs();
+return true;
 }
-void VisionIO::UpdateVisionConfig(Visionconfig &config) {
-
+bool VisionIO::UpdateVisionConfig(VisionConfig &config) {
+return true;
 }
-bool VisionIOL::ProcessInputs() {
-    photonlib::PhotonPipelineResult result = this->hw_interface->camera.GetLatestResult();
+bool VisionIO::ProcessInputs() {
+    photonlib::PhotonPipelineResult result = this->hw_interface_->camera->GetLatestResult();
     if (result.HasTargets()) {
         photonlib::PhotonTrackedTarget target = result.GetBestTarget();
-        sw_interface_->error = result.GetYaw();
+        sw_interface_->error = target.GetYaw();
+        sw_interface_->cone = target.GetArea();
     }
-    sw_interface_->cone = result.GetArea();
-sw_interface->error = hw_interface_->camera;
+return true;
 }
 bool VisionIO::SetOutputs () {
 return true;

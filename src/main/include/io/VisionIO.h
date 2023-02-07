@@ -11,22 +11,26 @@ photonlib::PhotonCamera *const camera;
 frc::Relay *const LEDs;
 } VisionHardwareInterface;
 
-typedef struct vision_hardware_interface_t {
+typedef struct Vision_Config {
+
+} VisionConfig;
+
+typedef struct vision_software_interface_t {
     double error;
     double cone;
     double cube;
     double angle;
     bool reset_subsystem;
+    bool update_config;
+    VisionConfig vision_config;
 } VisionSoftwareInterface;
 
-bool Visionconfig::UpdateVisionConfig {
-return true;
-}
+
 class VisionIO : public frc2::SubsystemBase {
     public:
-    VisionIO(VisionHardwareInterface *hw_intereface,
+    VisionIO(VisionHardwareInterface *hw_interface,
                   VisionSoftwareInterface *sw_interface)
-                  :hw_interface_(hw_interface_), sw_interface_(sw_interface) {}
+                  :hw_interface_(hw_interface), sw_interface_(sw_interface) {}
 
                   void Periodic() override;
 
