@@ -59,7 +59,7 @@ public:
     bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
-    bool InitAuto(frc::Pose2d pos, bool keep_heading);
+    bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
 
     bool UpdateModules();
 
@@ -118,6 +118,12 @@ private:
     // Speed modifier (the joystick input is multiplied by this value)
     double speed_modifier_drive_ = 0.75;
     double speed_modifier_steer_ = 0.75;
+
+    double last_drive = 0.0;
+    double last_strafe = 0.0;
+    double last_turn = 0.0;
+
+    double control_decay = 0.2;
 
     // max output
     double max_output_drive_ = 1;

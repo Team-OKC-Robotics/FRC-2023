@@ -34,6 +34,11 @@
 
 #include "Logging.h"
 
+#include "units/length.h"
+#include "units/velocity.h"
+#include "units/math.h"
+#include "units/voltage.h"
+
 /**
  * This class is where the bulk of the robot should be declared.  Since
  * Command-based is a "declarative" paradigm, very little robot logic should

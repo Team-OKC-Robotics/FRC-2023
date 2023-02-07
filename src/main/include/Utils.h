@@ -51,4 +51,10 @@ namespace TeamOKC {
 
     bool Clamp(const double &lower, const double &upper, double *value);
 
+    typedef struct pose_t {
+        double rotation;
+        double x;
+        double y;
+    } Pose;
+
 }
