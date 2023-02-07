@@ -20,9 +20,9 @@ l2_gear_ratio = 6.75
 wheel_diameter = 4.0
 inches_to_meters = 0.0254 # yo unexpected 254!
 drive_max_output = 0.5
-drive_open_loop = 0.5
-steer_max_output = 0.4
-steer_open_loop = 0.5
+drive_open_loop = 0.1
+steer_max_output = 0.6
+steer_open_loop = 0.1
 
 [swerve.drive_pid]
 kP = 0.0
@@ -35,7 +35,7 @@ kD = 0.0
 kP = 0.004
 kI = 0.0
 # kD = 0.00005
-kD = 0.0
+kD = 0.0004
 
 [swerve.heading_pid]
 kP = 0.0004
