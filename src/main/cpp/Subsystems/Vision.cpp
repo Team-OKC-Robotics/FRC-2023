@@ -1,4 +1,4 @@
-#include "Subsystems/Vision.h"
+#include "subsystems/Vision.h"
 bool Vision::Init () {
     ResetSubsystem();
     return true;
@@ -13,24 +13,25 @@ bool Vision::Init () {
 
         }
 
-        bool GetConeError (double *error) {
-            *error = interface_->cone_error;
+        bool Vision::GetConeError (double *error) {
+            *error = interface_->error;
             return true;
         }
-        bool GetConeDistance (double *cone){
-            *cone = interface_->cone_distance;
+        bool Vision::GetConeDistance (double *cone) {
+            *cone = interface_->cone;
             return true;
         }
-        bool GetCubeDistance (double *cube){
-            *cube = interface_->cube_distance;
+        bool Vision::GetCubeDistance (double *cube){            
+            *cube = interface_->cube;
             return true;
         }
 
-        bool GetCubeAngle (double *angle){
-            *angle = interface_->angle_cube;
+        bool Vision::GetCubeAngle (double *angle){           
+            *angle = interface_->angle;
+            return true;
         }
-        bool ResetSubsystem (){
-            interface_->resetsubsystem_ = true;
+        bool Vision::ResetSubsystem (){
+            interface_->reset_subsystem = true;
             return true;
         }
 
