@@ -333,16 +333,20 @@ bool SwerveDrive::TeleOpDrive(const double &drive, const double &strafe, const d
 }
 
 bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn) {
+    double final_drive = drive * control_decay + last_drive * (1 - control_decay);
+    double final_strafe = strafe * control_decay + last_strafe * (1 - control_decay);
+    double final_turn = turn * control_decay  + last_turn * (1 - control_decay);
+
     //TODO convert `turn` to rad/sec
     //TODO convert drive and strafe to m/s I think
     // because tracklength/width are in meters
 
     // copied from ChiefDelphi thread
     //TODO post link here
-    double A = strafe - turn * tracklength_/2;
-    double B = strafe + turn * tracklength_/2;
-    double C = drive - turn * trackwidth_/2;
-    double D = drive + turn * trackwidth_/2;
+    double A = final_strafe - final_turn * tracklength_/2;
+    double B = final_strafe + final_turn * tracklength_/2;
+    double C = final_drive - final_turn * trackwidth_/2;
+    double D = final_drive + final_turn * trackwidth_/2;
 
     // speed
     double left_front_speed = sqrt(pow(B, 2) + pow(D, 2));
@@ -430,11 +434,16 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CHECK(this->left_back_module_ != nullptr);
     OKC_CHECK(this->right_front_module_ != nullptr);
     OKC_CHECK(this->right_back_module_ != nullptr);
-    
-    OKC_CALL(this->left_front_module_->SetAngle(left_front_turn));
-    OKC_CALL(this->left_back_module_->SetAngle(left_back_turn));
-    OKC_CALL(this->right_front_module_->SetAngle(right_front_turn));
-    OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
+
+    // really nice convoluted deadband
+    // this is to stop the swerve modules from immediately trying to center themselves instead of
+    // coasting until receiving another instruction so we don't tip
+    if (abs(drive) > 0.05 || abs(strafe) > 0.05 || abs(turn) > 0.05) {
+        OKC_CALL(this->left_front_module_->SetAngle(left_front_turn));
+        OKC_CALL(this->left_back_module_->SetAngle(left_back_turn));
+        OKC_CALL(this->right_front_module_->SetAngle(right_front_turn));
+        OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
+    }
 
     OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
     OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
@@ -447,20 +456,24 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     this->interface_->right_front_drive_motor_output = right_front_speed;
     this->interface_->right_back_drive_motor_output = right_back_speed;
 
+    last_drive = drive;
+    last_strafe = strafe;
+    last_turn = turn;
+
 
     return true;
 }
 
 
 
-bool SwerveDrive::InitAuto(frc::Pose2d pos, bool keep_heading) {
+bool SwerveDrive::InitAuto(TeamOKC::Pose pos, bool keep_heading) {
     this->auto_lock_heading_ = keep_heading;
 
     //  1. figure out angle between here and there
-    this->heading_to_goal_ = atan((position_->X().value() - pos.X().value()) / (position_->Y().value() - pos.Y().value()));
+    this->heading_to_goal_ = atan((position_->X().value() - pos.x) / (position_->Y().value() - pos.y));
 
     //  2. figure out distance
-    this->distance_to_goal_ = sqrt(pow(position_->X().value() + pos.X().value(), 2) + pow(position_->Y().value() + pos.Y().value(), 2));
+    this->distance_to_goal_ = sqrt(pow(position_->X().value() + pos.x, 2) + pow(position_->Y().value() + pos.x, 2));
 
     // set heading PID setpoint
     this->heading_pid_->SetSetpoint(this->heading_to_goal_);
