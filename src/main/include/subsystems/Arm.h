@@ -18,6 +18,7 @@ public:
     ~Arm() {}
 
     bool SetDegrees(double degrees);
+    bool SetPreset(double increment);
     bool SetExtend(double inches);
     bool Init();
     void Periodic() override;

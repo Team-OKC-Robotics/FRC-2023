@@ -21,12 +21,18 @@ bool Arm::SetDegrees(double degrees) {
     return true;
 }
 
+
 bool Arm::SetExtend(double inches) {
     this->inches_pid_->SetSetpoint(inches);
 
     return true;
 }
 
+bool Arm::SetPreset(double increment) {
+    this->arm_pid_->SetSetpoint(increment);
+
+    return true;
+}
 bool Arm::SetManualLiftPower(double power)
 {
     lift_power_ = power;

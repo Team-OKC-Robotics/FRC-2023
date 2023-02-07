@@ -16,6 +16,7 @@
 #include "io/SwerveDriveIO.h"
 #include "subsystems/SwerveDrive.h"
 
+
 // Subsystems
 #include "subsystems/SwerveDrive.h"
 
@@ -43,6 +44,9 @@
 #include "io/ArmIO.h"
 
 #include "commands/arm/ManualArmCommand.h"
+#include "commands/arm/IncrementArmPresetPositionCommand.h"
+#include "commands/arm/SetArmAngleCommand.h"
+#include "commands/arm/SetArmExtensionCommand.h"
  
 
 
@@ -122,15 +126,12 @@ private:
 
     //arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
-<<<<<<< Updated upstream
-=======
 
-    std::shared_ptr<IncrementArmPresetCommand> increment_arm_preset_command;
+    std::shared_ptr<IncrementArmPresetPositionCommand> increment_arm_preset_command;
 
     std::shared_ptr<SetArmAngleCommand> set_arm_angle_command;
 
-    std::shared_ptr<SetArmExtensionCommand> set_arm_angle_command; 
->>>>>>> Stashed changes
+    std::shared_ptr<SetArmExtensionCommand> set_arm_extension_command; 
 };
 
 
