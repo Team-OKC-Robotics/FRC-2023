@@ -9,7 +9,7 @@ outputLog = [[], []]
 setpointLog = [[], []]
 errorLog = [[], []]
 
-with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230206_230635.csv") as f:
+with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230207_223923.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):

@@ -153,17 +153,19 @@ void SwerveDrive::Periodic() {
     VOKC_CHECK(right_back_module_ != nullptr);
 
     VOKC_CALL(UpdateModules());
-   
+
     // update odometry
     VOKC_CHECK(swerve_odometry_ != nullptr);
     swerve_odometry_->Update(frc::Rotation2d(units::degree_t(-heading)), *positions_); // negate heading because odometry expects counterclockwise to be positive, but the NavX is not
 
     // update our position object
-    *position_ = swerve_odometry_->GetPose();
+    // *position_ = swerve_odometry_->GetPose();
 
     if (in_auto) {
             // if we're just starting auto
         if (auto_state_ == INIT) {
+            std::cout << "INIT" << std::endl;
+
             // if keep_heading skip turning the robot
             if (this->auto_lock_heading_) {
                 auto_state_ = ROTATE;
@@ -178,8 +180,8 @@ void SwerveDrive::Periodic() {
                 //  rotate wheels to the 45/135 position to rotate the robot
                 VOKC_CALL(this->left_front_module_->SetAngle(135));
                 VOKC_CALL(this->left_back_module_->SetAngle(45));
-                VOKC_CALL(this->right_front_module_->SetAngle(135));
-                VOKC_CALL(this->right_back_module_->SetAngle(45));
+                VOKC_CALL(this->right_front_module_->SetAngle(45));
+                VOKC_CALL(this->right_back_module_->SetAngle(135));
 
                 //  heading_pid to the NavX
                 double heading = 0.0;
@@ -200,10 +202,10 @@ void SwerveDrive::Periodic() {
             }
         // if we're to the turning stage
         } else if (auto_state_ == ROTATE) {
-                VOKC_CHECK(this->left_front_module_ != nullptr);
-                VOKC_CHECK(this->left_back_module_ != nullptr);
-                VOKC_CHECK(this->right_front_module_ != nullptr);
-                VOKC_CHECK(this->right_back_module_ != nullptr);
+            VOKC_CHECK(this->left_front_module_ != nullptr);
+            VOKC_CHECK(this->left_back_module_ != nullptr);
+            VOKC_CHECK(this->right_front_module_ != nullptr);
+            VOKC_CHECK(this->right_back_module_ != nullptr);
 
             // rotate wheels to face target
             if (this->auto_lock_heading_) {
@@ -219,6 +221,12 @@ void SwerveDrive::Periodic() {
                 VOKC_CALL(this->right_back_module_->SetAngle(0.0));
             }
 
+            std::cout << "ROTATING";
+
+            double error = 0.0;
+            this->left_front_module_->GetSteerError(&error);
+            std::cout << error << std::endl;
+
             bool left_steer_complete = false;
             bool right_steer_complete = false;
             VOKC_CALL(this->left_front_module_->AtSteerSetpoint(&left_steer_complete));
@@ -229,6 +237,9 @@ void SwerveDrive::Periodic() {
                 auto_state_ = TRANSLATE;
             }
         } else if (auto_state_ == TRANSLATE) {
+
+            std::cout << "TRANSLATING" << std::endl;
+
             double error = 0.0;
             VOKC_CHECK(this->left_front_module_ != nullptr);
             VOKC_CALL(this->left_front_module_->GetDriveError(&error));
@@ -366,23 +377,13 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double left_front_turn = atan2(B, C)  *  180.0/M_PI;
     double left_back_turn = atan2(A, C)  *  180.0/M_PI;
 
+    // keep the setpoints within [0, 360]
+    OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
 
-    if (left_front_turn < 0) {
-        left_front_turn += 360;
-    }
-
-    if (left_back_turn < 0) {
-        left_back_turn += 360;
-    }
-
-    if (right_front_turn < 0) {
-        right_front_turn += 360;
-    }
-    
-    if (right_back_turn < 0) {
-        right_back_turn += 360;
-    }
-
+    // get current angle of all the modules
     double left_front_angle = 0.0;
     double left_back_angle = 0.0;
     double right_front_angle = 0.0;
@@ -393,6 +394,7 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     right_front_module_->GetAngle(&left_front_angle);
     right_back_module_->GetAngle(&left_front_angle);
 
+    // do some funky invert stuff
     if (abs(left_front_angle - left_front_turn) > 90) {
         left_front_turn -= 180;
         left_front_speed *= -1;
@@ -413,22 +415,26 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         right_back_speed *= -1;
     }
 
-
-    if (left_front_turn < 0) {
-        left_front_turn += 360;
+    /**
+     * 
+     if (abs(right_back_angle - right_back_turn) > 90) {
+        right_back_turn -= 180;
+        right_back_speed *= -1;
     }
 
-    if (left_back_turn < 0) {
-        left_back_turn += 360;
-    }
+    so the diagonals travel more than 180 degrees for some reason
+    they go from, say, 45 to 315 or something right
+    which is in actuality only like 90 degrees, but
+    315 - 45 > 90 so some wack stuff happens
+     * 
+    */
 
-    if (right_front_turn < 0) {
-        right_front_turn += 360;
-    }
-    
-    if (right_back_turn < 0) {
-        right_back_turn += 360;
-    }
+
+    // keep the setpoints within [0, 360]
+    OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
 
     OKC_CHECK(this->left_front_module_ != nullptr);
     OKC_CHECK(this->left_back_module_ != nullptr);
@@ -456,10 +462,10 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     this->interface_->right_front_drive_motor_output = right_front_speed;
     this->interface_->right_back_drive_motor_output = right_back_speed;
 
+    // for control decay
     last_drive = drive;
     last_strafe = strafe;
     last_turn = turn;
-
 
     return true;
 }

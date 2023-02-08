@@ -54,6 +54,7 @@ public:
     bool SetDistance(double distance);
 
     bool GetAngle(double *angle);
+    bool GetSteerError(double *error);
     bool GetDriveError(double *error);
     bool GetSteerEncoderReading(double *reading);
     

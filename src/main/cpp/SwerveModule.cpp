@@ -20,6 +20,7 @@ bool SwerveModule::Init(Location loc) {
 
     OKC_CHECK(this->steer_pid_ != nullptr);
     steer_pid_->EnableContinuousInput(0, 360);
+    steer_pid_->SetTolerance(2, 2); // tolerate 2 degrees of deviation, which shouldn't be a lot I don't think
 
     // units and conversions and numbers and stuff
     L2_GEAR_RATIO_ = RobotParams::GetParam("swerve.l2_gear_ratio", 6.75);
@@ -250,5 +251,11 @@ bool SwerveModule::GetSteerEncoderReading(double *reading) {
 
     *reading = this->steer_enc_;
 
+    return true;
+}
+
+bool SwerveModule::GetSteerError(double *error) {
+    *error = this->steer_pid_->GetPositionError();
+    
     return true;
 }
