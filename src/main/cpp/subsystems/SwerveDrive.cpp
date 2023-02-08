@@ -31,7 +31,7 @@ bool SwerveDrive::Init() {
     tracklength_ = RobotParams::GetParam("swerve.x_disp", 0.3); // in meters
     trackwidth_ = RobotParams::GetParam("swerve.y_disp", 0.3); // in meters
 
-
+    position_ = TeamOKC::Pose(0, 0, 0);
     
     // !! IMPORTANT ASSUMPTION/PRACTICE/WHATEVER !!
     // the order of swerve stuff should always be in:
@@ -373,10 +373,10 @@ bool SwerveDrive::InitAuto(TeamOKC::Pose pos, bool keep_heading) {
     this->auto_lock_heading_ = keep_heading;
 
     //  1. figure out angle between here and there
-    this->heading_to_goal_ = atan((position_->X().value() - pos.x) / (position_->Y().value() - pos.y));
+    this->heading_to_goal_ = atan((position_.x - pos.x) / (position_.y - pos.y));
 
     //  2. figure out distance
-    this->distance_to_goal_ = sqrt(pow(position_->X().value() + pos.x, 2) + pow(position_->Y().value() + pos.x, 2));
+    this->distance_to_goal_ = sqrt(pow(position_.x + pos.x, 2) + pow(position_.y + pos.x, 2));
 
     // set heading PID setpoint
     this->heading_pid_->SetSetpoint(this->heading_to_goal_);

@@ -113,6 +113,7 @@ private:
     AutoState auto_state_;
     bool in_auto = false;
     bool auto_lock_heading_;
+    TeamOKC::Pose position_;
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;
