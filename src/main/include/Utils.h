@@ -57,4 +57,6 @@ namespace TeamOKC {
         double y;
     } Pose;
 
+    bool WrapAngle(double *angle);
+
 }
