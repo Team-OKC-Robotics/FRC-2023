@@ -56,53 +56,6 @@ bool SwerveDrive::Init() {
     OKC_CHECK(right_front_module_ != nullptr);
     OKC_CHECK(right_back_module_ != nullptr);
 
-    // create location objects
-    left_front_loc_ = std::make_shared<frc::Translation2d>();
-    left_back_loc_ = std::make_shared<frc::Translation2d>();
-    right_front_loc_ = std::make_shared<frc::Translation2d>();
-    right_back_loc_ = std::make_shared<frc::Translation2d>();
-
-    OKC_CALL(left_front_module_->GetLocationOnRobot(left_front_loc_.get()));
-    OKC_CALL(left_back_module_->GetLocationOnRobot(left_back_loc_.get()));
-    OKC_CALL(right_front_module_->GetLocationOnRobot(right_front_loc_.get()));
-    OKC_CALL(right_back_module_->GetLocationOnRobot(right_back_loc_.get()));
-    
-    OKC_CHECK(left_front_loc_ != nullptr);
-    OKC_CHECK(left_back_loc_ != nullptr);
-    OKC_CHECK(right_front_loc_ != nullptr);
-    OKC_CHECK(right_back_loc_ != nullptr);
-
-    // define SwerveKinematics object
-    swerve_kinematics_ = std::make_shared<frc::SwerveDriveKinematics<4>>(*left_front_loc_, *left_back_loc_, *right_front_loc_, *right_back_loc_);
-    OKC_CHECK(swerve_kinematics_ != nullptr);
-
-    // create position objects
-    left_front_pos_ = std::make_shared<frc::SwerveModulePosition>();
-    left_back_pos_ = std::make_shared<frc::SwerveModulePosition>();
-    right_front_pos_ = std::make_shared<frc::SwerveModulePosition>();
-    right_back_pos_ = std::make_shared<frc::SwerveModulePosition>();
-
-    OKC_CALL(left_front_module_->GetSwerveModulePosition(left_front_pos_.get()));
-    OKC_CALL(left_back_module_->GetSwerveModulePosition(left_back_pos_.get()));
-    OKC_CALL(right_front_module_->GetSwerveModulePosition(right_front_pos_.get()));
-    OKC_CALL(right_back_module_->GetSwerveModulePosition(right_back_pos_.get()));
-
-    OKC_CHECK(left_front_pos_ != nullptr);
-    OKC_CHECK(left_back_pos_ != nullptr);
-    OKC_CHECK(right_front_pos_ != nullptr);
-    OKC_CHECK(right_back_pos_ != nullptr);
-
-    
-    // create list of position objects
-    positions_ = std::make_shared<wpi::array<frc::SwerveModulePosition, 4>>(*left_front_pos_, *left_back_pos_, *right_front_pos_, *right_back_pos_);
-
-    // define SwerveOdometry object with default 0 starting parameters
-    OKC_CHECK(positions_ != nullptr);
-    swerve_odometry_ = std::make_shared<frc::SwerveDriveOdometry<4>>(*swerve_kinematics_, frc::Rotation2d(), *positions_, frc::Pose2d());
-
-    // our internal position object
-    position_ = std::make_shared<frc::Pose2d>();
-
     // PID controllers
     double headingP = RobotParams::GetParam("swerve.heading_pid.kP", 0.0);
     double headingI = RobotParams::GetParam("swerve.heading_pid.kI", 0.0);
@@ -112,28 +65,10 @@ bool SwerveDrive::Init() {
 
     // setpoint
     at_setpoint_ = false;
-    
 
     // Reset everything
     OKC_CALL(ResetDriveEncoders());
     OKC_CALL(ResetGyro());
-    return true;
-}
-
-bool SwerveDrive::UpdateModules() {
-    // update modules
-    OKC_CALL(left_front_module_->Update(this->interface_->left_front_drive_motor_enc, this->interface_->left_front_steer_motor_enc, this->interface_->left_front_drive_enc_vel, this->interface_->left_front_steer_enc_vel));
-    OKC_CALL(left_back_module_->Update(this->interface_->left_back_drive_motor_enc, this->interface_->left_back_steer_motor_enc, this->interface_->left_back_drive_enc_vel, this->interface_->left_back_steer_enc_vel));
-    OKC_CALL(right_front_module_->Update(this->interface_->right_front_drive_motor_enc, this->interface_->right_front_steer_motor_enc, this->interface_->right_front_drive_enc_vel, this->interface_->right_front_steer_enc_vel));
-    OKC_CALL(right_back_module_->Update(this->interface_->right_back_drive_motor_enc, this->interface_->right_back_steer_motor_enc, this->interface_->right_back_drive_enc_vel, this->interface_->right_back_steer_enc_vel));
-
-    // update module positions
-    OKC_CALL(left_front_module_->GetSwerveModulePosition(left_front_pos_.get()));
-    OKC_CALL(left_back_module_->GetSwerveModulePosition(left_back_pos_.get()));
-    OKC_CALL(right_front_module_->GetSwerveModulePosition(right_front_pos_.get()));
-    OKC_CALL(right_back_module_->GetSwerveModulePosition(right_back_pos_.get()));
-
-
     return true;
 }
 
@@ -151,15 +86,6 @@ void SwerveDrive::Periodic() {
     VOKC_CHECK(left_back_module_ != nullptr);
     VOKC_CHECK(right_front_module_ != nullptr);
     VOKC_CHECK(right_back_module_ != nullptr);
-
-    VOKC_CALL(UpdateModules());
-
-    // update odometry
-    VOKC_CHECK(swerve_odometry_ != nullptr);
-    swerve_odometry_->Update(frc::Rotation2d(units::degree_t(-heading)), *positions_); // negate heading because odometry expects counterclockwise to be positive, but the NavX is not
-
-    // update our position object
-    // *position_ = swerve_odometry_->GetPose();
 
     if (in_auto) {
             // if we're just starting auto
@@ -311,35 +237,6 @@ bool SwerveDrive::SetOpenLoopRampSteer(const double &open_loop_ramp) {
     OKC_CHECK(interface_ != nullptr);
 
     interface_->drive_config.open_loop_ramp_rate_steer = open_loop_ramp;
-    return true;
-}
-
-bool SwerveDrive::TeleOpDrive(const double &drive, const double &strafe, const double &turn) {
-    // get outputs from the kinematics object based on joystick inputs
-    auto outputs = swerve_kinematics_->ToSwerveModuleStates(frc::ChassisSpeeds(units::meters_per_second_t(drive * 4), units::meters_per_second_t(strafe * 4), units::radians_per_second_t(turn * 1.5)));
-    
-    // set desired state in all the modules (set setpoints for PIDs)
-    OKC_CALL(left_front_module_->SetDesiredState(outputs[0]));
-    OKC_CALL(left_back_module_->SetDesiredState(outputs[1]));
-    OKC_CALL(right_front_module_->SetDesiredState(outputs[2]));
-    OKC_CALL(right_back_module_->SetDesiredState(outputs[3]));
-
-    // set all the outputs in the interface
-    // drive outputs
-    OKC_CALL(left_front_module_->GetDriveOutput(&this->interface_->left_front_drive_motor_output));
-    OKC_CALL(left_back_module_->GetDriveOutput(&this->interface_->left_back_drive_motor_output));
-
-    OKC_CALL(right_front_module_->GetDriveOutput(&this->interface_->right_front_drive_motor_output));
-    OKC_CALL(right_back_module_->GetDriveOutput(&this->interface_->right_back_drive_motor_output));
-    
-    // steer outputs
-    OKC_CALL(left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
-    OKC_CALL(left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
-    
-    OKC_CALL(right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
-    OKC_CALL(right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
-
-    // if we've made it here, we haven't errored, so return true
     return true;
 }
 

@@ -55,13 +55,9 @@ public:
     bool SetMaxOutputDrive(const double &max_output);
     bool SetMaxOutputSteer(const double &max_output);
 
-    bool TeleOpDrive(const double &drive, const double &strafe, const double &turn);
-    bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
     bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
-
-    bool UpdateModules();
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -90,30 +86,6 @@ private:
     std::shared_ptr<SwerveModule> left_back_module_;
     std::shared_ptr<SwerveModule> right_front_module_;
     std::shared_ptr<SwerveModule> right_back_module_;
-
-    // swerve module positions
-    std::shared_ptr<frc::Translation2d> left_front_loc_;
-    std::shared_ptr<frc::Translation2d> left_back_loc_;
-    std::shared_ptr<frc::Translation2d> right_front_loc_;
-    std::shared_ptr<frc::Translation2d> right_back_loc_;
-
-    // swerve module states
-    std::shared_ptr<frc::SwerveModulePosition> left_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> left_back_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_back_pos_;    
-
-    // swerve module positions
-    std::shared_ptr<wpi::array<frc::SwerveModulePosition, 4>> positions_;
-
-    // kinematics
-    std::shared_ptr<frc::SwerveDriveKinematics<4>> swerve_kinematics_;
-
-    // odometry
-    std::shared_ptr<frc::SwerveDriveOdometry<4>> swerve_odometry_;
-
-    // position
-    std::shared_ptr<frc::Pose2d> position_;
 
     // Speed modifier (the joystick input is multiplied by this value)
     double speed_modifier_drive_ = 0.75;

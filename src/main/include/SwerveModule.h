@@ -39,32 +39,24 @@ enum Location {
 class SwerveModule {
 public:
     SwerveModule()
-     : drive_pid_(), steer_pid_(), state_(), pos_(), trans_(), location_() {};
+     : drive_pid_(), steer_pid_(), location_() {};
     ~SwerveModule() {}
 
     bool Init(Location loc);
-
-    bool GetSwerveModulePosition(frc::SwerveModulePosition *pos);
-    bool GetSwerveModuleState(frc::SwerveModuleState *state);
-
-    bool GetLocationOnRobot(frc::Translation2d *loc);
     
-    bool SetDesiredState(const frc::SwerveModuleState &state);
     bool SetAngle(double angle);
-    bool SetDistance(double distance);
-
     bool GetAngle(double *angle);
-    bool GetSteerError(double *error);
-    bool GetDriveError(double *error);
     bool GetSteerEncoderReading(double *reading);
-    
-    bool GetDriveOutput(double *output); // PID
     bool GetSteerOutput(double *output); // PID, optimize angle
+    bool GetSteerError(double *error);
+    bool AtSteerSetpoint(bool *at);
+
+    bool SetDistance(double distance);
+    bool GetDriveError(double *error);
+    bool GetDriveOutput(double *output); // PID
 
     bool SetDrivePID(double kP, double kI, double kD);
     bool SetSteerPID(double kP, double kI, double kD);
-
-    bool AtSteerSetpoint(bool *at);
 
     bool Update(double drive_enc, double steer_enc, double drive_vel, double steer_vel);
     bool Reset();
@@ -72,13 +64,6 @@ public:
 private:
     std::shared_ptr<frc::PIDController> drive_pid_;
     std::shared_ptr<frc::PIDController> steer_pid_;
-
-    // frc::SlewRateLimiter<units::scalar> steer_filter;
-
-    frc::SwerveModuleState state_;
-    frc::SwerveModulePosition pos_;
-
-    frc::Translation2d trans_;
 
     Location location_;
 
