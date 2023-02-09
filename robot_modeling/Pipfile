@@ -9,6 +9,7 @@ matplotlib = "*"
 pandas = "*"
 scipy = "*"
 lmfit = "*"
+control = "*"
 
 [dev-packages]
 

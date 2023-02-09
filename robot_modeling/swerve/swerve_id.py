@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 from lmfit import Parameters, minimize
 
-from common.linear_systems import second_order_integrator_x2, simulate_system
+from common.linear_systems import second_order_integrator_x2_deadband, simulate_system
 from common.cost_functions import mean_squared_error
 from common.load_frc_logs import load_sysid_logs
 
 # Module name used by main.py as a user argument.
-SWERVE_MODULE = "swerve"
+SWERVE_MODULE_ID = "swerve_id"
 # DEFAULT_SWERVE_FILE = "FRC_20230203_002759"
 # SWERVE_T0 = 10.9
 # SWERVE_TF = 11.8
@@ -21,13 +21,19 @@ DEFAULT_SWERVE_FILE = "FRC_20230203_015512"
 # SWERVE_TF = 38.5
 SWERVE_T0 = 22.5
 SWERVE_TF = 23.6
-SWERVE_MODEL = second_order_integrator_x2
+SWERVE_MODEL = second_order_integrator_x2_deadband
 
-# INIT_TIMES  = [11.8, 22.55, 23.25]
-# FINAL_TIMES = [13.0, 22.9,   23.6]
+# INIT_TIMES  = [21.0, 33, 42.0]
+# FINAL_TIMES = [22.7, 35, 42.6]
 
-INIT_TIMES  = [22.5]
-FINAL_TIMES = [23.6]
+# INIT_TIMES  = [14.0, 21.0, 33, 42.0]
+# FINAL_TIMES = [15.2, 22.7, 35, 42.6]
+
+# INIT_TIMES  = [37.1]
+# FINAL_TIMES = [38.4]
+
+INIT_TIMES  = [14.0, 21.0, 33, 37.1, 42.0]
+FINAL_TIMES = [15.2, 22.7, 35, 38.4, 42.6]
 
 def unwrap_abs_encoder(x):
     """
@@ -77,7 +83,7 @@ def load_swerve_data(data_file):
     x = np.array(telemetry_dict['"/swerve/steer_enc"'][1])
     x = unwrap_abs_encoder(x)
     x_rate = np.gradient(x, t)
-    # x_rate = savgol_filter(x_rate, 5, 2)
+    x_rate = savgol_filter(x_rate, 13, 2)
     actuator = np.array(telemetry_dict['"/swerve/output"'][1])
     ref_traj = np.vstack((x, x_rate))
     ref_traj = ref_traj.T
@@ -124,8 +130,9 @@ def swerve_sysid(file=DEFAULT_SWERVE_FILE, t0=SWERVE_T0, tf=SWERVE_TF):
     # Do the system ID (find the best parameters for the system)
     params = Parameters()
     # params.add('a', value=-0.5, min=-200.0, max=-0.02)
-    params.add('b', value=-2.0, min=-30.0, max=-0.01)
-    params.add('c', value=15000.0, min=0.0, max=35000.0)
+    params.add('b', value=-11.0, min=-30.0, max=-0.01)
+    params.add('c', value=17000.0, min=1000.0, max=35000.0)
+    params.add('d', value=0.1, min=0.01, max=0.25)
 
     # results = minimize(swerve_cost, params, method='nelder',
     #                    args=(t_slice, ref_traj_slice, actuator_slice))
@@ -137,7 +144,7 @@ def swerve_sysid(file=DEFAULT_SWERVE_FILE, t0=SWERVE_T0, tf=SWERVE_TF):
     # Print the parameter results
     param_star = results.params
     # print(f"a: {param_star['a']}\nb: {param_star['b']}\nc: {param_star['c']}")
-    print(f"b: {param_star['b']}\nc: {param_star['c']}")
+    print(f"b: {param_star['b']}\nc: {param_star['c']}\nd: {param_star['d']}")
 
     # Show results for each time slice
     for i in range(len(INIT_TIMES)):
@@ -150,6 +157,7 @@ def swerve_sysid(file=DEFAULT_SWERVE_FILE, t0=SWERVE_T0, tf=SWERVE_TF):
         # Local variables for sliced data
         t_slice = sliced_data['t']
         x_slice = sliced_data['x']
+        xdot_slice = sliced_data['x_rate']
         actuator_slice = sliced_data['actuator']
         ref_traj_slice = sliced_data['ref_traj']
 
@@ -158,15 +166,19 @@ def swerve_sysid(file=DEFAULT_SWERVE_FILE, t0=SWERVE_T0, tf=SWERVE_TF):
         sliced_sys_traj = simulate_system(t_slice, actuator_slice, sliced_x0, SWERVE_MODEL, param_star)
 
         # Display results
-        print(f"Slice MSE (x): {mean_squared_error(x_slice, sliced_sys_traj[0,:])}")
-        plot_results(t_slice, ref_traj_slice, sliced_sys_traj, actuator_slice)
+        print(f"Slice MSE #{i+1} (x): {mean_squared_error(x_slice, sliced_sys_traj[0,:])}")
+        print(f"Slice MSE #{i+1} (xdot): {mean_squared_error(xdot_slice, sliced_sys_traj[1,:])}")
+        # plot_results(t_slice, ref_traj_slice, sliced_sys_traj, actuator_slice)
 
     # Simulate the identified system on the full dataset
+    # Note: here we cut out the first part of the trajectory since we get rekt by a giant control step
+    # full_data = slice_data(full_data, 16, full_data['t'][-1])
     full_x0 = list(full_data['ref_traj'][0, :])
     full_sys_traj = simulate_system(full_data['t'], full_data['actuator'], full_x0, SWERVE_MODEL, param_star)
 
     # Report MSE and plot full data
     print(f"Full MSE (x): {mean_squared_error(full_data['x'], full_sys_traj[0,:])}")
+    print(f"Full MSE (xdot): {mean_squared_error(full_data['x_rate'], full_sys_traj[1,:])}")
     plot_results(full_data['t'], full_data['ref_traj'], full_sys_traj, full_data['actuator'])
 
     
