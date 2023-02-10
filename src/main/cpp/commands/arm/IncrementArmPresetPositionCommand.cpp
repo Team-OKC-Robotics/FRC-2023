@@ -13,8 +13,8 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
     // Set everything.
     arm_ = arm;
     increment_ = increment;
+                                   }
 
-    
 
 
 
