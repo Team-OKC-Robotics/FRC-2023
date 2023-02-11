@@ -47,3 +47,13 @@ left_front_offset = 210.0
 left_back_offset = 79.0
 right_front_offset = 9.2
 right_back_offset = 330.0
+
+[arm.lift_pid]
+kP = 0
+kI = 0
+kD = 0
+
+[arm.extend_pid]
+kP = 0
+kI = 0
+kD = 0 

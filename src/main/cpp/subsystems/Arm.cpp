@@ -1,10 +1,19 @@
 #include "subsystems/Arm.h"
 
 bool Arm::Init() {
-    arm_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
+    
+    double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.0);
+    double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
+    double arm_kD - RobotParams::GetParam("arm.lift_pid.kD", 0.0);
 
-    inches_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
+    double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.0);
+    double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
+    double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
 
+    arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
+
+    inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
+    
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
     arm_lift_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_enc");
 
