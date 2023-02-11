@@ -45,10 +45,10 @@ bool ArmIO::ProcessIO() {
     OKC_CHECK(hw_interface_->arm_extend_motor != nullptr);
     OKC_CHECK(hw_interface_->arm_up_motor != nullptr);
     hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
-    hw_interface_->arm_up_motor->Set(sw_interface_->arm_up_power);
+    hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
     hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
 
-    sw_interface_->arm_lift_encoder_val = hw_interface_->arm_lift_encoder->GetPosition();
+    sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
 
     return true;
 }

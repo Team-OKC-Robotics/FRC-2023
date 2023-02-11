@@ -27,26 +27,13 @@ typedef struct arm_software_interface_t {
 
     // actuator outputs
     double arm_lift_power;
-    double arm_up_power;
     double arm_extend_power;
     double arm_encoder;
     double arm_extend_encoder;
-    double arm_position_motor;
     ArmConfig arm_config;
-    double encoder_val_to_set;
-
-    double arm_lift_encoder_val;
-
+    
     bool update_config;
     bool reset_encoders;
-    bool set_encoder_to_val;
-    bool deployed_limit_switch_val;
-    bool deploy_limit_switch;
-    bool retracted_limit_switch_val;
-    bool retracted_limit_switch;
-    double arm_position_encoder_val;
-    double open_loop_ramp;
-    double max_indexer_current;
 } ArmSoftwareInterface;
 
 class ArmIO : public frc2::SubsystemBase {

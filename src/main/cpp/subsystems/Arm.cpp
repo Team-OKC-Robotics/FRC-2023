@@ -51,11 +51,10 @@ bool Arm::ManualControl() {
     OKC_CHECK(interface_ != nullptr);
 
     interface_->arm_lift_power = lift_power_;
-    interface_->arm_up_power = up_power_;
     interface_->arm_extend_power = extend_power_;
 
     arm_lift_output_log_.Append(interface_->arm_lift_power);
-    arm_lift_enc_log_.Append(interface_->arm_lift_encoder_val);
+    arm_lift_enc_log_.Append(interface_->arm_encoder);
 
 
     return true;
@@ -75,11 +74,11 @@ void Arm::Periodic() {
             VOKC_CALL(this->ManualControl());
             break;
         case Auto:
-            //this->interface_->arm_lift_power = this->arm_pid_->Caluculate(this->interface_->arm_encoder);
-            //this->interface_->arm_up_power = this->arm_pid_->Caluculate(this->interface_->arm_extend_encoder);
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_encoder);
+            this->interface_->arm_extend_power = this->arm_pid_->Calculate(this->interface_->arm_extend_encoder);
             break;
         default:
-            VOKC_CHECK_MSG(false, "Unhandled enum")    
+            VOKC_CHECK_MSG(false, "Unhandled enum");
     }
 }
 
