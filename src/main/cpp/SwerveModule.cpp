@@ -29,6 +29,35 @@ bool SwerveModule::Init(Location loc) {
 
     steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
 
+    this->location_ = loc;
+
+    // physical location on the robot
+    double x_disp = RobotParams::GetParam("swerve.x_disp", 0.3); // in meters
+    double y_disp = RobotParams::GetParam("swerve.y_disp", 0.3); // in meters
+
+    // based on where it needs to be
+    switch(loc) {
+        case Location::LEFT_FRONT:
+            // we only have this to pass it into the kinematics object, because WPILib needs it
+            // positive x is to the front of the robot, positive y is to the left of the robot
+            // this should match the code in the docs pretty well, I think
+            offset_ = RobotParams::GetParam("swerve.offset.left_front_offset", 0);
+            break;
+        case Location::LEFT_BACK:
+            offset_ = RobotParams::GetParam("swerve.offset.left_back_offset", 0);
+            break;
+        case Location::RIGHT_FRONT:
+            offset_ = RobotParams::GetParam("swerve.offset.right_front_offset", 0);
+            break;
+        case Location::RIGHT_BACK:
+            offset_ = RobotParams::GetParam("swerve.offset.right_back_offset", 0);
+            break;
+        default:
+            // we shouldn't have reached here, so throw an error
+            offset_ = 0;
+            return false;
+    }
+
     // reset subsystem to initial state
     this->Reset();
 
