@@ -1,19 +1,20 @@
 #include "subsystems/Arm.h"
+#include "Parameters.h"
 
 bool Arm::Init() {
     
-    double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.0);
+    double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
-    double arm_kD - RobotParams::GetParam("arm.lift_pid.kD", 0.0);
+    double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
 
-    double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.0);
+    double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
     double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
 
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
 
     inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
-    
+
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
     arm_lift_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_enc");
 
@@ -25,6 +26,8 @@ bool Arm::SetControlMode(const ArmMode &mode){
     return true;
 }
 bool Arm::SetDegrees(double degrees) {
+    
+    OKC_CHECK(this->arm_pid_ != nullptr);
     this->arm_pid_->SetSetpoint(degrees);
 
     return true;
@@ -32,12 +35,14 @@ bool Arm::SetDegrees(double degrees) {
 
 
 bool Arm::SetExtend(double inches) {
+    OKC_CHECK(this->inches_pid_ != nullptr);
     this->inches_pid_->SetSetpoint(inches);
 
     return true;
 }
 
 bool Arm::SetPreset(double increment) {
+    OKC_CHECK(this->arm_pid_ != nullptr);
     this->arm_pid_->SetSetpoint(increment);
 
     return true;
@@ -83,8 +88,10 @@ void Arm::Periodic() {
             VOKC_CALL(this->ManualControl());
             break;
         case Auto:
+            VOKC_CHECK(interface_ != nullptr);
+            VOKC_CHECK(this->arm_pid_ != nullptr);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_encoder);
-            this->interface_->arm_extend_power = this->arm_pid_->Calculate(this->interface_->arm_extend_encoder);
+            this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
