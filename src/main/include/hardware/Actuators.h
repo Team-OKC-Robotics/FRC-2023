@@ -19,12 +19,6 @@
 #define RIGHT_MOTOR_2 5
 #define RIGHT_MOTOR_3 6
 
-#define INDEXER_MOTOR 7
-#define INTAKE_POSITION_MOTOR 10
-#define INTAKE_MOTOR 11
-
-#define SHOOTER_MOTOR 8
-#define TRIGGER_MOTOR 9
 
 typedef struct actuator_interface_t {
     // Left drivetrain motors

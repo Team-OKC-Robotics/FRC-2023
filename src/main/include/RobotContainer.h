@@ -6,8 +6,6 @@
 
 #include <frc2/command/Command.h>
 
-#include "frc/Joystick.h"
-#include "frc2/command/button/JoystickButton.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -27,47 +25,4 @@ class RobotContainer {
  
 
   void ConfigureButtonBindings();
-
-      std::shared_ptr<frc::Joystick> gamepad1_;
-    std::shared_ptr<frc::Joystick> gamepad2_;
-
-    std::shared_ptr<frc2::JoystickButton> driver_a_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_b_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_back_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
-    std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
-
-    std::shared_ptr<frc2::JoystickButton> manip_a_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_b_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_left_stick_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_right_stick_button;
-
-    std::shared_ptr<frc2::JoystickButton> manip_trigger_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_left_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_bottom_right_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_top_right_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_botton_left_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_top_left_button_;
-
-    std::shared_ptr<frc2::JoystickButton> manip_seven_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_eight_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_nine_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_ten_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_eleven_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_twelve_button_;
-
-    std::shared_ptr<frc2::JoystickButton> manip_A_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_B_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_X_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_Y_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_RB_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_LB_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_RT_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_LT_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_back_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_start_button_;
-    std::shared_ptr<frc2::JoystickButton> manip_mode_button_;
-
 };
-
-

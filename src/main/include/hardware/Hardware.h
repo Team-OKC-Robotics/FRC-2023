@@ -13,10 +13,10 @@
 
 typedef struct hardware_t {
     // Actuators
-    std::unique_ptr<ActuatorInterface> actuators;
+    //std::unique_ptr<ActuatorInterface> actuators;
 
     // Drivetrain specific hardware abstractions.
-    std::unique_ptr<frc::DifferentialDrive> diff_drive;
+    //std::unique_ptr<frc::DifferentialDrive> diff_drive; (I didn't know which one to not include so I made both comments)
 
     // Sensors
     std::unique_ptr<SensorInterface> sensors;
@@ -54,10 +54,6 @@ bool SetupArmInterface(std::unique_ptr<HardwareInterface> &hardware,
  * @return false
  */
 bool SetupClawInterface(
-    std::unique_ptr<HardwareInterface> &hardware,
-    std::shared_ptr<ShooterHardwareInterface> *interface);
-
- bool SetupVisionTrackingInterface(
     std::unique_ptr<HardwareInterface> &hardware,
     std::shared_ptr<ShooterHardwareInterface> *interface);
 

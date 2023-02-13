@@ -13,6 +13,7 @@ void ClawIO::SimulationPeriodic() {
 bool ClawIO::ProcessIO() {
     OKC_CHECK(sw_interface_ != nullptr);
     OKC_CHECK(hw_interface_ != nullptr);
+    OKC_CHECK(hw_interface_->claw_open_and_close_encoder != nullptr);
 
     // Set the software outputs
     // If the encoder should be reset, reset it
@@ -21,7 +22,7 @@ bool ClawIO::ProcessIO() {
         // Lower the encoder reset flag
         sw_interface_->reset_claw_open_and_close = false;
     }
-    hw_interface_->claw_open_and_close_motor->Set (sw_interface_->claw_open_and_close_power);
+    hw_interface_->claw_open_and_close_motor->Set(sw_interface_->claw_open_and_close_power);
     sw_interface_->encoder_reading = hw_interface_->claw_open_and_close_encoder->GetPosition();
 
     return true;

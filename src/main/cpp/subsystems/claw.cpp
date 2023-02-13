@@ -19,3 +19,9 @@ bool Claw::SetPosition(){
 bool Claw::Reset(){
     return true;
 }
+void Claw::Periodic(){
+    return;
+}
+void Claw::SimulationPeriodic(){
+    return;
+}

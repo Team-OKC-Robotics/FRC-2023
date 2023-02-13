@@ -17,7 +17,7 @@ typedef struct claw_config_t {
 typedef struct claw_hardware_interface_t {
     rev::CANSparkMax *const claw_open_and_close_motor;
     rev::SparkMaxRelativeEncoder *const claw_open_and_close_encoder;
-} ClawHardwareInterface;
+} ClawHardware;
 
 typedef struct claw_software_interface_t {
     
@@ -25,12 +25,12 @@ typedef struct claw_software_interface_t {
     double claw_open_and_close_power; 
     double encoder_reading;
     bool reset_claw_open_and_close;
-} ClawSoftwareInterface;
+} ClawSoftware;
 
 class ClawIO : public frc2::SubsystemBase {
 public:
-    ClawIO(ClawHardwareInterface *hw_interface,
-                 ClawSoftwareInterface *sw_interface)
+    ClawIO(ClawHardware *hw_interface,
+                 ClawSoftware *sw_interface)
         : hw_interface_(hw_interface), sw_interface_(sw_interface) {}
 
     /**
@@ -47,6 +47,6 @@ public:
     bool ProcessIO();
 
 private:
-    ClawHardwareInterface *const hw_interface_;
-    ClawSoftwareInterface *const sw_interface_;
+    ClawHardware *const hw_interface_;
+    ClawSoftware *const sw_interface_;
 };
