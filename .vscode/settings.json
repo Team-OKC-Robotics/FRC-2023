@@ -14,6 +14,7 @@
     "**/.factorypath": true,
     "**/*~": true
   },
+<<<<<<< Updated upstream
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "files.associations": {
     "array": "cpp",
@@ -89,3 +90,6 @@
     "variant": "cpp"
   }
 }
+=======
+  
+>>>>>>> Stashed changes
