@@ -36,5 +36,6 @@ typedef struct sensors_t {
 
     // arm encoders
     std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_lift_encoder;
+    std::unique_ptr<frc::AnalogEncoder> arm_absolute_encoder;
 
 } Sensors;

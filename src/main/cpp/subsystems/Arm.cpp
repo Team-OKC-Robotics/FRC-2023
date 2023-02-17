@@ -1,6 +1,7 @@
 #include "subsystems/Arm.h"
 #include "Parameters.h"
 
+//pulls PID values from the parameters.toml file
 bool Arm::Init() {
     
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
@@ -68,7 +69,7 @@ bool Arm::ManualControl() {
     interface_->arm_extend_power = extend_power_;
 
     arm_lift_output_log_.Append(interface_->arm_lift_power);
-    arm_lift_enc_log_.Append(interface_->arm_encoder);
+    arm_lift_enc_log_.Append(interface_->arm_absolute_encoder);
 
 
     return true;
@@ -90,7 +91,7 @@ void Arm::Periodic() {
         case Auto:
             VOKC_CHECK(interface_ != nullptr);
             VOKC_CHECK(this->arm_pid_ != nullptr);
-            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_encoder);
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_absolute_encoder);
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             break;
         default:

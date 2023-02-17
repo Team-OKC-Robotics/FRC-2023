@@ -6,6 +6,7 @@
 #include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
+#include "frc/AnalogEncoder.h"
 
 #include "Utils.h"
 
@@ -20,6 +21,7 @@ typedef struct arm_hardware_interface_t {
     rev::CANSparkMax *const arm_extend_motor;
 
     rev::RelativeEncoder *const arm_lift_encoder;
+    frc::AnalogEncoder *const arm_absolute_encoder;
  
 } ArmHardwareInterface;
 
@@ -30,6 +32,7 @@ typedef struct arm_software_interface_t {
     double arm_extend_power;
     double arm_encoder;
     double arm_extend_encoder;
+    double arm_absolute_encoder;
     ArmConfig arm_config;
     
     bool update_config;
