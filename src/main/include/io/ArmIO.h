@@ -38,7 +38,7 @@ typedef struct arm_software_interface_t {
     bool update_config;
     bool reset_encoders;
 } ArmSoftwareInterface;
-
+//arm class
 class ArmIO : public frc2::SubsystemBase {
 public:
     ArmIO(ArmHardwareInterface *hw_interface,

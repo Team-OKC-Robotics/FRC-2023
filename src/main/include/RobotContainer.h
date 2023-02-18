@@ -47,6 +47,7 @@
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/SetArmAngleCommand.h"
 #include "commands/arm/SetArmExtensionCommand.h"
+#include "commands/arm/IncrementArmExtendCommand.h"
  
 
 
@@ -113,7 +114,13 @@ private:
     std::shared_ptr<frc2::JoystickButton> driver_a_button_;
     std::shared_ptr<frc2::JoystickButton> driver_b_button_;
     std::shared_ptr<frc2::JoystickButton> driver_back_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
+    std::shared_ptr<frc2::JoystickButton> driver_x_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_start_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
+
+    
+     std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
     std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
     /**
@@ -127,11 +134,13 @@ private:
     //arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
 
-    std::shared_ptr<IncrementArmPresetPositionCommand> increment_arm_preset_command;
+    std::shared_ptr<IncrementArmPresetPositionCommand> increment_arm_preset_position_command;
 
     std::shared_ptr<SetArmAngleCommand> set_arm_angle_command;
 
     std::shared_ptr<SetArmExtensionCommand> set_arm_extension_command; 
+
+    std::shared_ptr<IncrementArmExtendCommand> increment_arm_extend_command;
 };
 
 

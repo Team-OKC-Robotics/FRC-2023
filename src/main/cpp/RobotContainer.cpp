@@ -28,6 +28,7 @@ void RobotContainer::ConfigureButtonBindings() {
     VOKC_CHECK(driver_a_button_ != nullptr);
     VOKC_CHECK(driver_b_button_ != nullptr);
     VOKC_CHECK(driver_back_button_ != nullptr);
+    VOKC_CHECK(driver_x_button_ != nullptr);
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
@@ -184,6 +185,15 @@ bool RobotContainer::InitGamepads() {
         std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
     driver_back_button_ =
         std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
+    driver_x_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
+    driver_start_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
+    driver_left_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    driver_right_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
+    
 
     return true;
 }
@@ -197,8 +207,21 @@ bool RobotContainer::InitCommands() {
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
-    arm_->SetDefaultCommand(*manual_arm_command_);
+    increment_arm_extend_command =std::make_shared<IncrementArmExtendCommand>(arm_, 1); 
+    set_arm_extension_command =std::make_shared<SetArmExtensionCommand>(arm_, 25);
 
+    set_arm_angle_command =std::make_shared<SetArmAngleCommand>(arm_, 90);
+    increment_arm_preset_position_command =std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+   
+   
+   
+   //button bindings
+    WPI_IGNORE_DEPRECATED
+    driver_a_button_->WhileHeld(*increment_arm_extend_command);
+    driver_b_button_->WhileHeld(*set_arm_extension_command);
+    driver_back_button_->WhileHeld(*set_arm_angle_command);
+    driver_x_button_->WhileHeld(*increment_arm_preset_position_command);
+    WPI_UNIGNORE_DEPRECATED
+    
     return true;
 }

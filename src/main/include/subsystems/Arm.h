@@ -21,6 +21,7 @@ public:
     bool SetPreset(double increment);
     bool SetExtend(double inches);
     bool Init();
+    bool IncrementExtend(double extend);
     void Periodic() override;
     bool SetManualLiftPower(double power);
     bool SetManualUpPower(double power);

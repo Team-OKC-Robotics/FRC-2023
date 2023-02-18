@@ -44,10 +44,18 @@ bool Arm::SetExtend(double inches) {
 
 bool Arm::SetPreset(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(increment);
+    this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
 
     return true;
 }
+
+bool Arm::IncrementExtend(double increment) {
+    OKC_CHECK(this->arm_pid_ != nullptr);
+    this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+
+    return true;
+}
+
 bool Arm::SetManualLiftPower(double power)
 {
     lift_power_ = power;

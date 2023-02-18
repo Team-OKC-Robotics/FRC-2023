@@ -8,25 +8,25 @@
 
 #include "commands/arm/SetArmExtensionCommand.h"
 
-#include "commands/arm/SetArmAngleCommand.h"
 
-SetArmAngleCommand::SetArmAngleCommand(std::shared_ptr<Arm> arm,
-                                   double degrees) {
+
+SetArmExtensionCommand::SetArmExtensionCommand(std::shared_ptr<Arm> arm,
+                                   double extension) {
     // Set everything.
     arm_ = arm;
-    degrees_ = degrees;
+    extension_ = extension;
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
     }
 }
 
-void SetArmAngleCommand::Execute() {
+void SetArmExtensionCommand::Execute() {
     VOKC_CHECK(arm_ != nullptr);
-    VOKC_CALL(arm_->SetDegrees(degrees_));
+    VOKC_CALL(arm_->SetExtend(extension_));
 }
 
-bool SetArmAngleCommand::IsFinished() {
+bool SetArmExtensionCommand::IsFinished() {
     // Always end this command.
     return true;
 }
