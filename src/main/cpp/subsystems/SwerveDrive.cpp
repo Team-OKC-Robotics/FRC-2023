@@ -317,6 +317,28 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         right_back_speed *= -1;
     }
 
+
+    // do it again to handle when we cross diagonals (ex forward+right->forward+left makes the wheels spin >90 (and >180) degrees)
+    if (abs(left_front_angle - left_front_turn) > 90) {
+        left_front_turn -= 180;
+        left_front_speed *= -1;
+    }
+
+    if (abs(left_back_angle - left_back_turn) > 90) {
+        left_back_turn -= 180;
+        left_back_speed *= -1;
+    }
+
+    if (abs(right_front_angle - right_front_turn) > 90) {
+        right_front_turn -= 180;
+        right_front_speed *= -1;
+    }
+
+    if (abs(right_back_angle - right_back_turn) > 90) {
+        right_back_turn -= 180;
+        right_back_speed *= -1;
+    }
+
     /**
      * 
      if (abs(right_back_angle - right_back_turn) > 90) {
