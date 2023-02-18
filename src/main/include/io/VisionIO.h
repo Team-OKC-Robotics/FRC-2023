@@ -15,7 +15,7 @@ photonlib::PhotonCamera *const camera;
 frc::Relay *const LEDs;
 } VisionHardwareInterface;
 
-typedef struct Vision_Config {
+typedef struct vision_config_t {
 
 } VisionConfig;
 
