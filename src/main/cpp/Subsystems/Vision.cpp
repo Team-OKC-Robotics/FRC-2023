@@ -6,10 +6,10 @@ bool Vision::Init () {
 }
 
 
-void Periodic() {
+void Vision::Periodic() {
     
 }
-void SimulationPeriodic() {
+void Vision::SimulationPeriodic() {
 
 }
 
