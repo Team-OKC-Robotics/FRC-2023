@@ -197,8 +197,8 @@ bool RobotContainer::InitCommands() {
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
-    arm_->SetDefaultCommand(*manual_arm_command_);
+    // manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
+    // arm_->SetDefaultCommand(*manual_arm_command_);
 
     return true;
 }
