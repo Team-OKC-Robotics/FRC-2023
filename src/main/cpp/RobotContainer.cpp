@@ -130,7 +130,12 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
+    OKC_CHECK(actuators.arm_lift_motor != nullptr);
+    OKC_CHECK(actuators.arm_extend_motor != nullptr);
+
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
+    sensor_interface->arm_absolute_encoder = std::make_unique<frc::AnalogEncoder>(5);
+    sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 

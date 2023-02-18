@@ -49,7 +49,8 @@ bool ArmIO::ProcessIO() {
     hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
 
     sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
-    sw_interface_->arm_absolute_encoder = hw_interface_->arm_absolute_encoder->GetAbsolutePosition() * 360;
+    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360;
+    sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
 
     return true;
 }

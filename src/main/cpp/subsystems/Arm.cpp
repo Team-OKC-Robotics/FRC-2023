@@ -1,5 +1,6 @@
 #include "subsystems/Arm.h"
 #include "Parameters.h"
+#include "ui/UserInterface.h"
 
 //pulls PID values from the parameters.toml file
 bool Arm::Init() {
@@ -76,10 +77,6 @@ bool Arm::ManualControl() {
     interface_->arm_lift_power = lift_power_;
     interface_->arm_extend_power = extend_power_;
 
-    arm_lift_output_log_.Append(interface_->arm_lift_power);
-    arm_lift_enc_log_.Append(interface_->arm_absolute_encoder);
-
-
     return true;
 }
 bool Arm::SetManualUpPower(double power)
@@ -99,12 +96,17 @@ void Arm::Periodic() {
         case Auto:
             VOKC_CHECK(interface_ != nullptr);
             VOKC_CHECK(this->arm_pid_ != nullptr);
-            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_absolute_encoder);
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
     }
+
+    VOKC_CALL(ArmUI::nt_arm_duty_cycle_encoder->SetDouble(interface_->arm_duty_cycle_encoder));
+
+    arm_lift_output_log_.Append(interface_->arm_lift_power);
+    arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder);
 }
 
 // TODO: Understand this example code and implement it correctly

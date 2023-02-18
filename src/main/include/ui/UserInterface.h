@@ -51,3 +51,9 @@ namespace SwerveDriveUI {
     // Save drivetrain parameters
     extern nt::GenericEntry *const nt_save;
 } // namespace SwerveDriveUI
+
+namespace ArmUI {
+    extern frc::ShuffleboardTab &nt_tab;
+
+    extern nt::GenericEntry *const nt_arm_duty_cycle_encoder;
+}

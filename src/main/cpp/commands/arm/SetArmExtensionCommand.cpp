@@ -18,6 +18,8 @@ SetArmExtensionCommand::SetArmExtensionCommand(std::shared_ptr<Arm> arm,
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
+
+    arm_->SetControlMode(Auto);
     }
 }
 

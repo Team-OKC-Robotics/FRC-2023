@@ -13,7 +13,13 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
     // Set everything.
     arm_ = arm;
     increment_ = increment;
-                                   }
+
+    if (arm_ != nullptr) {
+        this->AddRequirements(arm_.get());
+    
+    arm_->SetControlMode(Auto);  
+    }
+   }
 
 
 

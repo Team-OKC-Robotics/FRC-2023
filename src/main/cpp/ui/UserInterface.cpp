@@ -46,3 +46,12 @@ namespace SwerveDriveUI {
     // Save parameters button
     nt::GenericEntry *const nt_save = nt_tab.Add("Save", false).GetEntry();
 } // namespace SwerveDriveUI
+
+namespace ArmUI {
+    // Get the tab
+    frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Arm");
+    
+
+nt::GenericEntry *const nt_arm_duty_cycle_encoder = nt_tab.Add("Arm Duty Cycles Encoder", 0.0).GetEntry();
+    
+}

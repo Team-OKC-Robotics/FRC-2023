@@ -20,15 +20,15 @@ for index, line in enumerate(log):
         print(line)
         continue
     # print(timestamp, id, data)
-    if (id == '"/swerve/steer_enc"'):
+    if (id == '"/arm/lift_output"'):
         steerEncLog[0].append(float(timestamp))
         steerEncLog[1].append(float(data))
-    elif id == '"/swerve/output"':
+    elif id == '"/swerve/lift_enc"':
         outputLog[0].append(float(timestamp))
         outputLog[1].append(float(data)) # so we can actually see it on the graph
-    elif id == '"/swerve/setpoint"':
-        setpointLog[0].append(float(timestamp))
-        setpointLog[1].append(float(data))
+    # elif id == '"/swerve/setpoint"':
+    #     setpointLog[0].append(float(timestamp))
+    #     setpointLog[1].append(float(data))
 
 
 # plt.figure()
@@ -56,8 +56,8 @@ for index, line in enumerate(log):
 plt.figure()
 plt.plot(steerEncLog[0], steerEncLog[1])
 plt.plot(outputLog[0], outputLog[1])
-plt.plot(setpointLog[0], setpointLog[1])
+# plt.plot(setpointLog[0], setpointLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
-plt.legend(("steer enc", "output", "setpoint"))
+plt.legend(("steer enc", "output"))
 plt.show()
