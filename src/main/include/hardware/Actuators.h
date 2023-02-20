@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <rev/CANSparkMax.h>
+#include "frc/DigitalInput.h"
 
 
 

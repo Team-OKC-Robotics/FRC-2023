@@ -6,6 +6,7 @@
 
 #include <frc/DigitalInput.h>
 #include <rev/RelativeEncoder.h>
+#include "frc/AnalogEncoder.h"
 
 // == sensor ports ==
 #define DEPLOY_LIMIT_SWITCH 2
