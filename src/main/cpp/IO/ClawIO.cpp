@@ -1,5 +1,5 @@
 
-#include "io/ClawIO.h"
+#include "io\ClawIO.h"
 
 void ClawIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
