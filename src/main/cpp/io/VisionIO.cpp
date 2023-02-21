@@ -7,6 +7,8 @@ void VisionIO::Periodic() {
 void VisionIO::SimulationPeriodic() {}
 
 bool VisionIO::ProcessIO() {
+    OKC_CHECK(sw_interface_ != nullptr);
+
     if (sw_interface_->update_config) {
         OKC_CALL(UpdateVisionConfig(sw_interface_->vision_config));
         sw_interface_->update_config = false;
@@ -22,6 +24,9 @@ bool VisionIO::UpdateVisionConfig(VisionConfig &config) {
 }
 
 bool VisionIO::ProcessInputs() {
+    OKC_CHECK(hw_interface_ != nullptr);
+    OKC_CHECK(sw_interface_ != nullptr);
+
     photonlib::PhotonPipelineResult result =
         this->hw_interface_->camera->GetLatestResult();
 
