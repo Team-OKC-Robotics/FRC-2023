@@ -86,9 +86,6 @@ model {
                     srcDir 'src/test/cpp'
                     include '**/*.cpp'
                 }
-                exportedHeaders {
-                    srcDir 'src/main/include'
-                }
             }
 
             // Enable run tasks for this component

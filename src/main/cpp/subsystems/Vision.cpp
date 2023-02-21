@@ -1,7 +1,7 @@
 #include "subsystems/Vision.h"
 
 bool Vision::Init() {
-    ResetSubsystem();
+    OKC_CALL(ResetSubsystem());
     return true;
 }
 

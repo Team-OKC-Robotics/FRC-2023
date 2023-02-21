@@ -33,9 +33,10 @@ jobs:
     
     # Upload test artifacts
     - name: Upload artifacts
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: test-artifacts
-        path: ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        path: ${{ github.workspace }}/build/test-results/frcUserProgramTest
     
 
