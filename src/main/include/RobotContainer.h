@@ -134,13 +134,10 @@ private:
     //arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
 
-    std::shared_ptr<IncrementArmPresetPositionCommand> increment_arm_preset_position_command;
-
-    std::shared_ptr<SetArmAngleCommand> set_arm_angle_command;
-
-    std::shared_ptr<SetArmExtensionCommand> set_arm_extension_command; 
-
-    std::shared_ptr<IncrementArmExtendCommand> increment_arm_extend_command;
+    std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
+    std::shared_ptr<IncrementArmExtendCommand> retractArmCommand;
+     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
+     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 };
 
 

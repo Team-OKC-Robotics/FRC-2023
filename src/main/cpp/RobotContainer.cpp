@@ -134,7 +134,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(actuators.arm_extend_motor != nullptr);
 
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
-    sensor_interface->arm_absolute_encoder = std::make_unique<frc::AnalogEncoder>(5);
+    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(5);
     sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
@@ -212,20 +212,22 @@ bool RobotContainer::InitCommands() {
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    increment_arm_extend_command =std::make_shared<IncrementArmExtendCommand>(arm_, 1); 
-    set_arm_extension_command =std::make_shared<SetArmExtensionCommand>(arm_, 25);
+    extendArmCommand =std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
 
-    set_arm_angle_command =std::make_shared<SetArmAngleCommand>(arm_, 90);
-    increment_arm_preset_position_command =std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
+
+    raiseArmCommand =std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
    
    
    
    //button bindings
     WPI_IGNORE_DEPRECATED
-    driver_a_button_->WhileHeld(*increment_arm_extend_command);
-    driver_b_button_->WhileHeld(*set_arm_extension_command);
-    driver_back_button_->WhileHeld(*set_arm_angle_command);
-    driver_x_button_->WhileHeld(*increment_arm_preset_position_command);
+    driver_a_button_->WhileHeld(*extendArmCommand);
+    driver_b_button_->WhileHeld(*retractArmCommand);
+    driver_back_button_->WhileHeld(*raiseArmCommand);
+    driver_x_button_->WhileHeld(*lowerArmCommand);
     WPI_UNIGNORE_DEPRECATED
     
     return true;

@@ -50,7 +50,10 @@ bool ArmIO::ProcessIO() {
 
     sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
     sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360;
+    
     sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
+
+    hw_interface_->extend_limit_switch->Get();
 
     return true;
 }
