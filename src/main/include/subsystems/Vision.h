@@ -4,7 +4,7 @@
 
 #include "io/VisionIO.h"
 
-class Vision : public frc2::Subsystem {
+class Vision : public frc2::SubsystemBase {
 public:
     Vision(VisionSoftwareInterface *interface) : interface_(interface) {}
 

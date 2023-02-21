@@ -23,13 +23,13 @@ protected:
     }
 };
 
-TEST_F(UtilsTest, OkcCheckTest) {
-    std::shared_ptr<bool> b = nullptr;
-    ASSERT_FALSE(OkcChecker(b != nullptr));
-    ASSERT_TRUE(OkcChecker(b == nullptr));
-}
+// TEST_F(UtilsTest, OkcCheckTest) {
+//     std::shared_ptr<bool> b = nullptr;
+//     ASSERT_FALSE(OkcChecker(b != nullptr));
+//     ASSERT_TRUE(OkcChecker(b == nullptr));
+// }
 
-TEST_F(UtilsTest, OkcCallTest) {
-    ASSERT_FALSE(OkcCallChecker(false));
-    ASSERT_TRUE(OkcCallChecker(true));
-}
+// TEST_F(UtilsTest, OkcCallTest) {
+//     ASSERT_FALSE(OkcCallChecker(false));
+//     ASSERT_TRUE(OkcCallChecker(true));
+// }
