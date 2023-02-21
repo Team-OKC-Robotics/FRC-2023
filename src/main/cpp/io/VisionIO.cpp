@@ -22,16 +22,16 @@ bool VisionIO::UpdateVisionConfig(VisionConfig &config) {
 }
 
 bool VisionIO::ProcessInputs() {
-#ifdef __FRC_ROBORIO__
-    photonlib::PhotonPipelineResult result =
-        this->hw_interface_->camera->GetLatestResult();
+    // #ifdef __FRC_ROBORIO__
+    //     photonlib::PhotonPipelineResult result =
+    //         this->hw_interface_->camera->GetLatestResult();
 
-    if (result.HasTargets()) {
-        photonlib::PhotonTrackedTarget target = result.GetBestTarget();
-        sw_interface_->error = target.GetYaw();
-        sw_interface_->cone = target.GetArea();
-    }
-#endif
+    //     if (result.HasTargets()) {
+    //         photonlib::PhotonTrackedTarget target = result.GetBestTarget();
+    //         sw_interface_->error = target.GetYaw();
+    //         sw_interface_->cone = target.GetArea();
+    //     }
+    // #endif
 
     return true;
 }
