@@ -29,7 +29,7 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
-      run: ./gradlew build
+      run: ./gradlew build --stacktrace
     
     # Upload test artifacts
     - name: Upload artifacts
