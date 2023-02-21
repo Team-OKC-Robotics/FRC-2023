@@ -2,7 +2,7 @@
 
 #include "frc/Relay.h"
 
-// #include <photonlib/PhotonCamera.h>
+#include <photonlib/PhotonCamera.h>
 
 #include <frc2/command/SubsystemBase.h>
 
@@ -10,7 +10,7 @@
 #include <memory>
 
 typedef struct vision_hardware_interface_t {
-    // photonlib::PhotonCamera *const camera;
+    photonlib::PhotonCamera *const camera;
     frc::Relay *const LEDs;
 } VisionHardwareInterface;
 

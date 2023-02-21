@@ -30,3 +30,12 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+    
+    # Upload test artifacts
+    - name: Upload artifacts
+    - uses: actions/upload-artifact@v3
+      with:
+        name: test-artifacts
+        path: ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+    
+
