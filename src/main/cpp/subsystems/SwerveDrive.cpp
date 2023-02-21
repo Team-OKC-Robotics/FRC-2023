@@ -297,41 +297,41 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     right_back_module_->GetAngle(&left_front_angle);
 
     // do some funky invert stuff
-    if (abs(left_front_angle - left_front_turn) > 90) {
+    if (abs(left_front_angle - left_front_turn) > 110) {
         left_front_turn -= 180;
         left_front_speed *= -1;
 
-        if (abs(left_front_angle - left_front_turn) > 100) {
+        if (abs(left_front_angle - left_front_turn) > 110) {
             left_front_turn -= 180;
             left_front_speed *= -1;
         }
     }
 
-    if (abs(left_back_angle - left_back_turn) > 90) {
+    if (abs(left_back_angle - left_back_turn) > 110) {
         left_back_turn -= 180;
         left_back_speed *= -1;
 
-        if (abs(left_back_angle - left_back_turn) > 100) {
+        if (abs(left_back_angle - left_back_turn) > 110) {
             left_back_turn -= 180;
             left_back_speed *= -1;
         }
     }
 
-    if (abs(right_front_angle - right_front_turn) > 90) {
+    if (abs(right_front_angle - right_front_turn) > 110) {
         right_front_turn -= 180;
         right_front_speed *= -1;
 
-        if (abs(right_front_angle - right_front_turn) > 100) {
+        if (abs(right_front_angle - right_front_turn) > 110) {
             right_front_turn -= 180;
             right_front_speed *= -1;
         }
     }
 
-    if (abs(right_back_angle - right_back_turn) > 90) {
+    if (abs(right_back_angle - right_back_turn) > 110) {
         right_back_turn -= 180;
         right_back_speed *= -1;
 
-        if (abs(right_back_angle - right_back_turn) > 100) {
+        if (abs(right_back_angle - right_back_turn) > 110) {
             right_back_turn -= 180;
             right_back_speed *= -1;
         }
