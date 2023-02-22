@@ -82,7 +82,8 @@ bool SetupSwerveDriveInterface(
                                          actuators->arm_extend_motor.get(),
                                          sensors->arm_lift_encoder.get(),
                                          sensors->arm_duty_cycle_encoder.get(),
-                                         sensors->arm_extend_encoder.get()
+                                         sensors->arm_extend_encoder.get(),
+                                         sensors->extend_limit_switch.get()
                                          };
     interface = std::make_shared<ArmHardwareInterface>(arm_interface);
 

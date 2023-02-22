@@ -134,8 +134,9 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(actuators.arm_extend_motor != nullptr);
 
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
-    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(5);
+    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(1);
     sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
+    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(0);
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
@@ -212,13 +213,13 @@ bool RobotContainer::InitCommands() {
 
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    extendArmCommand =std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
 
     retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
 
-    raiseArmCommand =std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
 
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
    
    
    

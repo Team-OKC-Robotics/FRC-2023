@@ -15,9 +15,9 @@ IncrementArmExtendCommand::IncrementArmExtendCommand(std::shared_ptr<Arm> arm,
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
     
-    arm_->SetControlMode(Auto);
+        arm_->SetControlMode(Auto);
     }
-          }
+}
 
 
 

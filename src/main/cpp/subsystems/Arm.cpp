@@ -19,9 +19,18 @@ bool Arm::Init() {
 
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
     arm_lift_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_enc");
+    arm_lift_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_setpoint");
+
+    arm_extend_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_output");
+    arm_extend_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_enc");
+    arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint");
+
+    this->arm_pid_->SetSetpoint(0);
+    this->inches_pid_->SetSetpoint(0);
 
     return true;
 }
+
 bool Arm::SetControlMode(const ArmMode &mode){
     mode_= mode;
 
@@ -34,7 +43,6 @@ bool Arm::SetDegrees(double degrees) {
 
     return true;
 }
-
 
 bool Arm::SetExtend(double inches) {
     OKC_CHECK(this->inches_pid_ != nullptr);
@@ -52,7 +60,7 @@ bool Arm::SetPreset(double increment) {
 
 bool Arm::IncrementExtend(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+    this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
 
     return true;
 }
@@ -107,6 +115,11 @@ void Arm::Periodic() {
 
     arm_lift_output_log_.Append(interface_->arm_lift_power);
     arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder);
+    arm_lift_setpoint_log_.Append(arm_pid_->GetSetpoint());
+
+    arm_extend_output_log_.Append(interface_->arm_extend_power);
+    arm_extend_enc_log_.Append(interface_->arm_extend_encoder);
+    arm_extend_setpoint_log_.Append(inches_pid_->GetSetpoint());
 }
 
 // TODO: Understand this example code and implement it correctly
