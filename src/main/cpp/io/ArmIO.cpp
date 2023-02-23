@@ -135,7 +135,6 @@ bool ArmIO::UpdateArmConfig(ArmConfig &config) {
 
     return true;
 }
-
 //HACK: this is a hack
 bool ArmIO::ResetEncoders() {
     OKC_CHECK(hw_interface_ != nullptr);
