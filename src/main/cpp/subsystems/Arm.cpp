@@ -49,8 +49,8 @@ bool Arm::ManualControl() {
     interface_->arm_extend_power = extend_power_;
 
     // Log arm data.
-    PLOGD_(Logging::Arm) << "/arm/lift_output" << interface_->arm_lift_power;
-    PLOGD_(Logging::Arm) << "/arm/lift_enc" << interface_->arm_lift_encoder_val;
+    PLOGD_(Logging::Arm) << "/arm/lift_output," << interface_->arm_lift_power;
+    PLOGD_(Logging::Arm) << "/arm/lift_enc," << interface_->arm_lift_encoder_val;
 
     return true;
 }

@@ -608,11 +608,11 @@ bool SwerveDrive::UpdateShuffleboard() {
 
     // === LOGGING ===
     OKC_CALL(right_front_module_->GetAngle(&encoder_tmp));
-    PLOGD_(Logging::SwerveDrive) << "/swerve/setpoint" << encoder_tmp;
-    PLOGD_(Logging::SwerveDrive) << "/swerve/output" << interface_->right_front_steer_motor_output;
+    PLOGD_(Logging::SwerveDrive) << "/swerve/setpoint," << encoder_tmp;
+    PLOGD_(Logging::SwerveDrive) << "/swerve/output," << interface_->right_front_steer_motor_output;
     
     OKC_CALL(right_front_module_->GetSteerEncoderReading(&encoder_tmp));
-    PLOGD_(Logging::SwerveDrive) << "/swerve/steer_enc" << encoder_tmp;
+    PLOGD_(Logging::SwerveDrive) << "/swerve/steer_enc," << encoder_tmp;
     
 
 
