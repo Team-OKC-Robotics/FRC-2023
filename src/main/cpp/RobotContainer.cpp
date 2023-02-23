@@ -3,7 +3,9 @@
 RobotContainer::RobotContainer() {
     // Load robot parameters
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
-    frc::DataLogManager::Start();
+
+    // Set up the default logger.
+    plog::init<Logging::Default>(plog::debug, "default_log.csv");
 
     // Initialize the hardware interface.
     hardware_ = std::make_unique<Hardware>();
@@ -11,8 +13,6 @@ RobotContainer::RobotContainer() {
 
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-
-    
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -40,8 +40,7 @@ std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
     return swerve_teleop_command_;
 }
 
-bool RobotContainer::InitHardware(
-    std::unique_ptr<Hardware> &hardware) {
+bool RobotContainer::InitHardware(std::unique_ptr<Hardware> &hardware) {
     OKC_CHECK(hardware != nullptr);
 
     // Initialize sub-hardware interfaces.
@@ -60,19 +59,30 @@ bool RobotContainer::InitHardware(
 bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     OKC_CHECK(actuators_interface != nullptr);
 
-    actuators_interface->left_front_drive_motor = std::make_unique<rev::CANSparkMax>(LEFT_FRONT_DRIVE_MOTOR, BRUSHLESS);
-    actuators_interface->left_back_drive_motor = std::make_unique<rev::CANSparkMax>(LEFT_BACK_DRIVE_MOTOR, BRUSHLESS);
-    actuators_interface->right_front_drive_motor = std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_DRIVE_MOTOR, BRUSHLESS);
-    actuators_interface->right_back_drive_motor = std::make_unique<rev::CANSparkMax>(RIGHT_BACK_DRIVE_MOTOR, BRUSHLESS);
+    actuators_interface->left_front_drive_motor =
+        std::make_unique<rev::CANSparkMax>(LEFT_FRONT_DRIVE_MOTOR, BRUSHLESS);
+    actuators_interface->left_back_drive_motor =
+        std::make_unique<rev::CANSparkMax>(LEFT_BACK_DRIVE_MOTOR, BRUSHLESS);
+    actuators_interface->right_front_drive_motor =
+        std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_DRIVE_MOTOR, BRUSHLESS);
+    actuators_interface->right_back_drive_motor =
+        std::make_unique<rev::CANSparkMax>(RIGHT_BACK_DRIVE_MOTOR, BRUSHLESS);
 
-    actuators_interface->left_front_steer_motor = std::make_unique<rev::CANSparkMax>(LEFT_FRONT_STEER_MOTOR, BRUSHLESS);
-    actuators_interface->left_back_steer_motor = std::make_unique<rev::CANSparkMax>(LEFT_BACK_STEER_MOTOR, BRUSHLESS);
-    actuators_interface->right_front_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_STEER_MOTOR, BRUSHLESS);
-    actuators_interface->right_back_steer_motor = std::make_unique<rev::CANSparkMax>(RIGHT_BACK_STEER_MOTOR, BRUSHLESS);
+    actuators_interface->left_front_steer_motor =
+        std::make_unique<rev::CANSparkMax>(LEFT_FRONT_STEER_MOTOR, BRUSHLESS);
+    actuators_interface->left_back_steer_motor =
+        std::make_unique<rev::CANSparkMax>(LEFT_BACK_STEER_MOTOR, BRUSHLESS);
+    actuators_interface->right_front_steer_motor =
+        std::make_unique<rev::CANSparkMax>(RIGHT_FRONT_STEER_MOTOR, BRUSHLESS);
+    actuators_interface->right_back_steer_motor =
+        std::make_unique<rev::CANSparkMax>(RIGHT_BACK_STEER_MOTOR, BRUSHLESS);
 
-    actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
-    actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
-    actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
+    actuators_interface->arm_lift_motor =
+        std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
+    actuators_interface->arm_up_motor =
+        std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
+    actuators_interface->arm_extend_motor =
+        std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
     return true;
 }
 
@@ -80,19 +90,19 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
                                  Sensors *sensor_interface) {
     OKC_CHECK(sensor_interface != nullptr);
 
-    #ifdef __FRC_ROBORIO__
-        // Initialize navX.
-        try {
-            sensor_interface->ahrs = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
-        } catch (std::exception &ex) {
-            std::string what_string = ex.what();
-            std::string err_msg("Error instantiating navX MXP:  " + what_string);
-            const char *p_err_msg = err_msg.c_str();
+#ifdef __FRC_ROBORIO__
+    // Initialize navX.
+    try {
+        sensor_interface->ahrs = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
+    } catch (std::exception &ex) {
+        std::string what_string = ex.what();
+        std::string err_msg("Error instantiating navX MXP:  " + what_string);
+        const char *p_err_msg = err_msg.c_str();
 
-            // Print the error message.
-            OKC_CHECK_MSG(false, p_err_msg);
-        }
-    #endif
+        // Print the error message.
+        OKC_CHECK_MSG(false, p_err_msg);
+    }
+#endif
 
     OKC_CHECK(actuators.left_front_drive_motor != nullptr);
     OKC_CHECK(actuators.left_back_drive_motor != nullptr);
@@ -104,20 +114,40 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(actuators.right_front_steer_motor != nullptr);
     OKC_CHECK(actuators.right_back_steer_motor != nullptr);
 
-    sensor_interface->left_front_drive_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.left_front_drive_motor->GetEncoder());
-    sensor_interface->left_back_drive_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.left_back_drive_motor->GetEncoder());
-    sensor_interface->right_front_drive_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.right_front_drive_motor->GetEncoder());
-    sensor_interface->right_back_drive_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.right_back_drive_motor->GetEncoder());
-    
-    sensor_interface->left_front_steer_encoder = std::make_unique<frc::AnalogEncoder>(LEFT_FRONT_STEER_ENCODER);
-    sensor_interface->left_back_steer_encoder = std::make_unique<frc::AnalogEncoder>(LEFT_BACK_STEER_ENCODER);
-    sensor_interface->right_front_steer_encoder = std::make_unique<frc::AnalogEncoder>(RIGHT_FRONT_STEER_ENCODER);
-    sensor_interface->right_back_steer_encoder = std::make_unique<frc::AnalogEncoder>(RIGHT_BACK_STEER_ENCODER);
+    sensor_interface->left_front_drive_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.left_front_drive_motor->GetEncoder());
+    sensor_interface->left_back_drive_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.left_back_drive_motor->GetEncoder());
+    sensor_interface->right_front_drive_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.right_front_drive_motor->GetEncoder());
+    sensor_interface->right_back_drive_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.right_back_drive_motor->GetEncoder());
 
-    sensor_interface->left_front_steer_vel_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.left_front_steer_motor->GetEncoder());
-    sensor_interface->left_back_steer_vel_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.left_back_steer_motor->GetEncoder());
-    sensor_interface->right_front_steer_vel_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.right_front_steer_motor->GetEncoder());
-    sensor_interface->right_back_steer_vel_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.right_back_steer_motor->GetEncoder());
+    sensor_interface->left_front_steer_encoder =
+        std::make_unique<frc::AnalogEncoder>(LEFT_FRONT_STEER_ENCODER);
+    sensor_interface->left_back_steer_encoder =
+        std::make_unique<frc::AnalogEncoder>(LEFT_BACK_STEER_ENCODER);
+    sensor_interface->right_front_steer_encoder =
+        std::make_unique<frc::AnalogEncoder>(RIGHT_FRONT_STEER_ENCODER);
+    sensor_interface->right_back_steer_encoder =
+        std::make_unique<frc::AnalogEncoder>(RIGHT_BACK_STEER_ENCODER);
+
+    sensor_interface->left_front_steer_vel_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.left_front_steer_motor->GetEncoder());
+    sensor_interface->left_back_steer_vel_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.left_back_steer_motor->GetEncoder());
+    sensor_interface->right_front_steer_vel_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.right_front_steer_motor->GetEncoder());
+    sensor_interface->right_back_steer_vel_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.right_back_steer_motor->GetEncoder());
 
     OKC_CHECK(sensor_interface->left_front_drive_encoder != nullptr);
     OKC_CHECK(sensor_interface->left_back_drive_encoder != nullptr);
@@ -129,7 +159,9 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
-    sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
+    sensor_interface->arm_lift_encoder =
+        std::make_unique<rev::SparkMaxRelativeEncoder>(
+            actuators.arm_lift_motor->GetEncoder());
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
@@ -144,13 +176,14 @@ bool RobotContainer::InitSwerve() {
     swerve_drive_sw_ = std::make_shared<SwerveDriveSoftwareInterface>();
 
     // Link SwerveDriveIO to hardware / software
-    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw_.get(), swerve_drive_sw_.get());
+    swerve_drive_io_ = std::make_shared<SwerveDriveIO>(swerve_drive_hw_.get(),
+                                                       swerve_drive_sw_.get());
 
     // Link swerve dirve software to the I/O
     swerve_drive_ = std::make_shared<SwerveDrive>(swerve_drive_sw_.get());
-    
+
     OKC_CALL(swerve_drive_->Init());
-    
+
     return true;
 }
 
@@ -160,7 +193,7 @@ bool RobotContainer::InitArm() {
     arm_sw_ = std::make_shared<ArmSoftwareInterface>();
 
     arm_io_ = std::make_shared<ArmIO>(arm_hw_.get(), arm_sw_.get());
-    
+
     arm_ = std::make_shared<Arm>(arm_sw_.get());
 
     OKC_CALL(arm_->Init());
@@ -175,7 +208,6 @@ bool RobotContainer::InitGamepads() {
 
     gamepad1_ = std::make_shared<frc::Joystick>(gamepad1_id);
     gamepad2_ = std::make_shared<frc::Joystick>(gamepad2_id);
-
 
     // Initialize the joystick buttons
     driver_a_button_ =
@@ -192,12 +224,14 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
+    // m_autonomousCommand =
+    // std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
     m_autonomousCommand_ = nullptr;
 
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+    swerve_teleop_command_ =
+        std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
+    manual_arm_command_ = std::make_shared<ManualArmCommand>(arm_, gamepad2_);
     arm_->SetDefaultCommand(*manual_arm_command_);
 
     return true;

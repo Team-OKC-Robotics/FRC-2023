@@ -8,9 +8,7 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
-    left_front_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/setpoint");
-    left_front_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/output");
-    left_front_steer_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/steer_enc");
+    plog::init<Logging::SwerveDrive>(plog::debug, "swervedrive_log.csv");
 
     double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1);
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
@@ -610,10 +608,12 @@ bool SwerveDrive::UpdateShuffleboard() {
 
     // === LOGGING ===
     OKC_CALL(right_front_module_->GetAngle(&encoder_tmp));
-    left_front_setpoint_log_.Append(encoder_tmp);
-    left_front_output_log_.Append(interface_->right_front_steer_motor_output);
+    PLOGD_(Logging::SwerveDrive) << "/swerve/setpoint" << encoder_tmp;
+    PLOGD_(Logging::SwerveDrive) << "/swerve/output" << interface_->right_front_steer_motor_output;
+    
     OKC_CALL(right_front_module_->GetSteerEncoderReading(&encoder_tmp));
-    left_front_steer_enc_log_.Append(encoder_tmp);
+    PLOGD_(Logging::SwerveDrive) << "/swerve/steer_enc" << encoder_tmp;
+    
 
 
     // If competition mode isn't set to true, then allow the PID gains to be

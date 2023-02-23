@@ -1,9 +1,14 @@
 
 #pragma once
 
-#include <frc/DataLogManager.h>
-#include <wpi/DataLog.h>
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
 
-namespace TeamOKC {
-    extern wpi::log::DataLog &log;
-}
+namespace Logging {
+    // Define log IDs for subsystems.
+    enum Loggers {
+        Default = 0,
+        SwerveDrive = 1,
+        Arm = 2
+    };
+} // namespace Logging

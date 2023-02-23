@@ -41,7 +41,4 @@ private:
     double lift_power_;
     double up_power_;
     double extend_power_;
-
-    wpi::log::DoubleLogEntry arm_lift_output_log_;
-    wpi::log::DoubleLogEntry arm_lift_enc_log_;
 };

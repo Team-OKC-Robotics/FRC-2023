@@ -5,6 +5,10 @@
 #include <memory>
 #include <vector>
 
+#include <plog/Log.h>
+
+/// Utilities
+#include "Logging.h"
 #include "Parameters.h"
 #include "RobotContainer.h"
 #include "Utils.h"
@@ -13,10 +17,11 @@
 #include "hardware/Hardware.h"
 
 // I/O Subsystems
+#include "io/ArmIO.h"
 #include "io/SwerveDriveIO.h"
-#include "subsystems/SwerveDrive.h"
 
 // Subsystems
+#include "subsystems/Arm.h"
 #include "subsystems/SwerveDrive.h"
 
 // Gamepad
@@ -26,21 +31,11 @@
 
 /// Commands
 // swerve
-#include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoSwerveCommand.h"
+#include "commands/swerve/TeleOpSwerveCommand.h"
 
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
-
-#include "Logging.h"
-
-//subsytems
-#include "subsystems/Arm.h"
-#include "subsystems/SwerveDrive.h"
-
-//I/O Subsystems
-
-#include "io/ArmIO.h"
 
 #include "commands/arm/ManualArmCommand.h"
  
@@ -63,8 +58,7 @@ private:
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
     bool InitActuators(Actuators *actuators_interface);
-    bool InitSensors(const Actuators &actuators,
-                     Sensors *sensor_interface);
+    bool InitSensors(const Actuators &actuators, Sensors *sensor_interface);
 
     // Command initialization
     bool InitCommands();
@@ -81,8 +75,6 @@ private:
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
-
-
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
@@ -104,7 +96,6 @@ private:
     std::shared_ptr<frc::Joystick> gamepad1_;
     std::shared_ptr<frc::Joystick> gamepad2_;
 
-
     std::shared_ptr<frc2::JoystickButton> driver_a_button_;
     std::shared_ptr<frc2::JoystickButton> driver_b_button_;
     std::shared_ptr<frc2::JoystickButton> driver_back_button_;
@@ -119,8 +110,6 @@ private:
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
 
-    //arm
+    // arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
 };
-
-
