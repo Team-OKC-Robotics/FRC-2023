@@ -1,5 +1,3 @@
-#pragma once
-
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 
@@ -10,8 +8,7 @@
 
 
 
-SetArmExtensionCommand::SetArmExtensionCommand(std::shared_ptr<Arm> arm,
-                                   double extension) {
+SetArmExtensionCommand::SetArmExtensionCommand(std::shared_ptr<Arm> arm, double extension) {
     // Set everything.
     arm_ = arm;
     extension_ = extension;

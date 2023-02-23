@@ -1,5 +1,3 @@
-#pragma once
-
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 
@@ -10,8 +8,7 @@
 
 
 
-SetArmAngleCommand::SetArmAngleCommand(std::shared_ptr<Arm> arm,
-                                   double degrees) {
+SetArmAngleCommand::SetArmAngleCommand(std::shared_ptr<Arm> arm, double degrees) {
     // Set everything.
     arm_ = arm;
     degrees_ = degrees;
@@ -19,7 +16,7 @@ SetArmAngleCommand::SetArmAngleCommand(std::shared_ptr<Arm> arm,
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
 
-    arm_->SetControlMode(Auto);
+        arm_->SetControlMode(Auto);
     }
 }
 

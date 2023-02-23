@@ -30,8 +30,6 @@ bool Arm::Init() {
 
     return true;
 }
-bool Arm::SetControlMode(const ArmMode &mode){
-    mode_= mode;
 
 bool Arm::SetControlMode(const ArmMode &mode){
     mode_= mode;
@@ -123,30 +121,3 @@ void Arm::Periodic() {
     arm_extend_enc_log_.Append(interface_->arm_extend_encoder);
     arm_extend_setpoint_log_.Append(inches_pid_->GetSetpoint());
 }
-
-// TODO: Understand this example code and implement it correctly
-// Note: this is public in the header file
-// bool Subsystem::SetPosition(const double &position) {
-//     this.position_ = position;
-//     return true;
-// }
-
-// void Subsystem::Periodic() {
-//     // The subsystem does different things based on what mode it is put in
-//     // by the user.
-//     switch (mode) {
-//     case Manual:
-//         OKC_CALL(SetUserPower());
-//         break;
-//     case AutoPosition:
-//         OKC_CALL(GoToPosition());
-//         break;
-//     default:
-//         break;
-//     }
-// }
-
-// bool Subsystem::SetPosition(const double &position) {
-//     this.position_ = position;
-//     return true;
-// }
