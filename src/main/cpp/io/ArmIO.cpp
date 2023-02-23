@@ -48,8 +48,8 @@ bool ArmIO::ProcessIO() {
     TeamOKC::Clamp(-0.2, 0.2, &sw_interface_->arm_lift_power);
     TeamOKC::Clamp(-0.2, 0.2, &sw_interface_->arm_extend_power);
 
-    // if the absolute encoder is >180 degrees
-    if (sw_interface_->arm_duty_cycle_encoder >= 180) {
+    // if the absolute encoder is >110 degrees
+    if (sw_interface_->arm_duty_cycle_encoder >= 110) {
         // and we're trying to go farther positive
         if (sw_interface_->arm_lift_power > 0) {
             // stop it
@@ -60,7 +60,7 @@ bool ArmIO::ProcessIO() {
             hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
             hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
         }
-    } else if (sw_interface_->arm_duty_cycle_encoder <= -180) {
+    } else if (sw_interface_->arm_duty_cycle_encoder <= -110) {
         // and we're trying to go farther negative
         if (sw_interface_->arm_lift_power < 0) {
             // stop it
@@ -80,6 +80,7 @@ bool ArmIO::ProcessIO() {
 
     // if the IR sensor is getting a read
     if (sw_interface_->extend_limit_switch) {
+        // reset arm encoder
         hw_interface_->arm_extend_encoder->SetPosition(0.0);
 
         // if the motor power is positive
