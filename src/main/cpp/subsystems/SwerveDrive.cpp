@@ -8,7 +8,7 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
-    plog::init<Logging::SwerveDrive>(plog::debug, "swervedrive_log.csv");
+    plog::init<plog::OKCFormatter, Logging::SwerveDrive>(plog::debug, "swervedrive_log.csv");
 
     double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1);
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);

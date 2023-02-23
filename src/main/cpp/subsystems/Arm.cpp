@@ -6,7 +6,7 @@ bool Arm::Init() {
     inches_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
 
     // Initialize the logger for the Arm.
-    plog::init<Logging::Arm>(plog::debug, "arm_log.csv");
+    plog::init<plog::OKCFormatter, Logging::Arm>(plog::debug, "arm_log.csv");
 
     return true;
 }

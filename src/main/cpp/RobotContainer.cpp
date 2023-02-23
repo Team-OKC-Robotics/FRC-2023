@@ -5,7 +5,7 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
 
     // Set up the default logger.
-    plog::init<Logging::Default>(plog::debug, "default_log.csv");
+    plog::init<plog::OKCFormatter, Logging::Default>(plog::debug, "default_log.csv");
 
     // Initialize the hardware interface.
     hardware_ = std::make_unique<Hardware>();
