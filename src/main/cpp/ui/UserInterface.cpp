@@ -52,6 +52,12 @@ namespace ArmUI {
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Arm");
     
     nt::GenericEntry *const nt_arm_duty_cycle_encoder = nt_tab.Add("Arm Duty Cycles Encoder", 0.0).GetEntry();
+    nt::GenericEntry *const nt_arm_setpoint = nt_tab.Add("arm setpoint", 0.0).GetEntry();
+    nt::GenericEntry *const nt_arm_power = nt_tab.Add("arm power", 0.0).GetEntry();
+
+    nt::GenericEntry *const nt_extend_encoder = nt_tab.Add("extend encodoer", 0.0).GetEntry();
+    nt::GenericEntry *const nt_extend_setpoint = nt_tab.Add("extend setpoint", 0.0).GetEntry();
+    nt::GenericEntry *const nt_extend_power = nt_tab.Add("extend power", 0.0).GetEntry();
 }
 
 namespace ClawUI {

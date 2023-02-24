@@ -112,6 +112,12 @@ void Arm::Periodic() {
     }
 
     VOKC_CALL(ArmUI::nt_arm_duty_cycle_encoder->SetDouble(interface_->arm_duty_cycle_encoder));
+    VOKC_CALL(ArmUI::nt_arm_setpoint->SetDouble(this->arm_pid_->GetSetpoint()));
+    VOKC_CALL(ArmUI::nt_arm_power->SetDouble(interface_->arm_lift_power));
+
+    VOKC_CALL(ArmUI::nt_extend_encoder->SetDouble(interface_->arm_extend_encoder));
+    VOKC_CALL(ArmUI::nt_extend_setpoint->SetDouble(this->inches_pid_->GetSetpoint()));
+    VOKC_CALL(ArmUI::nt_extend_power->SetDouble(interface_->arm_extend_power));
 
     arm_lift_output_log_.Append(interface_->arm_lift_power);
     arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder);
