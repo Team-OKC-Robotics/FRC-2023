@@ -1,22 +1,30 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include "io/ClawIO.h"
+#include <frc/controller/PIDController.h>
+#include <memory>
+#include "Logging.h"
+#include "wpi/DataLog.h"
+
+enum ClawPreset {
+  CONE,
+  CUBE,
+  OPEN
+};
 
 class Claw : public frc2::SubsystemBase {
  public:
-  Claw();
-  ~Claw();
+  Claw(ClawSoftwareInterface *interface) : interface_(interface) {}
+  ~Claw() {}
 
   bool Init();
   
   bool ResetPositionEncoder();
   bool ResetPositionPID();
 
-  bool SetPosition();
+  bool SetPreset(ClawPreset preset);
+  bool SetPosition(double pos);
   bool Reset();
   
   /**
@@ -31,9 +39,17 @@ class Claw : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
-  
+  ClawSoftwareInterface *const interface_;
+  std::shared_ptr<frc::PIDController> claw_pid_;
+
+  double claw_power_;
+  double open_pos_;
+  double cube_pos_;
+  double cone_pos_;
+
+  wpi::log::DoubleLogEntry claw_output_log_;
+  wpi::log::DoubleLogEntry claw_enc_log_;
+  wpi::log::DoubleLogEntry claw_setpoint_log_;
 };
 
   
