@@ -104,7 +104,11 @@ void Arm::Periodic() {
         case Auto:
             VOKC_CHECK(interface_ != nullptr);
             VOKC_CHECK(this->arm_pid_ != nullptr);
-            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+            if (this->arm_pid_->GetSetpoint() == 0) {
+                this->interface_->arm_lift_power = 0;
+            } else {
+                this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+            }
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             break;
         default:
