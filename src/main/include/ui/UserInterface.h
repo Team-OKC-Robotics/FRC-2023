@@ -57,3 +57,9 @@ namespace ArmUI {
 
     extern nt::GenericEntry *const nt_arm_duty_cycle_encoder;
 }
+
+namespace ClawUI {
+    extern frc::ShuffleboardTab &nt_tab;
+
+    extern nt::GenericEntry *const nt_claw_encoder;
+}

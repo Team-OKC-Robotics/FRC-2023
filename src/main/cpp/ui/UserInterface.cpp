@@ -51,7 +51,11 @@ namespace ArmUI {
     // Get the tab
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Arm");
     
+    nt::GenericEntry *const nt_arm_duty_cycle_encoder = nt_tab.Add("Arm Duty Cycles Encoder", 0.0).GetEntry();
+}
 
-nt::GenericEntry *const nt_arm_duty_cycle_encoder = nt_tab.Add("Arm Duty Cycles Encoder", 0.0).GetEntry();
-    
+namespace ClawUI {
+    frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("claw");
+
+    nt::GenericEntry *const nt_claw_encoder = nt_tab.Add("claw encoder", 0.0).GetEntry();
 }
