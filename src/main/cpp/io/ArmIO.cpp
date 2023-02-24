@@ -40,16 +40,15 @@ bool ArmIO::ProcessIO() {
     sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
     sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  -  330; // offset of 330
 
-    if (sw_interface_->arm_duty_cycle_encoder < 0) {
+    if (sw_interface_->arm_duty_cycle_encoder < -180) {
         sw_interface_->arm_duty_cycle_encoder += 360;
-        sw_interface_->arm_duty_cycle_encoder *= -1;
     }
     
-    TeamOKC::Clamp(-0.2, 0.2, &sw_interface_->arm_lift_power);
-    TeamOKC::Clamp(-0.2, 0.2, &sw_interface_->arm_extend_power);
+    TeamOKC::Clamp(-0.7, 0.7, &sw_interface_->arm_lift_power);
+    TeamOKC::Clamp(-0.7, 0.7, &sw_interface_->arm_extend_power);
 
     // if the absolute encoder is >110 degrees
-    if (sw_interface_->arm_duty_cycle_encoder >= 110) {
+    if (sw_interface_->arm_duty_cycle_encoder >= 100) {
         // and we're trying to go farther positive
         if (sw_interface_->arm_lift_power > 0) {
             // stop it
@@ -60,7 +59,7 @@ bool ArmIO::ProcessIO() {
             hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
             hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
         }
-    } else if (sw_interface_->arm_duty_cycle_encoder <= -110) {
+    } else if (sw_interface_->arm_duty_cycle_encoder <= -100) {
         // and we're trying to go farther negative
         if (sw_interface_->arm_lift_power < 0) {
             // stop it
