@@ -49,12 +49,12 @@ right_front_offset = 9.2
 right_back_offset = 330.0
 
 [arm.lift_pid]
-kP = 0.1
+kP = 0.01
 kI = 0
 kD = 0
 
 [arm.extend_pid]
-kP = 0.1
+kP = 0.01
 kI = 0
 kD = 0 
 
