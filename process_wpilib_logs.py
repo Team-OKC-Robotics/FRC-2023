@@ -12,7 +12,7 @@ extendEncLog = [[], []]
 extendOutputLog = [[], []]
 extendSetpointLog = [[], []]
 
-with open(r"C:\Users\teamo\Documents\github\FRC-2023\logs\good logs\FRC_20230222_013104.csv") as f:
+with open(r"C:\Users\teamo\Documents\github\FRC-2023\logs\good logs\FRC_20230224_003626.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
