@@ -33,8 +33,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     //button bindings
     WPI_IGNORE_DEPRECATED
     // main driver controls
-    driver_left_bumper_->WhileHeld(*manual_open_claw);
-    driver_right_bumper_->WhileHeld(*manual_close_claw);
+    driver_left_bumper_->WhileHeld(*manual_open_claw).WhenReleased(*manual_stop_claw);
+    driver_right_bumper_->WhileHeld(*manual_close_claw).WhenReleased(*manual_stop_claw);
     
     // second driver controls
     manip_a_button_->WhileHeld(*lowerArmCommand);
@@ -272,6 +272,7 @@ bool RobotContainer::InitCommands() {
     // claw commands
     manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
     manual_close_claw = std::make_shared<ManualClawCommand>(claw_, 0.1);
+    manual_stop_claw = std::make_shared<ManualClawCommand>(claw_, 0);
      
     return true;
 }

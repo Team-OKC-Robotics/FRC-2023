@@ -159,6 +159,7 @@ private:
     // claw
     std::shared_ptr<ManualClawCommand> manual_open_claw;
     std::shared_ptr<ManualClawCommand> manual_close_claw;
+    std::shared_ptr<ManualClawCommand> manual_stop_claw;
 };
 
 

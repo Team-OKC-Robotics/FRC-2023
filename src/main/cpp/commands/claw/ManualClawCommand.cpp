@@ -22,11 +22,6 @@ void ManualClawCommand::Execute() {
     VOKC_CALL(claw_->SetManualPower(power_))
 }
 
-void ManualClawCommand::End(bool interrupted) {
-    VOKC_CALL(claw_->SetManualPower(0));
-    return;
-}
-
 bool ManualClawCommand::IsFinished() {
     // Always end this command, as it should continually be scheduled using the WhileHeld() or something
     return true;

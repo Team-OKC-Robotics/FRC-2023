@@ -11,7 +11,6 @@ public:
     explicit ManualClawCommand(std::shared_ptr<Claw> claw, double power);
 
     void Execute() override;
-    void End(bool interrupted) override;
     bool IsFinished() override;
 
 private:
