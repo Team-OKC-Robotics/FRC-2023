@@ -7,7 +7,7 @@
 #include <frc/Filesystem.h>
 
 #include "Utils.h"
-#include "third_party/toml.hpp"
+#include "toml.hpp"
 
 namespace RobotParams {
     extern toml::table parameters;

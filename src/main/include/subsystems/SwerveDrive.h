@@ -139,7 +139,6 @@ private:
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;
 
-    wpi::log::DoubleLogEntry left_front_setpoint_log_;
-    wpi::log::DoubleLogEntry left_front_output_log_;
-    wpi::log::DoubleLogEntry left_front_steer_enc_log_;
+    // Logging
+    OKCLog swerve_logger;
 };

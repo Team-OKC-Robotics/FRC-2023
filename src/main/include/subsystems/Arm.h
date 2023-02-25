@@ -42,6 +42,5 @@ private:
     double up_power_;
     double extend_power_;
 
-    wpi::log::DoubleLogEntry arm_lift_output_log_;
-    wpi::log::DoubleLogEntry arm_lift_enc_log_;
+    OKCLog arm_logger;
 };
