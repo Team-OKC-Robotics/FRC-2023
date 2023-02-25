@@ -8,7 +8,7 @@
 #include "Logging.h"
 #include "wpi/DataLog.h"
 
-enum ArmMode{
+enum ControlMode {
     Manual,
     Auto
 };
@@ -27,7 +27,7 @@ public:
     bool SetManualUpPower(double power);
     bool SetManualExtendPower(double power);
 
-    bool SetControlMode(const ArmMode &mode);
+    bool SetControlMode(const ControlMode &mode);
     bool ManualControl();
     bool AutoControl();
     
@@ -39,7 +39,7 @@ private:
     std::shared_ptr<frc::PIDController> inches_pid_;
     double preset_;
    
-    ArmMode mode_;
+    ControlMode mode_;
     
     double lift_power_;
     double up_power_;

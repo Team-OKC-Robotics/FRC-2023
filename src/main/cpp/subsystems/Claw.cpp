@@ -11,7 +11,11 @@ bool Claw::Init() {
 
     // create the claw PID
     claw_pid_ = std::make_shared<frc::PIDController>(kP, kI, kD);
+
+    // manual control
     claw_power_ = 0;
+
+    mode_ = Manual;
 
     // logs for the claw values
     claw_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/claw/claw_output");
@@ -72,9 +76,30 @@ bool Claw::Reset() {
     return true;
 }
 
+bool Claw::SetControlMode(ControlMode mode) {
+    mode_ = mode;
+
+    return true;
+}
+
+bool Claw::SetManualPower(double power) {
+    claw_power_ = power;
+
+    return true;
+}
+
 void Claw::Periodic() {
-    // PID to the claw's setpoint
-    interface_->claw_open_and_close_power = this->claw_pid_->Calculate(interface_->encoder_reading);
+    switch(mode_) {
+        case Manual:
+            interface_->claw_open_and_close_power = claw_power_;
+            break;
+        case Auto:
+            // PID to the claw's setpoint
+            interface_->claw_open_and_close_power = this->claw_pid_->Calculate(interface_->encoder_reading);
+            break;
+        default:
+            VOKC_CHECK_MSG(false, "unhandled claw control enum");
+    }
 
     // log the values
     claw_output_log_.Append(interface_->claw_open_and_close_power);

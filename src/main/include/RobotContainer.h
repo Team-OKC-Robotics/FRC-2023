@@ -40,6 +40,9 @@
 #include "commands/arm/SetArmExtensionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
 
+// claw
+#include "commands/claw/ManualClawCommand.h"
+
 // misc
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
@@ -147,6 +150,10 @@ private:
     std::shared_ptr<IncrementArmExtendCommand> retractArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
+
+    // claw
+    std::shared_ptr<ManualClawCommand> manual_open_claw;
+    std::shared_ptr<ManualClawCommand> manual_close_claw;
 };
 
 

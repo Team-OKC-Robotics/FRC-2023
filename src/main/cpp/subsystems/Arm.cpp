@@ -31,7 +31,7 @@ bool Arm::Init() {
     return true;
 }
 
-bool Arm::SetControlMode(const ArmMode &mode){
+bool Arm::SetControlMode(const ControlMode &mode){
     mode_= mode;
 
     return true;
