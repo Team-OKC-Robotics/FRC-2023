@@ -21,10 +21,10 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(InitCommands());
 
     // Configure the button bindings
-    ConfigureButtonBindings();
+    VOKC_CALL(ConfigureButtonBindings());
 }
 
-void RobotContainer::ConfigureButtonBindings() {
+bool RobotContainer::ConfigureButtonBindings() {
     VOKC_CHECK(driver_a_button_ != nullptr);
     VOKC_CHECK(driver_b_button_ != nullptr);
     VOKC_CHECK(driver_back_button_ != nullptr);

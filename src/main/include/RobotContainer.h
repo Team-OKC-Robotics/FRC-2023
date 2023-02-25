@@ -82,7 +82,7 @@ private:
 
     // Gamepad initialization
     bool InitGamepads();
-    void ConfigureButtonBindings();
+    bool ConfigureButtonBindings();
 
     // subsystem initialization
     bool InitSwerve();
