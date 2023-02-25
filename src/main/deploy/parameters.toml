@@ -48,6 +48,12 @@ left_back_offset = 79.0
 right_front_offset = 9.2
 right_back_offset = 330.0
 
+[arm]
+offset = -330
+lift_limit = 110
+extend_limit = 100
+max_output = 0.2
+
 [arm.lift_pid]
 kP = 0.05
 kI = 0

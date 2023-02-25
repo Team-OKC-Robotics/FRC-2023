@@ -29,6 +29,15 @@ void RobotContainer::ConfigureButtonBindings() {
     VOKC_CHECK(driver_b_button_ != nullptr);
     VOKC_CHECK(driver_back_button_ != nullptr);
     VOKC_CHECK(driver_x_button_ != nullptr);
+
+    //button bindings
+    WPI_IGNORE_DEPRECATED
+    driver_a_button_->WhileHeld(*extendArmCommand);
+    driver_b_button_->WhileHeld(*retractArmCommand);
+    driver_back_button_->WhileHeld(*raiseArmCommand);
+    driver_x_button_->WhileHeld(*lowerArmCommand);
+    WPI_UNIGNORE_DEPRECATED
+  
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
@@ -211,25 +220,15 @@ bool RobotContainer::InitCommands() {
     //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
     m_autonomousCommand_ = nullptr;
 
+    // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
+    // arm commands
     extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
-
     retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
 
     raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
-
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
-   
-   
-   
-   //button bindings
-    WPI_IGNORE_DEPRECATED
-    driver_a_button_->WhileHeld(*extendArmCommand);
-    driver_b_button_->WhileHeld(*retractArmCommand);
-    driver_back_button_->WhileHeld(*raiseArmCommand);
-    driver_x_button_->WhileHeld(*lowerArmCommand);
-    WPI_UNIGNORE_DEPRECATED
-    
+     
     return true;
 }

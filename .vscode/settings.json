@@ -87,6 +87,7 @@
     "typeindex": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "charconv": "cpp"
+    "charconv": "cpp",
+    "forward_list": "cpp"
   }
 }
