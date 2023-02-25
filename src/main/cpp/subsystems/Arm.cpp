@@ -6,7 +6,7 @@ bool Arm::Init() {
     inches_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
 
     // Initialize the logger for the Arm.
-    plog::init<plog::OKCFormatter, Logging::Arm>(plog::debug, "arm_log.csv");
+    arm_logger.Init("arm_log");
 
     return true;
 }
@@ -49,8 +49,8 @@ bool Arm::ManualControl() {
     interface_->arm_extend_power = extend_power_;
 
     // Log arm data.
-    PLOGD_(Logging::Arm) << "/arm/lift_output," << interface_->arm_lift_power;
-    PLOGD_(Logging::Arm) << "/arm/lift_enc," << interface_->arm_lift_encoder_val;
+    arm_logger.Log("/arm/lift_output", interface_->arm_lift_power);
+    arm_logger.Log("/arm/lift_enc", interface_->arm_lift_encoder_val);
 
     return true;
 }

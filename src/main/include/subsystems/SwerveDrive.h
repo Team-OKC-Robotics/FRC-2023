@@ -138,4 +138,7 @@ private:
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;
+
+    // Logging
+    OKCLog swerve_logger;
 };

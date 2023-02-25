@@ -8,7 +8,7 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
-    plog::init<plog::OKCFormatter, Logging::SwerveDrive>(plog::debug, "swervedrive_log.csv");
+    swerve_logger.Init("swervedrive_log");
 
     double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1);
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
@@ -608,11 +608,11 @@ bool SwerveDrive::UpdateShuffleboard() {
 
     // === LOGGING ===
     OKC_CALL(right_front_module_->GetAngle(&encoder_tmp));
-    PLOGD_(Logging::SwerveDrive) << "/swerve/setpoint," << encoder_tmp;
-    PLOGD_(Logging::SwerveDrive) << "/swerve/output," << interface_->right_front_steer_motor_output;
+    swerve_logger.Log("/swerve/setpoint", encoder_tmp);
+    swerve_logger.Log("/swerve/output", interface_->right_front_steer_motor_output);
     
     OKC_CALL(right_front_module_->GetSteerEncoderReading(&encoder_tmp));
-    PLOGD_(Logging::SwerveDrive) << "/swerve/steer_enc," << encoder_tmp;
+    swerve_logger.Log("/swerve/steer_enc", encoder_tmp);
     
 
 

@@ -41,4 +41,6 @@ private:
     double lift_power_;
     double up_power_;
     double extend_power_;
+
+    OKCLog arm_logger;
 };

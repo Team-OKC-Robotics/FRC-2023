@@ -5,8 +5,6 @@
 #include <memory>
 #include <vector>
 
-#include <plog/Log.h>
-
 /// Utilities
 #include "Logging.h"
 #include "Parameters.h"
