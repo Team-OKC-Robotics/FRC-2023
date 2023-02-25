@@ -1,7 +1,9 @@
 import tkinter
+from tinkter import filedialog
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+import os, sys
 
 # big dict to contain all the individual logs
 logs = {}
@@ -25,13 +27,38 @@ logs = {}
 #    ]
 # }
 
-#TODO
-# pretend this is a CSV file
-log = None
-with open(path, "r") as f:
-    log = path.read().split("\n")
+#TODO use ssh to pull logs off rio
 
-# for each combination in the CSV
+# well we only want the most recent right?
+# no we should have a file dialog for user to choose which log
+# then convert that to csv and store it in csv_logs for github stuff
+# then open and read that
+
+# tkinter file dialog window for user to select log
+# <STACK OVERFLOW CODE>
+root = tkinter.Tk()
+root.withdraw()
+
+log_path = filedialog.askopenfilename()
+# </STACK OVERFLOW CODE>
+
+# call the wpilib binary to csv converter thingy
+exit_code = os.system("py wpilib_log_reader_csv_file.py " + log_path)
+
+# if it didn't work out
+if exit_code != 0:
+    # quit and die
+    print(exit_code)
+    sys.exit(1)
+
+#TODO convert log_path to end with .csv instead of .wpilog, then that's our log I think
+# then read that log
+
+# read the csv file for future log processing
+with open(log_path, "r") as f:
+    log = log_path.read().split("\n")
+
+# for each line in the CSV
 for index, line in enumerate(log):
     # if it's a blank line
     if line.strip() == "":
