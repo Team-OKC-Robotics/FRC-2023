@@ -26,6 +26,8 @@
 #define ARM_UP_MOTOR 10
 #define ARM_EXTEND_MOTOR 11
 
+#define CLAW_MOTOR 12
+
 
 typedef struct actuators_t {
     // Left drivetrain motors

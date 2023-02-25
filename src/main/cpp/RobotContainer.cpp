@@ -49,6 +49,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_right_bumper_->WhileHeld(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
+    return true;
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
@@ -94,6 +95,8 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
+
+    actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
     return true;
 }
 
