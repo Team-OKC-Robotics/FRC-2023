@@ -25,25 +25,25 @@ typedef struct arm_hardware_interface_t {
     frc::DutyCycleEncoder *const arm_duty_cycle_encoder;
     rev::RelativeEncoder *const arm_extend_encoder;
     frc::DigitalInput *const extend_limit_switch;
-
- 
 } ArmHardwareInterface;
 
 typedef struct arm_software_interface_t {
-
     // actuator outputs
     double arm_lift_power;
     double arm_extend_power;
+
+    // sensor inputs
     double arm_encoder;
     double arm_extend_encoder;
     double arm_duty_cycle_encoder;
+    bool extend_limit_switch;
+
+    // config
     ArmConfig arm_config;
-    
     bool update_config;
     bool reset_encoders;
-
-    bool extend_limit_switch;
 } ArmSoftwareInterface;
+
 //arm class
 class ArmIO : public frc2::SubsystemBase {
 public:
@@ -71,4 +71,9 @@ private:
 
     ArmHardwareInterface *const hw_interface_;
     ArmSoftwareInterface *const sw_interface_;
+
+    double offset;
+    double lift_limit;
+    double extend_limit;
+    double max_output;
 };

@@ -1,5 +1,6 @@
 
 #include "io/ArmIO.h"
+#include "Parameters.h"
 
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
@@ -12,6 +13,19 @@ void ArmIO::SimulationPeriodic() {
 }
 
 bool ArmIO::ProcessIO() {
+    bool hasReadParameters = false;
+
+    // if we haven't read the parameters
+    if (!hasReadParameters) {
+        // update the variables
+        offset = RobotParams::GetParam("arm.offset", -330);
+        lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
+        extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
+        max_output = RobotParams::GetParam("arm.max_output", 0.2);
+
+        // raise the flag
+        hasReadParameters = true;
+    }
     OKC_CHECK(sw_interface_ != nullptr);
     OKC_CHECK(hw_interface_ != nullptr);
 
@@ -38,17 +52,19 @@ bool ArmIO::ProcessIO() {
    
     sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
     sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
-    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  -  330; // offset of 330
+    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  +  offset; // offset of 330
 
+    // angle wrapping
     if (sw_interface_->arm_duty_cycle_encoder < -180) {
         sw_interface_->arm_duty_cycle_encoder += 360;
     }
-    
-    TeamOKC::Clamp(-0.7, 0.7, &sw_interface_->arm_lift_power);
-    TeamOKC::Clamp(-0.7, 0.7, &sw_interface_->arm_extend_power);
+
+    // clamp maxmium output 
+    TeamOKC::Clamp(-max_output, max_output, &sw_interface_->arm_lift_power);
+    TeamOKC::Clamp(-max_output, max_output, &sw_interface_->arm_extend_power);
 
     // if the absolute encoder is >110 degrees
-    if (sw_interface_->arm_duty_cycle_encoder >= 100) {
+    if (sw_interface_->arm_duty_cycle_encoder >= lift_limit) {
         // and we're trying to go farther positive
         if (sw_interface_->arm_lift_power > 0) {
             // stop it
@@ -59,7 +75,7 @@ bool ArmIO::ProcessIO() {
             hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
             hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
         }
-    } else if (sw_interface_->arm_duty_cycle_encoder <= -100) {
+    } else if (sw_interface_->arm_duty_cycle_encoder <= -lift_limit) {
         // and we're trying to go farther negative
         if (sw_interface_->arm_lift_power < 0) {
             // stop it
@@ -92,7 +108,7 @@ bool ArmIO::ProcessIO() {
         }
     } else { // if the limit switch isn't pressed
         // if we're instead at the farthest point
-        if (sw_interface_->arm_extend_encoder > 100) {
+        if (sw_interface_->arm_extend_encoder > extend_limit) {
             // and power is positive
             if (sw_interface_->arm_extend_power > 0) {
                 // don't let it go farther
@@ -107,7 +123,6 @@ bool ArmIO::ProcessIO() {
             hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
         }
     }
-
 
     return true;
 }
