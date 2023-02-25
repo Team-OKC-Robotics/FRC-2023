@@ -18,8 +18,10 @@ public:
     ~Arm() {}
 
     bool SetDegrees(double degrees);
+    bool SetPreset(double increment);
     bool SetExtend(double inches);
     bool Init();
+    bool IncrementExtend(double extend);
     void Periodic() override;
     bool SetManualLiftPower(double power);
     bool SetManualUpPower(double power);
@@ -27,6 +29,7 @@ public:
 
     bool SetControlMode(const ArmMode &mode);
     bool ManualControl();
+    bool AutoControl();
     
 
 
@@ -44,4 +47,9 @@ private:
 
     wpi::log::DoubleLogEntry arm_lift_output_log_;
     wpi::log::DoubleLogEntry arm_lift_enc_log_;
+    wpi::log::DoubleLogEntry arm_lift_setpoint_log_;
+
+    wpi::log::DoubleLogEntry arm_extend_output_log_;
+    wpi::log::DoubleLogEntry arm_extend_enc_log_;
+    wpi::log::DoubleLogEntry arm_extend_setpoint_log_;
 };

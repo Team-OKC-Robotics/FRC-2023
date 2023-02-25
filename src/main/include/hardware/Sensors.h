@@ -3,16 +3,10 @@
 #include <memory>
 
 #include "AHRS.h"
-
-#include <frc/DigitalInput.h>
-#include <rev/RelativeEncoder.h>
 #include "frc/AnalogEncoder.h"
-
-// == sensor ports ==
-#define DEPLOY_LIMIT_SWITCH 2
-#define RETRACTED_LIMIT_SWITCH 3
-
-#define BALL_DETECTOR 9
+#include "frc/DutyCycleEncoder.h"
+#include <rev/RelativeEncoder.h>
+#include "frc/DigitalInput.h"
 
 // == sensor ports ==
 #define LEFT_FRONT_STEER_ENCODER 0
@@ -45,5 +39,9 @@ typedef struct sensors_t {
 
     // arm encoders
     std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_lift_encoder;
+    std::unique_ptr<frc::DutyCycleEncoder> arm_duty_cycle_encoder;
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_extend_encoder;
+    std::unique_ptr<frc::DigitalInput> extend_limit_switch;
+
 
 } Sensors;
