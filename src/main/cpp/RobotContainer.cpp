@@ -9,10 +9,10 @@ RobotContainer::RobotContainer() {
     hardware_ = std::make_unique<Hardware>();
     VOKC_CALL(this->InitHardware(hardware_));
 
+    // initialize the subsystems
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-
-    
+    VOKC_CALL(this->InitClaw());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());

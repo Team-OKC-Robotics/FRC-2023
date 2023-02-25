@@ -20,8 +20,6 @@ ManualClawCommand::ManualClawCommand(std::shared_ptr<Claw> claw, double power) {
 void ManualClawCommand::Execute() {
     VOKC_CHECK(claw_ != nullptr);
     VOKC_CALL(claw_->SetManualPower(power_))
-
-
 }
 
 void ManualClawCommand::End(bool interrupted) {
