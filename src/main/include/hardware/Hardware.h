@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <frc/motorcontrol/MotorControllerGroup.h>
 
 #include "hardware/Actuators.h"

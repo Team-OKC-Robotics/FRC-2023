@@ -21,14 +21,11 @@ void ManualArmCommand::Execute() {
 
    
     double lift_power_ = this->gamepad_->GetRawAxis(1);
-    double up_power_ = this->gamepad_->GetRawAxis(0);
-    double extend_power_ = this->gamepad_->GetRawAxis(2);
+    double extend_power_ = this->gamepad_->GetRawAxis(3) - this->gamepad_->GetRawAxis(2);
 
     VOKC_CALL(arm_->SetManualLiftPower(lift_power_));
     VOKC_CALL(arm_->SetManualUpPower(-lift_power_));
-    // VOKC_CALL(arm_->SetManualExtendPower(extend_power_));
-
-    
+    VOKC_CALL(arm_->SetManualExtendPower(extend_power_));
 }
 
 void ManualArmCommand::End(bool interrupted) {

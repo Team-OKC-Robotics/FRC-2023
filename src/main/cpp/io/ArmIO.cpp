@@ -1,5 +1,6 @@
 
 #include "io/ArmIO.h"
+#include "Parameters.h"
 
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
@@ -12,6 +13,19 @@ void ArmIO::SimulationPeriodic() {
 }
 
 bool ArmIO::ProcessIO() {
+    bool hasReadParameters = false;
+
+    // if we haven't read the parameters
+    if (!hasReadParameters) {
+        // update the variables
+        offset = RobotParams::GetParam("arm.offset", -330);
+        lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
+        extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
+        max_output = RobotParams::GetParam("arm.max_output", 0.2);
+
+        // raise the flag
+        hasReadParameters = true;
+    }
     OKC_CHECK(sw_interface_ != nullptr);
     OKC_CHECK(hw_interface_ != nullptr);
 
@@ -32,23 +46,83 @@ bool ArmIO::ProcessIO() {
         sw_interface_->reset_encoders = false;
     }
 
-    
-
-    // Get the hardware sensor values.
-    // limit switches
-    // sw_interface_->deployed_limit_switch_val =
-    //     hw_interface_->deploy_limit_switch->Get(); //???
-    // sw_interface_->retracted_limit_switch_val =
-    //     hw_interface_->retracted_limit_switch->Get(); //???
-
     // intake position encoder
     OKC_CHECK(hw_interface_->arm_extend_motor != nullptr);
     OKC_CHECK(hw_interface_->arm_up_motor != nullptr);
-    hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
-    hw_interface_->arm_up_motor->Set(sw_interface_->arm_up_power);
-    hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+   
+    sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
+    sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
+    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  +  offset; // offset of 330
 
-    sw_interface_->arm_lift_encoder_val = hw_interface_->arm_lift_encoder->GetPosition();
+    // angle wrapping
+    if (sw_interface_->arm_duty_cycle_encoder < -180) {
+        sw_interface_->arm_duty_cycle_encoder += 360;
+    }
+
+    // clamp maxmium output 
+    TeamOKC::Clamp(-max_output, max_output, &sw_interface_->arm_lift_power);
+    TeamOKC::Clamp(-max_output, max_output, &sw_interface_->arm_extend_power);
+
+    // if the absolute encoder is >110 degrees
+    if (sw_interface_->arm_duty_cycle_encoder >= lift_limit) {
+        // and we're trying to go farther positive
+        if (sw_interface_->arm_lift_power > 0) {
+            // stop it
+            hw_interface_->arm_lift_motor->Set(0);
+            hw_interface_->arm_up_motor->Set(0);
+        } else {
+            // otherwise, it's cool
+            hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+            hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
+        }
+    } else if (sw_interface_->arm_duty_cycle_encoder <= -lift_limit) {
+        // and we're trying to go farther negative
+        if (sw_interface_->arm_lift_power < 0) {
+            // stop it
+            hw_interface_->arm_lift_motor->Set(0);
+            hw_interface_->arm_up_motor->Set(0);
+        } else {
+            // otherwise, it's cool
+            hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+            hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
+        }
+    } else { // if neither limit is reached
+        hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+        hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
+    }
+
+    sw_interface_->extend_limit_switch = !hw_interface_->extend_limit_switch->Get(); // limit switch is inverse logic
+
+    // if the IR sensor is getting a read
+    if (sw_interface_->extend_limit_switch) {
+        // reset arm encoder
+        hw_interface_->arm_extend_encoder->SetPosition(0.0);
+
+        // if the motor power is positive
+        if (sw_interface_->arm_extend_power > 0) {
+            // let it pass, so the arm can move outwards
+            hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+        } else {
+            // otherwise, limit it to 0 and don't let it move
+            hw_interface_->arm_extend_motor->Set(0);
+        }
+    } else { // if the limit switch isn't pressed
+        // if we're instead at the farthest point
+        if (sw_interface_->arm_extend_encoder > extend_limit) {
+            // and power is positive
+            if (sw_interface_->arm_extend_power > 0) {
+                // don't let it go farther
+                hw_interface_->arm_extend_motor->Set(0);
+            } else {
+                // otherwise let the arm go wherever the heck it wants to go
+                hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+            }
+        // else, if neither limit is reached
+        } else {
+            // set the power of the motor
+            hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+        }
+    }
 
     return true;
 }
@@ -68,12 +142,6 @@ bool ArmIO::UpdateArmConfig(ArmConfig &config) {
     hw_interface_->arm_up_motor->SetOpenLoopRampRate(open_loop_ramp);
     hw_interface_->arm_extend_motor->SetOpenLoopRampRate(open_loop_ramp);
 
-    // Java code has this commented out as well, I'm assuming because it was
-    // meesing something up. well, the intake works (probably, been a while
-    // since it's been actually plugged in) without this, so leaving commented
-    // out for now
-    // hw_interface_->intake_position_motor->SetOpenLoopRampRate(open_loop_ramp);
-
     // current limiting, so the neo 550 on the indexer doesn't stall and smoke
     hw_interface_->arm_lift_motor->SetSmartCurrentLimit(max_indexer_current);
     hw_interface_->arm_up_motor->SetSmartCurrentLimit(max_indexer_current);
@@ -88,11 +156,6 @@ bool ArmIO::ResetEncoders() {
     hw_interface_->arm_lift_motor->GetEncoder().SetPosition(0.0);
     hw_interface_->arm_up_motor->GetEncoder().SetPosition(0.0);
     hw_interface_->arm_extend_motor->GetEncoder().SetPosition(0.0);
-
-    // we currently don't use the encoder for these other two motors, so we
-    // don't need to reset them yet. yet.
-    // hw_interface_->intake_motor->GetEncoder().SetPosition(0.0);
-    // hw_interface_->indexer_motor->GetEncoder().SetPosition(0.0);
 
     return true;
 }

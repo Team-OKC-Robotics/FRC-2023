@@ -4,7 +4,9 @@
 
 #include "AHRS.h"
 #include "frc/AnalogEncoder.h"
+#include "frc/DutyCycleEncoder.h"
 #include <rev/RelativeEncoder.h>
+#include "frc/DigitalInput.h"
 
 // == sensor ports ==
 #define LEFT_FRONT_STEER_ENCODER 0
@@ -15,6 +17,7 @@
 typedef struct sensors_t {
     // navX IMU
     std::unique_ptr<AHRS> ahrs;
+
 
     // swerve drive drive encoders
     std::unique_ptr<rev::SparkMaxRelativeEncoder> left_front_drive_encoder;
@@ -36,5 +39,9 @@ typedef struct sensors_t {
 
     // arm encoders
     std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_lift_encoder;
+    std::unique_ptr<frc::DutyCycleEncoder> arm_duty_cycle_encoder;
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_extend_encoder;
+    std::unique_ptr<frc::DigitalInput> extend_limit_switch;
+
 
 } Sensors;
