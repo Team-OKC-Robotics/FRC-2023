@@ -36,6 +36,7 @@ bool Arm::SetControlMode(const ArmMode &mode){
 
     return true;
 }
+
 bool Arm::SetDegrees(double degrees) {
     
     OKC_CHECK(this->arm_pid_ != nullptr);
@@ -65,15 +66,13 @@ bool Arm::IncrementExtend(double increment) {
     return true;
 }
 
-bool Arm::SetManualLiftPower(double power)
-{
+bool Arm::SetManualLiftPower(double power) {
     lift_power_ = power;
 
     return true;
 }
 
-bool Arm::SetManualExtendPower(double power)
-{
+bool Arm::SetManualExtendPower(double power) {
     extend_power_ = power;
 
     return true;
@@ -87,12 +86,32 @@ bool Arm::ManualControl() {
 
     return true;
 }
-bool Arm::SetManualUpPower(double power)
-{
+
+bool Arm::SetManualUpPower(double power) {
     up_power_ = power;
 
     return true;
 
+}
+
+bool Arm::AutoControl() {
+    OKC_CHECK(interface_ != nullptr);
+    OKC_CHECK(this->arm_pid_ != nullptr);
+
+    // if the setpoint is 0 (ie the arm hasn't been set to go somewhere yet, like it's just been enabled)
+    if (this->arm_pid_->GetSetpoint() == 0) {
+        // don't do anything
+        this->interface_->arm_lift_power = 0;
+    } else { // otherwise
+        // PID to the setpoint
+        this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+    }
+
+    // this doesn't apply to extend because it is unlikely we would break something with this *knock on wood*
+    this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
+
+
+    return true;
 }
 
 void Arm::Periodic() {
@@ -102,19 +121,13 @@ void Arm::Periodic() {
             VOKC_CALL(this->ManualControl());
             break;
         case Auto:
-            VOKC_CHECK(interface_ != nullptr);
-            VOKC_CHECK(this->arm_pid_ != nullptr);
-            if (this->arm_pid_->GetSetpoint() == 0) {
-                this->interface_->arm_lift_power = 0;
-            } else {
-                this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
-            }
-            this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
+            VOKC_CALL(this->AutoControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
     }
 
+    // shuffleboard value updating
     VOKC_CALL(ArmUI::nt_arm_duty_cycle_encoder->SetDouble(interface_->arm_duty_cycle_encoder));
     VOKC_CALL(ArmUI::nt_arm_setpoint->SetDouble(this->arm_pid_->GetSetpoint()));
     VOKC_CALL(ArmUI::nt_arm_power->SetDouble(interface_->arm_lift_power));
@@ -123,6 +136,7 @@ void Arm::Periodic() {
     VOKC_CALL(ArmUI::nt_extend_setpoint->SetDouble(this->inches_pid_->GetSetpoint()));
     VOKC_CALL(ArmUI::nt_extend_power->SetDouble(interface_->arm_extend_power));
 
+    // and log the values
     arm_lift_output_log_.Append(interface_->arm_lift_power);
     arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder);
     arm_lift_setpoint_log_.Append(arm_pid_->GetSetpoint());

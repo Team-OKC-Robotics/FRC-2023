@@ -29,6 +29,7 @@ public:
 
     bool SetControlMode(const ArmMode &mode);
     bool ManualControl();
+    bool AutoControl();
     
 
 
