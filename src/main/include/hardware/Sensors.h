@@ -43,5 +43,6 @@ typedef struct sensors_t {
     std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_extend_encoder;
     std::unique_ptr<frc::DigitalInput> extend_limit_switch;
 
-
+    // claw sensors
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> claw_encoder;
 } Sensors;

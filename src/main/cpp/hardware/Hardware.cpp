@@ -63,7 +63,8 @@ bool SetupSwerveDriveInterface(
 
     return true;
 }
- bool SetupArmInterface(std::unique_ptr<Hardware> &hardware,
+
+bool SetupArmInterface(std::unique_ptr<Hardware> &hardware,
                             std::shared_ptr<ArmHardwareInterface> &interface){ 
  OKC_CHECK(hardware->actuators != nullptr);
                             
@@ -88,7 +89,23 @@ bool SetupSwerveDriveInterface(
     interface = std::make_shared<ArmHardwareInterface>(arm_interface);
 
     return true;
+}
 
+bool SetupClawInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<ClawHardwareInterface> &interface) {
+    //Get actuators interface for arm
+    std::unique_ptr<Actuators> &actuators = hardware->actuators;
+    std::unique_ptr<Sensors> &sensors = hardware->sensors;
+    
+   //make sure the actuators actually exist 
+   OKC_CHECK(actuators->claw_motor != nullptr);
+   
+   ClawHardwareInterface claw_interface = {
+    actuators->claw_motor.get(),
+    sensors->claw_encoder.get()
+   };
 
+    interface = std::make_shared<ClawHardwareInterface>(claw_interface);
+
+    return true;
 
 }

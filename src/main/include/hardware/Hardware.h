@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "io/SwerveDriveIO.h"
 #include "io/ArmIO.h"
+#include "io/ClawIO.h"
 
 // Subsystem I/O
 
@@ -33,7 +34,7 @@ bool SetupSwerveDriveInterface(
     std::shared_ptr<SwerveDriveHardwareInterface> &interface);
 
 /**
- * @brief Link the Intake to the hardware interfaces.
+ * @brief Link the arm to the hardware interfaces.
  *
  * @param interface
  * @return true
@@ -43,15 +44,15 @@ bool SetupArmInterface(std::unique_ptr<Hardware> &hardware,
                         std::shared_ptr<ArmHardwareInterface> &interface);
 
 /**
- * @brief Link the Shooter to the hardware interfaces.
+ * @brief Link the claw to the hardware interfaces.
  *
  * @param interface
  * @return true
  * @return false
  */
-//bool SetupClawInterface(
- //   std::unique_ptr<HardwareInterface> &hardware,
- //   std::shared_ptr<ClawHardware> *interface);
+bool SetupClawInterface(
+   std::unique_ptr<Hardware> &hardware,
+   std::shared_ptr<ClawHardwareInterface> &interface);
 
 // bool SetupVisionTrackingInterface(
 //    std::unique_ptr<HardwareInterface> &hardware,
