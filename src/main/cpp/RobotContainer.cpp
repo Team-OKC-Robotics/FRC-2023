@@ -32,10 +32,21 @@ void RobotContainer::ConfigureButtonBindings() {
 
     //button bindings
     WPI_IGNORE_DEPRECATED
-    driver_a_button_->WhileHeld(*extendArmCommand);
-    driver_b_button_->WhileHeld(*retractArmCommand);
-    driver_back_button_->WhileHeld(*raiseArmCommand);
-    driver_x_button_->WhileHeld(*lowerArmCommand);
+    // main driver controls
+    driver_left_bumper_->WhileHeld(*manual_open_claw);
+    driver_right_bumper_->WhileHeld(*manual_close_claw);
+    
+    // second driver controls
+    manip_a_button_->WhileHeld(*lowerArmCommand);
+    manip_y_button_->WhileHeld(*raiseArmCommand);
+    manip_left_bumper_button_->WhileHeld(*retractArmCommand);
+    manip_right_bumper_button_->WhileHeld(*extendArmCommand);
+
+    // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
+    driver_a_button_->WhileHeld(*lowerArmCommand);
+    driver_y_button_->WhileHeld(*raiseArmCommand);
+    driver_left_bumper_->WhileHeld(*retractArmCommand);
+    driver_right_bumper_->WhileHeld(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
 }
@@ -255,6 +266,10 @@ bool RobotContainer::InitCommands() {
 
     raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
+
+    // claw commands
+    manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
+    manual_close_claw = std::make_shared<ManualClawCommand>(claw_, 0.1);
      
     return true;
 }
