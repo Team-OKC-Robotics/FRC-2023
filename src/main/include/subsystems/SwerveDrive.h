@@ -55,13 +55,9 @@ public:
     bool SetMaxOutputDrive(const double &max_output);
     bool SetMaxOutputSteer(const double &max_output);
 
-    bool TeleOpDrive(const double &drive, const double &strafe, const double &turn);
-    bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
-    bool InitAuto(frc::Pose2d pos, bool keep_heading);
-
-    bool UpdateModules();
+    bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -91,33 +87,15 @@ private:
     std::shared_ptr<SwerveModule> right_front_module_;
     std::shared_ptr<SwerveModule> right_back_module_;
 
-    // swerve module positions
-    std::shared_ptr<frc::Translation2d> left_front_loc_;
-    std::shared_ptr<frc::Translation2d> left_back_loc_;
-    std::shared_ptr<frc::Translation2d> right_front_loc_;
-    std::shared_ptr<frc::Translation2d> right_back_loc_;
-
-    // swerve module states
-    std::shared_ptr<frc::SwerveModulePosition> left_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> left_back_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_back_pos_;    
-
-    // swerve module positions
-    std::shared_ptr<wpi::array<frc::SwerveModulePosition, 4>> positions_;
-
-    // kinematics
-    std::shared_ptr<frc::SwerveDriveKinematics<4>> swerve_kinematics_;
-
-    // odometry
-    std::shared_ptr<frc::SwerveDriveOdometry<4>> swerve_odometry_;
-
-    // position
-    std::shared_ptr<frc::Pose2d> position_;
-
     // Speed modifier (the joystick input is multiplied by this value)
     double speed_modifier_drive_ = 0.75;
     double speed_modifier_steer_ = 0.75;
+
+    double last_drive = 0.0;
+    double last_strafe = 0.0;
+    double last_turn = 0.0;
+
+    double control_decay = 0.1;
 
     // max output
     double max_output_drive_ = 1;
@@ -135,6 +113,7 @@ private:
     AutoState auto_state_;
     bool in_auto = false;
     bool auto_lock_heading_;
+    TeamOKC::Pose position_;
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;

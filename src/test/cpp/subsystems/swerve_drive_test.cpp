@@ -57,40 +57,24 @@ TEST_F(SwerveDriveTest, VectorTeleOpDrive) {
     // tele-op drive with some higher numbers
     ASSERT_TRUE(swerve_->VectorTeleOpDrive(0.5, 2, 4));
 
-    //TODO check motor outputs I suppose? make sure none of them are 0?
+    EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
+    EXPECT_NE(sw_interface_.left_back_drive_motor_output, 0);
+    EXPECT_NE(sw_interface_.right_front_drive_motor_output, 0);
+    EXPECT_NE(sw_interface_.right_back_drive_motor_output, 0);
+
     // and also make sure none are greater than 1
-}
-
-TEST_F(SwerveDriveTest, WPITeleOpDrive) {
-    ASSERT_TRUE(swerve_->TeleOpDrive(0, 0, 0));
-    swerve_->Periodic();
-
-    // so everything should be 0 (except steer motors, because they're trying to PID to 0)
-    // EXPECT_EQ(sw_interface_.left_front_drive_motor_output, 0);
-    // EXPECT_EQ(sw_interface_.left_back_drive_motor_output, 0);
-    // EXPECT_EQ(sw_interface_.right_front_drive_motor_output, 0);
-    // EXPECT_EQ(sw_interface_.right_back_drive_motor_output, 0);
-    //TODO steer motors
-
-    ASSERT_TRUE(swerve_->TeleOpDrive(3, 0.5, 0.25));
-    swerve_->Periodic();
-    // swerve_->Periodic();
-
-    // drive motors shouldn't be 0 then (not sure exactly what they should be, but it shouldn't be 0)
-    // EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
-    // EXPECT_NE(sw_interface_.left_back_drive_motor_output, 0);
-    // EXPECT_NE(sw_interface_.right_front_drive_motor_output, 0);
-    // EXPECT_NE(sw_interface_.right_back_drive_motor_output, 0);
-    //FIXME
-
-    //TODO steer motors
 }
 
 TEST_F(SwerveDriveTest, LockAutonomousDrive) {
     //TODO better pos/heading
-    frc::Pose2d pos = frc::Pose2d();
+    TeamOKC::Pose pos = TeamOKC::Pose(10, -5, 30);
 
     ASSERT_TRUE(swerve_->InitAuto(pos, true)); // lock heading
+
+    swerve_->Periodic();
+
+    EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
+
 
     //do some janky periodic() stuff maybe? just get it to go through all the states
     //TODO
@@ -98,9 +82,14 @@ TEST_F(SwerveDriveTest, LockAutonomousDrive) {
 
 TEST_F(SwerveDriveTest, UnlockedAutoDrive) {
      //TODO better pos/heading
-    frc::Pose2d pos = frc::Pose2d();
+    TeamOKC::Pose pos = TeamOKC::Pose(-5, 20, 90);
 
     ASSERT_TRUE(swerve_->InitAuto(pos, false)); // turn to heading first before driving
+
+    swerve_->Periodic();
+    swerve_->Periodic();
+
+    EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
 
     //do some janky periodic() stuff maybe? just get it to go through all the states
     //TODO
@@ -151,7 +140,6 @@ TEST_F(SwerveDriveTest, DriveEncodersTest) {
     EXPECT_EQ(avg, (left_front+left_back+right_front+right_back) / 4);
 
     //TODO velocity encoders
-    //FIXME this test fails
 }
 
 TEST_F(SwerveDriveTest, SteerEncodersTest) {
@@ -159,7 +147,6 @@ TEST_F(SwerveDriveTest, SteerEncodersTest) {
 }
 
 TEST_F(SwerveDriveTest, PeriodicTest) {
-    // wait how does this test pass?
     swerve_->Periodic();
     //TODO change some things and verify they get updated by Periodic?
 }
