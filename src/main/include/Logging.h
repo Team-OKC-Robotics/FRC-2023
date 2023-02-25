@@ -66,7 +66,7 @@ class OKCLog {
             std::chrono::duration<double> elapsed_seconds = cur_t - start_time_;
 
             // Build the output for this log event and save it to the file.
-            std::string row_output = std::to_string(elapsed_seconds.count()) + "," + label + "," + std::to_string(data) + "\n";
+            std::string row_output = std::to_string(elapsed_seconds.count()) + ",\"" + label + "\"," + std::to_string(data) + "\n";
             log_out_ << row_output << std::flush;
         }
 
