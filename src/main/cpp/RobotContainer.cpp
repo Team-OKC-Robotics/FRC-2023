@@ -45,8 +45,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
     driver_a_button_->WhileHeld(*lowerArmCommand);
     driver_y_button_->WhileHeld(*raiseArmCommand);
-    driver_left_bumper_->WhileHeld(*retractArmCommand);
-    driver_right_bumper_->WhileHeld(*extendArmCommand);
+    driver_x_button_->WhileHeld(*retractArmCommand);
+    driver_b_button_->WhileHeld(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
