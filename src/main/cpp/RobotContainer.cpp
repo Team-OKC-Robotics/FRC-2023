@@ -25,10 +25,10 @@ RobotContainer::RobotContainer() {
 }
 
 bool RobotContainer::ConfigureButtonBindings() {
-    VOKC_CHECK(driver_a_button_ != nullptr);
-    VOKC_CHECK(driver_b_button_ != nullptr);
-    VOKC_CHECK(driver_back_button_ != nullptr);
-    VOKC_CHECK(driver_x_button_ != nullptr);
+    OKC_CHECK(driver_a_button_ != nullptr);
+    OKC_CHECK(driver_b_button_ != nullptr);
+    OKC_CHECK(driver_back_button_ != nullptr);
+    OKC_CHECK(driver_x_button_ != nullptr);
 
     //button bindings
     WPI_IGNORE_DEPRECATED
