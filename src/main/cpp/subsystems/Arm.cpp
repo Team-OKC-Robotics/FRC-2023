@@ -28,6 +28,10 @@ bool Arm::Init() {
     this->arm_pid_->SetSetpoint(0);
     this->inches_pid_->SetSetpoint(0);
 
+    lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
+    extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
+     
+
     return true;
 }
 
@@ -40,28 +44,69 @@ bool Arm::SetControlMode(const ControlMode &mode){
 bool Arm::SetDegrees(double degrees) {
     
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(degrees);
+
+    // limit the lift PID setpoint to the actual hardware limits
+    if (degrees < lift_limit) {
+        if (degrees > -lift_limit) {
+            this->arm_pid_->SetSetpoint(degrees);
+        } else {
+            this->arm_pid_->SetSetpoint(-lift_limit);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(lift_limit);
+    }
 
     return true;
 }
 
 bool Arm::SetExtend(double inches) {
     OKC_CHECK(this->inches_pid_ != nullptr);
-    this->inches_pid_->SetSetpoint(inches);
+
+    // limit the extend PID setpoint to the actual hardware limits
+    if (inches < extend_limit) {
+        if (inches > 0) {
+            this->arm_pid_->SetSetpoint(inches);
+        } else {
+            this->arm_pid_->SetSetpoint(0);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(extend_limit);
+    }
+
 
     return true;
 }
 
 bool Arm::SetPreset(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+
+    // limit the lift PID setpoint to the actual hardware limits
+    if (arm_pid_->GetSetpoint() + increment < lift_limit) {
+        if (arm_pid_->GetSetpoint() + increment > -lift_limit) {
+            this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+        } else {
+            this->arm_pid_->SetSetpoint(-lift_limit);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(lift_limit);
+    }
 
     return true;
 }
 
 bool Arm::IncrementExtend(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
+
+    // limit the extend PID setpoint to the actual hardware limits
+    if (inches_pid_->GetSetpoint() + increment  <  extend_limit) {
+        if (inches_pid_->GetSetpoint() + increment > 0) {
+            this->arm_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
+        } else {
+            this->arm_pid_->SetSetpoint(0);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(extend_limit);
+    }
 
     return true;
 }
