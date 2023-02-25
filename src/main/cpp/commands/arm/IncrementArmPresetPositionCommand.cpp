@@ -8,8 +8,7 @@
 
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 
-IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared_ptr<Arm> arm,
-                                   double increment) {
+IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared_ptr<Arm> arm, double increment) {
     // Set everything.
     arm_ = arm;
     increment_ = increment;
@@ -17,7 +16,7 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
     
-    arm_->SetControlMode(Auto);  
+        arm_->SetControlMode(Auto);  
     }
    }
 

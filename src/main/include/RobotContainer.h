@@ -120,7 +120,7 @@ private:
     std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
 
     
-     std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
     std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
     /**
@@ -136,8 +136,8 @@ private:
 
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
     std::shared_ptr<IncrementArmExtendCommand> retractArmCommand;
-     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
-     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
+    std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
+    std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 };
 
 
