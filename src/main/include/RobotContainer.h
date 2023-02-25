@@ -15,10 +15,13 @@
 // I/O Subsystems
 #include "io/SwerveDriveIO.h"
 #include "subsystems/SwerveDrive.h"
-
+#include "io/ArmIO.h"
+#include "io/ClawIO.h"
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/Arm.h"
+#include "subsystems/Claw.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
@@ -30,24 +33,18 @@
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoSwerveCommand.h"
 
-#include <frc2/command/Command.h>
-#include <frc2/command/SubsystemBase.h>
-
-#include "Logging.h"
-
-//subsytems
-#include "subsystems/Arm.h"
-#include "subsystems/SwerveDrive.h"
-
-//I/O Subsystems
-
-#include "io/ArmIO.h"
-
+// arm
 #include "commands/arm/ManualArmCommand.h"
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/SetArmAngleCommand.h"
 #include "commands/arm/SetArmExtensionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
+
+// misc
+#include <frc2/command/Command.h>
+#include <frc2/command/SubsystemBase.h>
+
+#include "Logging.h"
  
 
 
@@ -82,25 +79,30 @@ private:
     // subsystem initialization
     bool InitSwerve();
     bool InitArm();
+    bool InitClaw();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
+    std::shared_ptr<ClawHardwareInterface> claw_hw_;
 
 
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
     std::shared_ptr<ArmIO> arm_io_;
+    std::shared_ptr<ClawIO> claw_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
     std::shared_ptr<ArmSoftwareInterface> arm_sw_;
+    std::shared_ptr<ClawSoftwareInterface> claw_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
     std::shared_ptr<Arm> arm_;
+    std::shared_ptr<Claw> claw_;
 
     /**
      * User interfaces

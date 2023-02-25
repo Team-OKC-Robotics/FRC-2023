@@ -149,6 +149,10 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
+    OKC_CHECK(actuators.claw_motor != nullptr);
+
+    sensor_interface->claw_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.claw_motor->GetEncoder());
+
     return true;
 }
 
@@ -180,6 +184,20 @@ bool RobotContainer::InitArm() {
     arm_ = std::make_shared<Arm>(arm_sw_.get());
 
     OKC_CALL(arm_->Init());
+
+    return true;
+}
+
+bool RobotContainer::InitClaw() {
+    OKC_CALL(SetupClawInterface(hardware_, claw_hw_));
+
+    claw_sw_ = std::make_shared<ClawSoftwareInterface>();
+
+    claw_io_ = std::make_shared<ClawIO>(claw_hw_.get(), claw_sw_.get());
+    
+    claw_ = std::make_shared<Claw>(claw_sw_.get());
+
+    OKC_CALL(claw_->Init());
 
     return true;
 }
