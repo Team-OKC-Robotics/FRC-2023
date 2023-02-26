@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id "cpp"
     id "google-test-test-suite"
@@ -95,5 +97,94 @@ model {
             wpi.cpp.deps.wpilib(it)
             wpi.cpp.deps.googleTest(it)
         }
+    }
+}
+
+task copyDeployDir {
+    String prefix = 'test-results/frcUserProgramTest/'
+    String suffix = 'src/main/deploy'
+
+    // Linux is the default for deploy and CI
+    if (OperatingSystem.current().isLinux()) {
+        // Make the directory
+        project.mkdir prefix + "linuxathena/debug/" + suffix
+        project.mkdir prefix + "linuxx86-64/debug/" + suffix
+
+        // Linux Athena
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxathena/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxathena/release/" + suffix)
+        }
+        // Linux x86-64
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxx86-64/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxx86-64/release/" + suffix)
+        }
+    } else if(OperatingSystem.current().isWindows()){
+        // Windows is used by most of the team for development.
+        project.mkdir prefix + "windowsx86-64/debug/" + suffix
+        project.mkdir prefix + "windowsx86/debug/" + suffix
+
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86-64/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86-64/release/" + suffix)
+        }
+
+        // Non 64 bit version just in case
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86/release/" + suffix)
+        }
+        
+    } else {
+        // Otherwise this is a Mac
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "osxuniversal/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "osxuniversal/release/" + suffix)
+        }
+    }
+    
+}
+
+// Copy the deploy/ folder when doing unit tests (check) in order to load things like parameters.
+check.dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
+    }
+}
+
+build.dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
     }
 }
