@@ -123,14 +123,10 @@ private:
     std::shared_ptr<frc2::JoystickButton> driver_b_button_;
     std::shared_ptr<frc2::JoystickButton> driver_x_button_;
     std::shared_ptr<frc2::JoystickButton> driver_y_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_start_bumper_;
-    std::shared_ptr<frc2::JoystickButton> driver_back_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_x_button_;
     std::shared_ptr<frc2::JoystickButton> driver_start_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_back_button_;
     std::shared_ptr<frc2::JoystickButton> driver_left_stick_button_;
     std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
-
-    
     std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
     std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
