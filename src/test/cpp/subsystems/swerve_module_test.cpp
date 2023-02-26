@@ -56,18 +56,57 @@ TEST_F(SwerveModuleTest, AngleSetpointTest) {
     //  - bool GetSteerError(double *error);
 }
 
-/**
-    bool GetSteerEncoderReading(double *reading);
+TEST_F(SwerveModuleTest, SteerEncoderReadingTest) {
+    // steer encoder reading should be initialized to 0
+    double reading = 0.0;
+    EXPECT_TRUE(module_->GetSteerEncoderReading(&reading));
+    EXPECT_EQ(reading, 0);
+
+    //TODO fix this so it reads the offset from RobotParams
+    const double offset = 330;
+
+    // now test for Update()
+    const double angle = 45;
+    double sensor_value = (angle + offset) / 360;
+
+    // wrap the sensor value
+    if (sensor_value > 1) {
+        sensor_value -= 1;
+    } else if (sensor_value < 0) {
+        sensor_value += 1;
+    }
+    
+    reading = 0.0;
+    // reading should update based off of calling Update()
+    EXPECT_TRUE(module_->Update(0, sensor_value, 0, 0));
+    EXPECT_TRUE(module_->GetSteerEncoderReading(&reading));
+    EXPECT_EQ(reading, angle);
+}
+
+TEST_F(SwerveModuleTest, DrivePIDTest) {
+    // test setting the P, I, and D gains for the drive PID
+    ASSERT_TRUE(module_->SetDrivePID(0, 0, 0));
+    ASSERT_TRUE(module_->SetDrivePID(1, 0, 0));
+    ASSERT_TRUE(module_->SetDrivePID(1, 0.01, 0.11));
+    ASSERT_TRUE(module_->SetDrivePID(0, 0.01, 100));
+}
+
+TEST_F(SwerveModuleTest, SteerPIDTest) {
+    // test setting the P, I, and D gains for the steer PID
+    ASSERT_TRUE(module_->SetSteerPID(0, 0, 0));
+    ASSERT_TRUE(module_->SetSteerPID(1, 0, 0));
+    ASSERT_TRUE(module_->SetSteerPID(1, 0.01, 0.11));
+    ASSERT_TRUE(module_->SetSteerPID(0, 0.01, 100));
+}
+
+
+/**    
     bool GetSteerOutput(double *output); // PID, optimize angle
 
     bool SetDistance(double distance);
     bool GetDriveError(double *error);
     bool GetDriveOutput(double *output); // PID
 
-    bool SetDrivePID(double kP, double kI, double kD);
-    bool SetSteerPID(double kP, double kI, double kD);
 
     bool Update(double drive_enc, double steer_enc, double drive_vel, double steer_vel);
-    bool Reset();
-
 */
