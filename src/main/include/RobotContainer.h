@@ -18,6 +18,7 @@
 #include "io/ArmIO.h"
 #include "io/ClawIO.h"
 
+
 // Subsystems
 #include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
@@ -48,8 +49,6 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include "Logging.h"
- 
-
 
 #include "units/length.h"
 #include "units/velocity.h"
@@ -126,6 +125,12 @@ private:
     std::shared_ptr<frc2::JoystickButton> driver_y_button_;
     std::shared_ptr<frc2::JoystickButton> driver_start_bumper_;
     std::shared_ptr<frc2::JoystickButton> driver_back_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_x_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_start_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
+
+    
     std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
     std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
