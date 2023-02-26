@@ -65,12 +65,12 @@ bool Arm::SetExtend(double inches) {
     // limit the extend PID setpoint to the actual hardware limits
     if (inches < extend_limit) {
         if (inches > 0) {
-            this->arm_pid_->SetSetpoint(inches);
+            this->inches_pid_->SetSetpoint(inches);
         } else {
-            this->arm_pid_->SetSetpoint(0);
+            this->inches_pid_->SetSetpoint(0);
         }
     } else {
-        this->arm_pid_->SetSetpoint(extend_limit);
+        this->inches_pid_->SetSetpoint(extend_limit);
     }
 
 
@@ -100,12 +100,12 @@ bool Arm::IncrementExtend(double increment) {
     // limit the extend PID setpoint to the actual hardware limits
     if (inches_pid_->GetSetpoint() + increment  <  extend_limit) {
         if (inches_pid_->GetSetpoint() + increment > 0) {
-            this->arm_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
+            this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
         } else {
-            this->arm_pid_->SetSetpoint(0);
+            this->inches_pid_->SetSetpoint(0);
         }
     } else {
-        this->arm_pid_->SetSetpoint(extend_limit);
+        this->inches_pid_->SetSetpoint(extend_limit);
     }
 
     return true;
