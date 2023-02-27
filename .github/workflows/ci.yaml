@@ -35,24 +35,12 @@ jobs:
     - name: Copy Deploy Configuration
       run: ./gradlew copyDeployDir
 
-    - name: Show Files 1
-      run: ls -a $GITHUB_WORKSPACE
+    - name: PWD
+      run: pwd
     
-    - name: Show Files 2
+    - name: Show Files
       if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug
-    
-    - name: Show Files 3
-      if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src
-
-    - name: Show Files 4
-      if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main
-
-    - name: Show Files 5
-      if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+      run: ls -al .
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
