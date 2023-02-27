@@ -40,7 +40,7 @@ jobs:
         ls -a
         ls -a build
         ls -a build/test-results
-        ls -a /__w/FRC-2023/FRC-2023/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/deploy
+        ls -a /__w/FRC-2023/FRC-2023/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
 
     # Runs a single command using the runners shell
     #- name: Compile and run tests on robot code
