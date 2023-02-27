@@ -109,8 +109,12 @@ task copyDeployDir {
         // Make the directories
         def d1 = new File(prefix + "linuxathena/debug/" + suffix)
         def d2 = new File(prefix + "linuxx86-64/debug/" + suffix)
+        def d3 = new File(prefix + "linuxathena/release/" + suffix)
+        def d4 = new File(prefix + "linuxx86-64/release/" + suffix)
         d1.mkdirs()
         d2.mkdirs() 
+        d3.mkdirs()
+        d4.mkdirs() 
 
         // Linux Athena
         // Copy debug
@@ -138,8 +142,12 @@ task copyDeployDir {
         // Windows is used by most of the team for development.
         def d1 = new File(prefix + "windowsx86-64/debug/" + suffix)
         def d2 = new File(prefix + "windowsx86/debug/" + suffix)
+        def d3 = new File(prefix + "windowsx86-64/release/" + suffix)
+        def d4 = new File(prefix + "windowsx86/release/" + suffix)
         d1.mkdirs()
         d2.mkdirs() 
+        d3.mkdirs()
+        d4.mkdirs() 
 
         // Copy debug
         copy {
@@ -167,7 +175,9 @@ task copyDeployDir {
     } else {
         // Otherwise this is a Mac
         def d1 = new File(prefix + "osxuniversal/debug/" + suffix)
+        def d2 = new File(prefix + "osxuniversal/release/" + suffix)
         d1.mkdirs()
+        d2.mkdirs()
 
         // Copy debug
         copy {
