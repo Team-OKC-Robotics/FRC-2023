@@ -14,7 +14,6 @@
 
 // I/O Subsystems
 #include "io/SwerveDriveIO.h"
-#include "subsystems/SwerveDrive.h"
 #include "io/ArmIO.h"
 #include "io/ClawIO.h"
 
