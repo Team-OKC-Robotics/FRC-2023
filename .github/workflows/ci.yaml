@@ -17,7 +17,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
@@ -35,6 +35,28 @@ jobs:
     - name: Copy Deploy Configuration
       run: ./gradlew copyDeployDir
 
+    - name: Show Files
+      run: |
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+
+    - name: Show Files Again
+      run: |
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+
+    # Upload test artifacts
+    - name: Upload artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-artifacts
+        path: ${{ github.workspace }}/build/test-results/frcUserProgramTest
