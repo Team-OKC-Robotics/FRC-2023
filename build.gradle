@@ -106,9 +106,11 @@ task copyDeployDir {
 
     // Linux is the default for deploy and CI
     if (OperatingSystem.current().isLinux()) {
-        // Make the directory
-        project.mkdir prefix + "linuxathena/debug/" + suffix
-        project.mkdir prefix + "linuxx86-64/debug/" + suffix
+        // Make the directories
+        def d1 = new File(prefix + "linuxathena/debug/" + suffix)
+        def d2 = new File(prefix + "linuxx86-64/debug/" + suffix)
+        d1.mkdirs()
+        d2.mkdirs() 
 
         // Linux Athena
         // Copy debug
@@ -134,8 +136,10 @@ task copyDeployDir {
         }
     } else if(OperatingSystem.current().isWindows()){
         // Windows is used by most of the team for development.
-        project.mkdir prefix + "windowsx86-64/debug/" + suffix
-        project.mkdir prefix + "windowsx86/debug/" + suffix
+        def d1 = new File(prefix + "windowsx86-64/debug/" + suffix)
+        def d2 = new File(prefix + "windowsx86/debug/" + suffix)
+        d1.mkdirs()
+        d2.mkdirs() 
 
         // Copy debug
         copy {
@@ -162,6 +166,9 @@ task copyDeployDir {
         
     } else {
         // Otherwise this is a Mac
+        def d1 = new File(prefix + "osxuniversal/debug/" + suffix)
+        d1.mkdirs()
+
         // Copy debug
         copy {
             from project.fileTree('src/main/deploy')
