@@ -95,8 +95,6 @@ void SwerveDrive::Periodic() {
     if (in_auto) {
             // if we're just starting auto
         if (auto_state_ == INIT) {
-            std::cout << "INIT" << std::endl;
-
             // if keep_heading skip turning the robot
             if (this->auto_lock_heading_) {
                 auto_state_ = ROTATE;
@@ -152,12 +150,6 @@ void SwerveDrive::Periodic() {
                 VOKC_CALL(this->right_back_module_->SetAngle(0.0));
             }
 
-            std::cout << "ROTATING";
-
-            double error = 0.0;
-            this->left_front_module_->GetSteerError(&error);
-            std::cout << error << std::endl;
-
             bool left_steer_complete = false;
             bool right_steer_complete = false;
             VOKC_CALL(this->left_front_module_->AtSteerSetpoint(&left_steer_complete));
@@ -168,9 +160,6 @@ void SwerveDrive::Periodic() {
                 auto_state_ = TRANSLATE;
             }
         } else if (auto_state_ == TRANSLATE) {
-
-            std::cout << "TRANSLATING" << std::endl;
-
             double error = 0.0;
             VOKC_CHECK(this->left_front_module_ != nullptr);
             VOKC_CALL(this->left_front_module_->GetDriveError(&error));
@@ -296,7 +285,21 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     right_front_module_->GetAngle(&left_front_angle);
     right_back_module_->GetAngle(&left_front_angle);
 
-    // do some funky invert stuff
+    /**
+     * The following if statements exist to make tele-op better by turning the modules less
+     * the basic premise of the code is that you should never have to steer the module more than 90 degrees
+     * this is because to reverse the direction of travel for a module, you _could_ turn it 180 degrees,
+     * but it would be better to simply invert the direction that the drive motor/wheel is spinning, like normal
+     * differential drivetrains do. So you should never need to steer more than 90 degrees. Of coures, in practice
+     * angles and steering and all that can interfere with each other, so our threshold angle of choice for inverting
+     * the motor instead of steering the module is 110 degrees. I don't really know why just 90 degrees doesn't work,
+     * but empirical testing (and first-driver Eli) says that this is good, so I'm not going to mess with it.
+     * What about the nested if statement? Well, sometimes specific cases pass the first if (such as a current angle
+     * of 3 degrees and a desired angle of 340) where the distance is 3-340 = -337, abs(-337) > 110. But it is slower
+     * to turn the wheel all the way around. The steer_pid has continuous input, so it handles the 3 -> 340 transition
+     * well. So we double check, and if after inverting it the difference is still larger than 110, then we just
+     * put it back to how it was, because math. There's probably a proper way to do this, but this right here works.
+    */
     if (abs(left_front_angle - left_front_turn) > 110) {
         left_front_turn -= 180;
         left_front_speed *= -1;
