@@ -95,7 +95,7 @@ bool Arm::SetPreset(double increment) {
 }
 
 bool Arm::IncrementExtend(double increment) {
-    OKC_CHECK(this->arm_pid_ != nullptr);
+    OKC_CHECK(this->inches_pid_ != nullptr);
 
     // limit the extend PID setpoint to the actual hardware limits
     if (inches_pid_->GetSetpoint() + increment  <  extend_limit) {
@@ -142,6 +142,7 @@ bool Arm::SetManualUpPower(double power) {
 bool Arm::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
     OKC_CHECK(this->arm_pid_ != nullptr);
+    OKC_CHECK(this->inches_pid_ != nullptr);
 
     // if the setpoint is 0 (ie the arm hasn't been set to go somewhere yet, like it's just been enabled)
     if (this->arm_pid_->GetSetpoint() == 0) {
