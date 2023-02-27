@@ -57,7 +57,7 @@ bool SwerveDrive::Init() {
     OKC_CHECK(right_back_module_ != nullptr);
 
     // PID controllers
-    double headingP = RobotParams::GetParam("swerve.heading_pid.kP", 0.0);
+    double headingP = RobotParams::GetParam("swerve.heading_pid.kP", 0.01);
     double headingI = RobotParams::GetParam("swerve.heading_pid.kI", 0.0);
     double headingD = RobotParams::GetParam("swerve.heading_pid.kD", 0.0);
 
