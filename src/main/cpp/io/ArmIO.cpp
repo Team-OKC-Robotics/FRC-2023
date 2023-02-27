@@ -2,6 +2,16 @@
 #include "io/ArmIO.h"
 #include "Parameters.h"
 
+bool ArmIO::Init() {
+    // read limits and stuff from the parameters file
+    offset = RobotParams::GetParam("arm.offset", -330);
+    lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
+    extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
+    max_output = RobotParams::GetParam("arm.max_output", 0.2);
+
+    return true;
+}
+
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
     
@@ -13,19 +23,6 @@ void ArmIO::SimulationPeriodic() {
 }
 
 bool ArmIO::ProcessIO() {
-    bool hasReadParameters = false;
-
-    // if we haven't read the parameters
-    if (!hasReadParameters) {
-        // update the variables
-        offset = RobotParams::GetParam("arm.offset", -330);
-        lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
-        extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
-        max_output = RobotParams::GetParam("arm.max_output", 0.2);
-
-        // raise the flag
-        hasReadParameters = true;
-    }
     OKC_CHECK(sw_interface_ != nullptr);
     OKC_CHECK(hw_interface_ != nullptr);
 

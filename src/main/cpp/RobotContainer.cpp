@@ -197,6 +197,7 @@ bool RobotContainer::InitArm() {
     
     arm_ = std::make_shared<Arm>(arm_sw_.get());
 
+    OKC_CALL(arm_io_->Init());
     OKC_CALL(arm_->Init());
 
     return true;
