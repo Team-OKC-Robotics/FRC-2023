@@ -25,7 +25,7 @@ jobs:
     
     # Grant write permission for gradlew
      - name: Grant write permission for gradlew
-      run: chmod +rw gradelw
+      run: chmod +rw gradlew
 
     # Install a roboRIO toolchain
     - name: Install RoboRIO Toolchain
