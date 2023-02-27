@@ -40,19 +40,19 @@ jobs:
     
     - name: Show Files 2
       if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug
     
     - name: Show Files 3
       if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src
 
     - name: Show Files 4
       if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main
 
     - name: Show Files 5
       if: always()
-      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
