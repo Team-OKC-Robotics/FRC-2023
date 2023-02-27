@@ -55,7 +55,7 @@ bool Claw::SetPreset(ClawPreset preset) {
         this->SetPosition(cone_pos_);
     } else {
         // we shouldn't have gotten here, so let someone know something weird happened
-        OKC_CHECK_MSG(false, "unhandled claw enum value");
+        OKC_CHECK_MSG(false, "unhandled claw preset enum value");
     }
 
     return true;
