@@ -98,6 +98,7 @@ bool SetupClawInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<Cla
     
    //make sure the actuators actually exist 
    OKC_CHECK(actuators->claw_motor != nullptr);
+   OKC_CHECK(sensors->claw_encoder != nullptr);
    
    ClawHardwareInterface claw_interface = {
     actuators->claw_motor.get(),
