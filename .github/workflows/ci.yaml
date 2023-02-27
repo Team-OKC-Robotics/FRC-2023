@@ -37,6 +37,10 @@ jobs:
 
     - name: Show Files
       run: |
+        ls -a ${{ github.workspace }}
+        ls -a ${{ github.workspace }}/build
+        ls -a ${{ github.workspace }}/build/test-results
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest
         ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
         ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
         ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
