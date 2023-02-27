@@ -36,23 +36,23 @@ jobs:
       run: ./gradlew copyDeployDir
 
     - name: Show Files 1
-      run: ls -a ${{ github.workspace }}
+      run: ls -a $GITHUB_WORKSPACE
     
     - name: Show Files 2
       if: always()
-      run: ls -a ${{ github.workspace }}/build/
+      run: ls -a $GITHUB_WORKSPACE/build/
     
     - name: Show Files 3
       if: always()
-      run: ls -a ${{ github.workspace }}/build/test-results/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/
 
     - name: Show Files 4
       if: always()
-      run: ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/
 
     - name: Show Files 5
       if: always()
-      run: ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/
+      run: ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
@@ -61,10 +61,10 @@ jobs:
     - name: Show Files Again
       if: always()
       run: |
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
+        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
     # Upload test artifacts
     - name: Upload artifacts
