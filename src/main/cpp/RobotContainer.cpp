@@ -28,6 +28,16 @@ void RobotContainer::ConfigureButtonBindings() {
     VOKC_CHECK(driver_a_button_ != nullptr);
     VOKC_CHECK(driver_b_button_ != nullptr);
     VOKC_CHECK(driver_back_button_ != nullptr);
+    VOKC_CHECK(driver_x_button_ != nullptr);
+
+    //button bindings
+    WPI_IGNORE_DEPRECATED
+    driver_a_button_->WhileHeld(*extendArmCommand);
+    driver_b_button_->WhileHeld(*retractArmCommand);
+    driver_back_button_->WhileHeld(*raiseArmCommand);
+    driver_x_button_->WhileHeld(*lowerArmCommand);
+    WPI_UNIGNORE_DEPRECATED
+  
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
@@ -129,7 +139,13 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->right_front_steer_encoder != nullptr);
     OKC_CHECK(sensor_interface->right_back_steer_encoder != nullptr);
 
+    OKC_CHECK(actuators.arm_lift_motor != nullptr);
+    OKC_CHECK(actuators.arm_extend_motor != nullptr);
+
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
+    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(1);
+    sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
+    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(0);
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
@@ -184,6 +200,15 @@ bool RobotContainer::InitGamepads() {
         std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
     driver_back_button_ =
         std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
+    driver_x_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
+    driver_start_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
+    driver_left_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    driver_right_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
+    
 
     return true;
 }
@@ -195,10 +220,15 @@ bool RobotContainer::InitCommands() {
     //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
     m_autonomousCommand_ = nullptr;
 
+    // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
-    manual_arm_command_ =std::make_shared<ManualArmCommand>(arm_, gamepad2_);
-    arm_->SetDefaultCommand(*manual_arm_command_);
+    // arm commands
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
 
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
+     
     return true;
 }

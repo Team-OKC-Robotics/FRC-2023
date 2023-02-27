@@ -4,11 +4,15 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 # all for the left front steer motors
-steerEncLog = [[], []]
-outputLog = [[], []]
-setpointLog = [[], []]
+liftEncLog = [[], []]
+liftOutputLog = [[], []]
+liftSetpointLog = [[], []]
 
-with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\FRC_20230121_173459.csv") as f:
+extendEncLog = [[], []]
+extendOutputLog = [[], []]
+extendSetpointLog = [[], []]
+
+with open(r"C:\Users\teamo\Documents\github\FRC-2023\logs\good logs\FRC_20230224_003626.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
@@ -20,15 +24,25 @@ for index, line in enumerate(log):
         print(line)
         continue
     # print(timestamp, id, data)
-    if (id == '"/swerve/steer_enc"'):
-        steerEncLog[0].append(float(timestamp))
-        steerEncLog[1].append(float(data))
-    elif id == '"/swerve/output"':
-        outputLog[0].append(float(timestamp))
-        outputLog[1].append(float(data)) # so we can actually see it on the graph
-    elif id == '"/swerve/setpoint"':
-        setpointLog[0].append(float(timestamp))
-        setpointLog[1].append(float(data))
+    if (id == '"/arm/lift_output"'):
+        liftEncLog[0].append(float(timestamp))
+        liftEncLog[1].append(float(data))
+    elif id == '"/arm/lift_enc"':
+        liftOutputLog[0].append(float(timestamp))
+        liftOutputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/arm/lift_setpoint"':
+        liftSetpointLog[0].append(float(timestamp))
+        liftSetpointLog[1].append(float(data))
+
+    if (id == '"/arm/extend_output"'):
+        extendEncLog[0].append(float(timestamp))
+        extendEncLog[1].append(float(data))
+    elif id == '"/arm/extend_enc"':
+        extendOutputLog[0].append(float(timestamp))
+        extendOutputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/arm/extend_setpoint"':
+        extendSetpointLog[0].append(float(timestamp))
+        extendSetpointLog[1].append(float(data))
 
 
 # plt.figure()
@@ -54,10 +68,18 @@ for index, line in enumerate(log):
 # plt.show()
 
 plt.figure()
-plt.plot(steerEncLog[0], steerEncLog[1])
-plt.plot(outputLog[0], outputLog[1])
-plt.plot(setpointLog[0], setpointLog[1])
+plt.plot(liftEncLog[0], liftEncLog[1])
+plt.plot(liftOutputLog[0], liftOutputLog[1])
+plt.plot(liftSetpointLog[0], liftSetpointLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
-plt.legend(("steer enc", "output", "setpoint"))
+plt.legend(("lift enc", "output", "setpoint"))
+
+plt.figure()
+plt.plot(extendEncLog[0], extendEncLog[1])
+plt.plot(extendOutputLog[0], extendOutputLog[1])
+plt.plot(extendSetpointLog[0], extendSetpointLog[1])
+plt.xlabel("Time (sec)")
+plt.ylabel("data")
+plt.legend(("extend enc", "output", "setpoint"))
 plt.show()

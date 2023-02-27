@@ -6,6 +6,8 @@
 #include <frc/motorcontrol/MotorControllerGroup.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
+#include "frc/AnalogEncoder.h"
+#include "frc/DutyCycleEncoder.h"
 
 #include "Utils.h"
 
@@ -20,35 +22,29 @@ typedef struct arm_hardware_interface_t {
     rev::CANSparkMax *const arm_extend_motor;
 
     rev::RelativeEncoder *const arm_lift_encoder;
- 
+    frc::DutyCycleEncoder *const arm_duty_cycle_encoder;
+    rev::RelativeEncoder *const arm_extend_encoder;
+    frc::DigitalInput *const extend_limit_switch;
 } ArmHardwareInterface;
 
 typedef struct arm_software_interface_t {
-
     // actuator outputs
     double arm_lift_power;
-    double arm_up_power;
     double arm_extend_power;
+
+    // sensor inputs
     double arm_encoder;
     double arm_extend_encoder;
-    double arm_position_motor;
+    double arm_duty_cycle_encoder;
+    bool extend_limit_switch;
+
+    // config
     ArmConfig arm_config;
-    double encoder_val_to_set;
-
-    double arm_lift_encoder_val;
-
     bool update_config;
     bool reset_encoders;
-    bool set_encoder_to_val;
-    bool deployed_limit_switch_val;
-    bool deploy_limit_switch;
-    bool retracted_limit_switch_val;
-    bool retracted_limit_switch;
-    double arm_position_encoder_val;
-    double open_loop_ramp;
-    double max_indexer_current;
 } ArmSoftwareInterface;
 
+//arm class
 class ArmIO : public frc2::SubsystemBase {
 public:
     ArmIO(ArmHardwareInterface *hw_interface,
@@ -75,4 +71,9 @@ private:
 
     ArmHardwareInterface *const hw_interface_;
     ArmSoftwareInterface *const sw_interface_;
+
+    double offset;
+    double lift_limit;
+    double extend_limit;
+    double max_output;
 };
