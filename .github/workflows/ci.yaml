@@ -60,6 +60,14 @@ jobs:
         ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
         ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
+    - name: Show Files Again 2
+      if: always()
+      run: |
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
+        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+
     # Upload test artifacts
     - name: Upload artifacts
       if: always()
