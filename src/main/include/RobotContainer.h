@@ -32,6 +32,7 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoSwerveCommand.h"
+#include "commands/swerve/SlowTeleOpSwerveCommand.h"
 
 // arm
 #include "commands/arm/ManualArmCommand.h"
@@ -147,6 +148,7 @@ private:
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
+    std::shared_ptr<SlowTeleOpSwerveCommand> slow_swerve_teleop_command_;
 
     //arm
     std::shared_ptr<ManualArmCommand> manual_arm_command_;
