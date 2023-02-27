@@ -35,18 +35,31 @@ jobs:
     - name: Copy Deploy Configuration
       run: ./gradlew copyDeployDir
 
-    - name: Show Files
-      run: |
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+    - name: Show Files 1
+      run: ls -a ${{ github.workspace }}
+    
+    - name: Show Files 2
+      if: always()
+      run: ls -a ${{ github.workspace }}/build/
+    
+    - name: Show Files 3
+      if: always()
+      run: ls -a ${{ github.workspace }}/build/test-results/
+
+    - name: Show Files 4
+      if: always()
+      run: ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/
+
+    - name: Show Files 5
+      if: always()
+      run: ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
 
     - name: Show Files Again
+      if: always()
       run: |
         ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
         ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
