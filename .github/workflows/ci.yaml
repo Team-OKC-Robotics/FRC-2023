@@ -37,6 +37,7 @@ jobs:
 
     - name: Show Files
       run: |
+        ls -a
         ls -a ${{ github.workspace }}
         ls -a ${{ github.workspace }}/build
         ls -a ${{ github.workspace }}/build/test-results
