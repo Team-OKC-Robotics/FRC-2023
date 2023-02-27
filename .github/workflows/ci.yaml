@@ -27,6 +27,10 @@ jobs:
     - name: Install RoboRIO Toolchain
       run: ./gradlew installRoboRioToolchain
 
+    # Copy the deploy directory explicitly
+    - name: Copy Deploy Configuration
+      run: ./gradlew copyDeployDir
+
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
