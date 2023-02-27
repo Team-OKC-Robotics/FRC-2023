@@ -38,18 +38,17 @@ jobs:
     - name: PWD
       run: pwd
     
-    - name: Show Files
+    - name: Show CWD Files
       if: always()
       run: ls -al .
 
-    - name: Environment vars
+    - name: Show root
       if: always()
-      run: |
-        echo $GITHUB_WORKSPACE
-        echo ${{ github.workspace }}
+      run: ls -l /
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
+      context: $GITHUB_WORKSPACE
       run: ./gradlew build
 
     - name: Show Files Again
