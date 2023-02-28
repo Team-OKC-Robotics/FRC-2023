@@ -48,6 +48,8 @@ private:
     double lift_limit_;
     double extend_limit_;
 
+    double offset_;
+
     wpi::log::DoubleLogEntry arm_lift_output_log_;
     wpi::log::DoubleLogEntry arm_lift_enc_log_;
     wpi::log::DoubleLogEntry arm_lift_setpoint_log_;
