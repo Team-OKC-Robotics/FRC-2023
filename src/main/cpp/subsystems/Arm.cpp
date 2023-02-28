@@ -1,10 +1,11 @@
 #include "subsystems/Arm.h"
+#include "Parameters.h"
 
 bool Arm::Init() {
     
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.0);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
-    double arm_kD - RobotParams::GetParam("arm.lift_pid.kD", 0.0);
+    double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.0);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);

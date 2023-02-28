@@ -46,3 +46,5 @@ private:
     wpi::log::DoubleLogEntry arm_lift_output_log_;
     wpi::log::DoubleLogEntry arm_lift_enc_log_;
 };
+
+
