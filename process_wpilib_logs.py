@@ -40,11 +40,11 @@ for index, line in enumerate(log):
         liftSetpointLog[1].append(float(data))
 
     if (id == '"/arm/extend_output"'):
-        extendEncLog[0].append(float(timestamp))
-        extendEncLog[1].append(float(data))
-    elif id == '"/arm/extend_enc"':
         extendOutputLog[0].append(float(timestamp))
         extendOutputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/arm/extend_enc"':
+        extendEncLog[0].append(float(timestamp))
+        extendEncLog[1].append(float(data))
     elif id == '"/arm/extend_setpoint"':
         extendSetpointLog[0].append(float(timestamp))
         extendSetpointLog[1].append(float(data))
