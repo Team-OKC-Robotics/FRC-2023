@@ -4,6 +4,7 @@ plugins {
     id "cpp"
     id "google-test-test-suite"
     id "edu.wpi.first.GradleRIO" version "2023.3.2"
+    id "com.dorongold.task-tree" version "2.1.0"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -201,6 +202,19 @@ check.dependsOn {
 }
 
 build.dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
+    }
+}
+
+// Hack for CI
+"runFrcUserProgramTestLinuxx86-64DebugGoogleTestExe".dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
+    }
+}
+
+"runFrcUserProgramTestLinuxx86-64ReleaseGoogleTestExe".dependsOn {
     tasks.findAll {
         task -> task.name.startsWith('copyDeployDir')
     }

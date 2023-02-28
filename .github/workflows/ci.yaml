@@ -37,17 +37,23 @@ jobs:
     - name: Copy Deploy Configuration
       run: ./gradlew copyDeployDir
 
+    - name: Get User
+      run: echo "$USER"
+
+    - name: User groups
+      run: groups
+
     - name: Show Files
       if: always()
       run: |
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/
+        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
+        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
-      run: ./gradlew check
+      run: ./gradlew build
 
     - name: Show Files Again
       if: always()
