@@ -28,10 +28,14 @@ bool Arm::Init() {
     this->arm_pid_->SetSetpoint(0);
     this->inches_pid_->SetSetpoint(0);
 
+    lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100);
+    extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100);
+     
+
     return true;
 }
 
-bool Arm::SetControlMode(const ArmMode &mode){
+bool Arm::SetControlMode(const ControlMode &mode){
     mode_= mode;
 
     return true;
@@ -40,28 +44,69 @@ bool Arm::SetControlMode(const ArmMode &mode){
 bool Arm::SetDegrees(double degrees) {
     
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(degrees);
+
+    // limit the lift PID setpoint to the actual hardware limits
+    if (degrees < lift_limit_) {
+        if (degrees > -lift_limit_) {
+            this->arm_pid_->SetSetpoint(degrees);
+        } else {
+            this->arm_pid_->SetSetpoint(-lift_limit_);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(lift_limit_);
+    }
 
     return true;
 }
 
 bool Arm::SetExtend(double inches) {
     OKC_CHECK(this->inches_pid_ != nullptr);
-    this->inches_pid_->SetSetpoint(inches);
+
+    // limit the extend PID setpoint to the actual hardware limits
+    if (inches < extend_limit_) {
+        if (inches > 0) {
+            this->inches_pid_->SetSetpoint(inches);
+        } else {
+            this->inches_pid_->SetSetpoint(0);
+        }
+    } else {
+        this->inches_pid_->SetSetpoint(extend_limit_);
+    }
+
 
     return true;
 }
 
 bool Arm::SetPreset(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
-    this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+
+    // limit the lift PID setpoint to the actual hardware limits
+    if (arm_pid_->GetSetpoint() + increment < lift_limit_) {
+        if (arm_pid_->GetSetpoint() + increment > -lift_limit_) {
+            this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
+        } else {
+            this->arm_pid_->SetSetpoint(-lift_limit_);
+        }
+    } else {
+        this->arm_pid_->SetSetpoint(lift_limit_);
+    }
 
     return true;
 }
 
 bool Arm::IncrementExtend(double increment) {
-    OKC_CHECK(this->arm_pid_ != nullptr);
-    this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
+    OKC_CHECK(this->inches_pid_ != nullptr);
+
+    // limit the extend PID setpoint to the actual hardware limits
+    if (inches_pid_->GetSetpoint() + increment  <  extend_limit_) {
+        if (inches_pid_->GetSetpoint() + increment > 0) {
+            this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
+        } else {
+            this->inches_pid_->SetSetpoint(0);
+        }
+    } else {
+        this->inches_pid_->SetSetpoint(extend_limit_);
+    }
 
     return true;
 }
@@ -97,6 +142,7 @@ bool Arm::SetManualUpPower(double power) {
 bool Arm::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
     OKC_CHECK(this->arm_pid_ != nullptr);
+    OKC_CHECK(this->inches_pid_ != nullptr);
 
     // if the setpoint is 0 (ie the arm hasn't been set to go somewhere yet, like it's just been enabled)
     if (this->arm_pid_->GetSetpoint() == 0) {

@@ -14,42 +14,46 @@
 
 // I/O Subsystems
 #include "io/SwerveDriveIO.h"
-#include "subsystems/SwerveDrive.h"
+#include "io/ArmIO.h"
+#include "io/ClawIO.h"
 
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/Arm.h"
+#include "subsystems/Claw.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
 #include <frc/Joystick.h>
-#include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/button/CommandJoystick.h>
+
 
 /// Commands
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoSwerveCommand.h"
 
-#include <frc2/command/Command.h>
-#include <frc2/command/SubsystemBase.h>
-
-#include "Logging.h"
-
-//subsytems
-#include "subsystems/Arm.h"
-#include "subsystems/SwerveDrive.h"
-
-//I/O Subsystems
-
-#include "io/ArmIO.h"
-
+// arm
 #include "commands/arm/ManualArmCommand.h"
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/SetArmAngleCommand.h"
 #include "commands/arm/SetArmExtensionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
- 
 
+// claw
+#include "commands/claw/ManualClawCommand.h"
+
+// misc
+#include <frc2/command/Command.h>
+#include <frc2/command/SubsystemBase.h>
+
+#include "Logging.h"
+
+#include "units/length.h"
+#include "units/velocity.h"
+#include "units/math.h"
+#include "units/voltage.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -77,51 +81,65 @@ private:
 
     // Gamepad initialization
     bool InitGamepads();
-    void ConfigureButtonBindings();
+    bool ConfigureButtonBindings();
 
     // subsystem initialization
     bool InitSwerve();
     bool InitArm();
+    bool InitClaw();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
+    std::shared_ptr<ClawHardwareInterface> claw_hw_;
 
 
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
     std::shared_ptr<ArmIO> arm_io_;
+    std::shared_ptr<ClawIO> claw_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
     std::shared_ptr<ArmSoftwareInterface> arm_sw_;
+    std::shared_ptr<ClawSoftwareInterface> claw_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
     std::shared_ptr<Arm> arm_;
+    std::shared_ptr<Claw> claw_;
 
     /**
      * User interfaces
      * - Gamepads
      * - Joystick Buttons
      */
-    std::shared_ptr<frc::Joystick> gamepad1_;
-    std::shared_ptr<frc::Joystick> gamepad2_;
+    std::shared_ptr<frc2::CommandJoystick> gamepad1_;
+    std::shared_ptr<frc2::CommandJoystick> gamepad2_;
 
+    std::shared_ptr<frc2::Trigger> driver_a_button_;
+    std::shared_ptr<frc2::Trigger> driver_b_button_;
+    std::shared_ptr<frc2::Trigger> driver_x_button_;
+    std::shared_ptr<frc2::Trigger> driver_y_button_;
+    std::shared_ptr<frc2::Trigger> driver_start_button_;
+    std::shared_ptr<frc2::Trigger> driver_back_button_;
+    std::shared_ptr<frc2::Trigger> driver_left_stick_button_;
+    std::shared_ptr<frc2::Trigger> driver_right_stick_button_;
+    std::shared_ptr<frc2::Trigger> driver_left_bumper_;
+    std::shared_ptr<frc2::Trigger> driver_right_bumper_;
 
-    std::shared_ptr<frc2::JoystickButton> driver_a_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_b_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_back_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_x_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_start_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_left_stick_button_;
-    std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
-
-    
-    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
-    std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
+    std::shared_ptr<frc2::Trigger> manip_a_button_;
+    std::shared_ptr<frc2::Trigger> manip_b_button_;
+    std::shared_ptr<frc2::Trigger> manip_x_button_;
+    std::shared_ptr<frc2::Trigger> manip_y_button_;
+    std::shared_ptr<frc2::Trigger> manip_back_button_;
+    std::shared_ptr<frc2::Trigger> manip_start_button_;
+    std::shared_ptr<frc2::Trigger> manip_left_bumper_button_;
+    std::shared_ptr<frc2::Trigger> manip_right_bumper_button_;
+    std::shared_ptr<frc2::Trigger> manip_left_stick_button_;
+    std::shared_ptr<frc2::Trigger> manip_right_stick_button_;
 
     /**
      * Commands
@@ -138,6 +156,11 @@ private:
     std::shared_ptr<IncrementArmExtendCommand> retractArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
+
+    // claw
+    std::shared_ptr<ManualClawCommand> manual_open_claw;
+    std::shared_ptr<ManualClawCommand> manual_close_claw;
+    std::shared_ptr<ManualClawCommand> manual_stop_claw;
 };
 
 

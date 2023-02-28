@@ -19,13 +19,13 @@ public:
      *
      * @param swerve The swerve drive used by this command.
      */
-    explicit AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, frc::Pose2d end_pos, bool keep_heading);
+    explicit AutoSwerveCommand(std::shared_ptr<SwerveDrive> swerve, TeamOKC::Pose end_pos, bool keep_heading);
 
     void Initialize() override;
     bool IsFinished() override;
 
 private:
     std::shared_ptr<SwerveDrive> swerve_;
-    frc::Pose2d end_pos_;
+    TeamOKC::Pose end_pos_;
     bool keep_heading_ = false;
 };

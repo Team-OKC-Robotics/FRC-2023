@@ -12,7 +12,12 @@ extendEncLog = [[], []]
 extendOutputLog = [[], []]
 extendSetpointLog = [[], []]
 
-with open(r"C:\Users\teamo\Documents\github\FRC-2023\logs\good logs\FRC_20230224_003626.csv") as f:
+steerEncLog = [[], []]
+outputLog = [[], []]
+setpointLog = [[], []]
+errorLog = [[], []]
+
+with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230221_010811.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
@@ -44,28 +49,9 @@ for index, line in enumerate(log):
         extendSetpointLog[0].append(float(timestamp))
         extendSetpointLog[1].append(float(data))
 
-
-# plt.figure()
-# plt.title("just a title")
-# plt.plot(outputLog[0], outputLog[1])
-# plt.xlabel("Time (sec)")
-# plt.ylabel("output (% max)")
-
-# plt.figure()
-# plt.plot(rpmLog[0], rpmLog[1])
-# plt.xlabel("Time (sec)")
-# plt.ylabel("RPM (RPM per 200 ms or something)")
-
-# plt.figure()
-# plt.plot(setpointLog[0], setpointLog[1])
-# plt.xlabel("Time (sec)")
-# plt.ylabel("setpoint (RPM-ish)")
-
-# plt.figure()
-# plt.plot(pidLog[0], pidLog[1])
-# plt.xlabel("Time (sec)")
-# plt.ylabel("pid output (calculated)")
-# plt.show()
+for index, timestamp in enumerate(setpointLog[0]):
+    errorLog[0].append(timestamp)
+    errorLog[1].append(setpointLog[1][index] - steerEncLog[1][index])
 
 plt.figure()
 plt.plot(liftEncLog[0], liftEncLog[1])
@@ -82,4 +68,13 @@ plt.plot(extendSetpointLog[0], extendSetpointLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
 plt.legend(("extend enc", "output", "setpoint"))
+
+plt.figure()
+plt.plot(steerEncLog[0], steerEncLog[1])
+plt.plot(outputLog[0], outputLog[1])
+plt.plot(setpointLog[0], setpointLog[1])
+plt.plot(errorLog[0], errorLog[1])
+plt.xlabel("Time (sec)")
+plt.ylabel("data")
+plt.legend(("steer enc", "output", "setpoint", "error"))
 plt.show()

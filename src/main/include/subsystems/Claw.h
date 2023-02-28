@@ -6,6 +6,7 @@
 #include <memory>
 #include "Logging.h"
 #include "wpi/DataLog.h"
+#include "subsystems/Arm.h"
 
 enum ClawPreset {
   CONE,
@@ -26,6 +27,9 @@ class Claw : public frc2::SubsystemBase {
   bool SetPreset(ClawPreset preset);
   bool SetPosition(double pos);
   bool Reset();
+
+  bool SetManualPower(double power);
+  bool SetControlMode(ControlMode mode);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -41,6 +45,8 @@ class Claw : public frc2::SubsystemBase {
  private:
   ClawSoftwareInterface *const interface_;
   std::shared_ptr<frc::PIDController> claw_pid_;
+
+  ControlMode mode_;
 
   double claw_power_;
   double open_pos_;

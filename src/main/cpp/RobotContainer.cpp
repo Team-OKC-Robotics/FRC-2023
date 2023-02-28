@@ -9,10 +9,10 @@ RobotContainer::RobotContainer() {
     hardware_ = std::make_unique<Hardware>();
     VOKC_CALL(this->InitHardware(hardware_));
 
+    // initialize the subsystems
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-
-    
+    VOKC_CALL(this->InitClaw());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -21,23 +21,35 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(InitCommands());
 
     // Configure the button bindings
-    ConfigureButtonBindings();
+    VOKC_CALL(ConfigureButtonBindings());
 }
 
-void RobotContainer::ConfigureButtonBindings() {
-    VOKC_CHECK(driver_a_button_ != nullptr);
-    VOKC_CHECK(driver_b_button_ != nullptr);
-    VOKC_CHECK(driver_back_button_ != nullptr);
-    VOKC_CHECK(driver_x_button_ != nullptr);
+bool RobotContainer::ConfigureButtonBindings() {
+    OKC_CHECK(driver_a_button_ != nullptr);
+    OKC_CHECK(driver_b_button_ != nullptr);
+    OKC_CHECK(driver_back_button_ != nullptr);
+    OKC_CHECK(driver_x_button_ != nullptr);
 
     //button bindings
     WPI_IGNORE_DEPRECATED
-    driver_a_button_->WhileHeld(*extendArmCommand);
-    driver_b_button_->WhileHeld(*retractArmCommand);
-    driver_back_button_->WhileHeld(*raiseArmCommand);
-    driver_x_button_->WhileHeld(*lowerArmCommand);
+    // main driver controls
+    driver_left_bumper_->WhileActiveContinous(*manual_open_claw).WhenInactive(*manual_stop_claw);
+    driver_right_bumper_->WhileActiveContinous(*manual_close_claw).WhenInactive(*manual_stop_claw);
+    
+    // second driver controls
+    manip_a_button_->WhileActiveContinous(*lowerArmCommand);
+    manip_y_button_->WhileActiveContinous(*raiseArmCommand);
+    manip_left_bumper_button_->WhileActiveContinous(*retractArmCommand);
+    manip_right_bumper_button_->WhileActiveContinous(*extendArmCommand);
+
+    // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
+    driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    driver_b_button_->WhileActiveContinous(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
+    return true;
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
@@ -83,6 +95,8 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
+
+    actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
     return true;
 }
 
@@ -149,6 +163,10 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
+    OKC_CHECK(actuators.claw_motor != nullptr);
+
+    sensor_interface->claw_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.claw_motor->GetEncoder());
+
     return true;
 }
 
@@ -179,7 +197,22 @@ bool RobotContainer::InitArm() {
     
     arm_ = std::make_shared<Arm>(arm_sw_.get());
 
+    OKC_CALL(arm_io_->Init());
     OKC_CALL(arm_->Init());
+
+    return true;
+}
+
+bool RobotContainer::InitClaw() {
+    OKC_CALL(SetupClawInterface(hardware_, claw_hw_));
+
+    claw_sw_ = std::make_shared<ClawSoftwareInterface>();
+
+    claw_io_ = std::make_shared<ClawIO>(claw_hw_.get(), claw_sw_.get());
+    
+    claw_ = std::make_shared<Claw>(claw_sw_.get());
+
+    OKC_CALL(claw_->Init());
 
     return true;
 }
@@ -189,26 +222,32 @@ bool RobotContainer::InitGamepads() {
     int gamepad1_id = RobotParams::GetParam("gamepad1_id", 0);
     int gamepad2_id = RobotParams::GetParam("gamepad2_id", 1);
 
-    gamepad1_ = std::make_shared<frc::Joystick>(gamepad1_id);
-    gamepad2_ = std::make_shared<frc::Joystick>(gamepad2_id);
+    gamepad1_ = std::make_shared<frc2::CommandJoystick>(gamepad1_id);
+    gamepad2_ = std::make_shared<frc2::CommandJoystick>(gamepad2_id);
 
 
     // Initialize the joystick buttons
-    driver_a_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
-    driver_b_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
-    driver_back_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
-    driver_x_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
-    driver_start_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
-    driver_left_stick_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
-    driver_right_stick_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
-    
+    driver_a_button_ = std::make_shared<frc2::Trigger>();
+    driver_a_button_ = &gamepad1_->Button(A_BUTTON);
+    driver_b_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(B_BUTTON));
+    driver_x_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(X_BUTTON));
+    driver_y_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(Y_BUTTON));
+    driver_start_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(START_BUTTON));
+    driver_back_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(BACK_BUTTON));
+    driver_left_bumper_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(LEFT_BUMP));
+    driver_right_bumper_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(RIGHT_BUMP));
+
+    // second driver
+    manip_a_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), A_BUTTON);
+    manip_b_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), B_BUTTON);
+    manip_x_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), X_BUTTON);
+    manip_y_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), Y_BUTTON);
+    manip_back_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), START_BUTTON);
+    manip_start_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), BACK_BUTTON);
+    manip_left_bumper_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), LEFT_BUMP);
+    manip_right_bumper_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), RIGHT_BUMP);
+    manip_left_stick_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    manip_right_stick_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), RIGHT_STICK_BUTTON);
 
     return true;
 }
@@ -217,18 +256,22 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
-    m_autonomousCommand_ = nullptr;
+    m_autonomousCommand_ = std::make_shared<AutoSwerveCommand>(swerve_drive_, TeamOKC::Pose(10.0, 10.0, 90.0), true);
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
     // arm commands
-    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
-    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 1); 
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -1);
 
-    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
+
+    // claw commands
+    manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
+    manual_close_claw = std::make_shared<ManualClawCommand>(claw_, 0.1);
+    manual_stop_claw = std::make_shared<ManualClawCommand>(claw_, 0);
      
     return true;
 }

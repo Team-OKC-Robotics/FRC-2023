@@ -26,6 +26,8 @@
 #define ARM_UP_MOTOR 10
 #define ARM_EXTEND_MOTOR 11
 
+#define CLAW_MOTOR 12
+
 
 typedef struct actuators_t {
     // Left drivetrain motors
@@ -47,6 +49,4 @@ typedef struct actuators_t {
 
     // Claw things
     std::unique_ptr<rev::CANSparkMax> claw_motor;
-    std::unique_ptr<frc::DigitalInput> claw_IR_sensor;
-
 } Actuators;
