@@ -17,7 +17,7 @@ outputLog = [[], []]
 setpointLog = [[], []]
 errorLog = [[], []]
 
-with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230228_014850.csv") as f:
+with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230228_230725.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
@@ -30,11 +30,11 @@ for index, line in enumerate(log):
         continue
     # print(timestamp, id, data)
     if (id == '"/arm/lift_output"'):
-        liftEncLog[0].append(float(timestamp))
-        liftEncLog[1].append(float(data))
-    elif id == '"/arm/lift_enc"':
         liftOutputLog[0].append(float(timestamp))
         liftOutputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/arm/lift_enc"':
+        liftEncLog[0].append(float(timestamp))
+        liftEncLog[1].append(float(data))
     elif id == '"/arm/lift_setpoint"':
         liftSetpointLog[0].append(float(timestamp))
         liftSetpointLog[1].append(float(data))
@@ -48,6 +48,16 @@ for index, line in enumerate(log):
     elif id == '"/arm/extend_setpoint"':
         extendSetpointLog[0].append(float(timestamp))
         extendSetpointLog[1].append(float(data))
+    
+    if (id == '"/swerve/steer_enc"'):
+        steerEncLog[0].append(float(timestamp))
+        steerEncLog[1].append(float(data))
+    elif id == '"/swerve/output"':
+        outputLog[0].append(float(timestamp))
+        outputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/swerve/setpoint"':
+        setpointLog[0].append(float(timestamp))
+        setpointLog[1].append(float(data))
 
 for index, timestamp in enumerate(setpointLog[0]):
     errorLog[0].append(timestamp)
