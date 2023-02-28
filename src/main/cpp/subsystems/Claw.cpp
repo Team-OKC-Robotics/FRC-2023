@@ -4,6 +4,16 @@
 #include "ui/UserInterface.h"
 
 bool Claw::Init() {
+    OKC_CHECK(interface_ != nullptr);
+
+    ClawConfig config_ = {
+        20, // current limit
+        1   // max output
+    };
+
+    interface_->config = config_;
+    interface_->update_config = true;
+
     // read PID values from the parameters file
     double kP = RobotParams::GetParam("claw.claw_pid.kP", 0.01);
     double kI = RobotParams::GetParam("claw.claw_pid.kI", 0.0);
