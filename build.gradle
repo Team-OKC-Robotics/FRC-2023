@@ -206,16 +206,3 @@ build.dependsOn {
         task -> task.name.startsWith('copyDeployDir')
     }
 }
-
-// Hack for CI
-"runFrcUserProgramTestLinuxx86-64DebugGoogleTestExe".dependsOn {
-    tasks.findAll {
-        task -> task.name.startsWith('copyDeployDir')
-    }
-}
-
-"runFrcUserProgramTestLinuxx86-64ReleaseGoogleTestExe".dependsOn {
-    tasks.findAll {
-        task -> task.name.startsWith('copyDeployDir')
-    }
-}

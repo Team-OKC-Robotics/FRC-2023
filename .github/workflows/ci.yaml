@@ -43,6 +43,9 @@ jobs:
     - name: User groups
       run: groups
 
+    - name: Task Tree
+      run: ./gradlew build taskTree
+
     - name: Show Files
       if: always()
       run: |
