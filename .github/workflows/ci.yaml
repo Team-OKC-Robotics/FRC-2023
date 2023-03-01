@@ -37,14 +37,10 @@ jobs:
     - name: Copy Deploy Configuration
       run: ./gradlew copyDeployDir
 
-    - name: Get User
-      run: echo "$USER"
-
-    - name: User groups
-      run: groups
-
-    - name: Task Tree
-      run: ./gradlew build taskTree
+    - name: Defend Files from Gradle
+      run: |
+        chattr +i -RV $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        chattr +i -RV $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
     - name: Show Files
       if: always()
