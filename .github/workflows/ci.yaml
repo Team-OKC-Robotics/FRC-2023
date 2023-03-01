@@ -18,57 +18,34 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
-      with:
-        context: $GITHUB_WORKSPACE
 
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    
-    # Grant write permission for gradlew
-    - name: Grant write permission for gradlew
-      run: chmod +rw gradlew
 
     # Install a roboRIO toolchain
     - name: Install RoboRIO Toolchain
       run: ./gradlew installRoboRioToolchain
 
     # Copy the deploy directory explicitly
-    - name: Copy Deploy Configuration
-      run: ./gradlew copyDeployDir
-
-    - name: Defend Files from Gradle
+    # - name: Copy deploy c/onfiguration
+    #   run: ./gradlew copyDeployDir
+    - name : Symlink deploy configuration
       run: |
-        chattr +i -RV $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        chattr +i -RV $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+        mkdir -p $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
+        mkdir -p $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+        ln -s $GITHUB_WORKSPACE/src/main/deploy/parameters.toml $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy/parameters.toml
+        ln -s $GITHUB_WORKSPACE/src/main/deploy/parameters.toml $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy/parameters.toml
 
-    - name: Show Files
+    - name: Show files
       if: always()
       run: |
-        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/
         ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
         ls -al $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
-
-    - name: Show Files Again
-      if: always()
-      run: |
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/
-        ls -a $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
-
-    - name: Show Files Again 2
-      if: always()
-      run: |
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/
-        ls -a ${{ github.workspace }}/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
 
     # Upload test artifacts
     - name: Upload artifacts
