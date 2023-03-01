@@ -312,6 +312,116 @@
         "titleType": 0,
         "tiles": {}
       }
+    },
+    {
+      "title": "armtab",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "2,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/Arm/Arm Duty Cycles Encoder",
+              "_title": "Shuffleboard/Arm/Arm Duty Cycles Encoder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -110.0,
+              "Range/Max": 110.0,
+              "Visuals/Show value": true
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Arm/arm power",
+              "_title": "Shuffleboard/Arm/arm power",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/Arm/arm setpoint",
+              "_title": "Shuffleboard/Arm/arm setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -110.0,
+              "Range/Max": 110.0,
+              "Visuals/Show value": true
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Arm/extend encodoer",
+              "_title": "Shuffleboard/Arm/extend encodoer",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Arm/extend power",
+              "_title": "Shuffleboard/Arm/extend power",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Arm/extend setpoint",
+              "_title": "Shuffleboard/Arm/extend setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
