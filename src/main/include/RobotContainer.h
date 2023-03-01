@@ -158,6 +158,15 @@ private:
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 
+    std::shared_ptr<SetArmAngleCommand> arm_angle_pickup_command_;
+    std::shared_ptr<SetArmExtensionCommand> arm_extend_pickup_command_;
+
+    std::shared_ptr<SetArmAngleCommand> arm_angle_mid_command_;
+    std::shared_ptr<SetArmExtensionCommand> arm_extend_mid_command_;
+
+    std::shared_ptr<SetArmAngleCommand> arm_angle_high_command_;
+    std::shared_ptr<SetArmExtensionCommand> arm_extend_high_command_;
+
     // claw
     std::shared_ptr<ManualClawCommand> manual_open_claw;
     std::shared_ptr<ManualClawCommand> manual_close_claw;

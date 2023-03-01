@@ -41,11 +41,10 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_right_bumper_->WhileHeld(*manual_close_claw).WhenReleased(*manual_stop_claw);
     
     // second driver controls
-    manip_a_button_->WhileHeld(*lowerArmCommand);
-    manip_y_button_->WhileHeld(*raiseArmCommand);
-    manip_left_bumper_button_->WhileHeld(*retractArmCommand);
-    manip_right_bumper_button_->WhileHeld(*extendArmCommand);
-
+    manip_a_button_->WhenPressed(*arm_angle_pickup_command_).WhenPressed(*arm_extend_pickup_command_);
+    manip_b_button_->WhenPressed(*arm_angle_mid_command_).WhenPressed(*arm_extend_mid_command_);
+    manip_y_button_->WhenPressed(*arm_angle_high_command_).WhenPressed(*arm_extend_high_command_);
+  
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
     driver_a_button_->WhileHeld(*lowerArmCommand);
     driver_y_button_->WhileHeld(*raiseArmCommand);
@@ -232,7 +231,6 @@ bool RobotContainer::InitGamepads() {
 
     // Initialize the joystick buttons
     driver_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
-    driver_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
     driver_b_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
     driver_x_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
     driver_y_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), Y_BUTTON);
@@ -266,11 +264,24 @@ bool RobotContainer::InitCommands() {
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
 
     // arm commands
-    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 1); 
-    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -1);
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 5); 
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -5);
 
-    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
+
+    // to pick stuff up from the back of the robot
+    arm_angle_pickup_command_ = std::make_shared<SetArmAngleCommand>(arm_, 23);
+    arm_extend_pickup_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 50);
+
+    // to score on the mid cone pole
+    arm_angle_mid_command_ = std::make_shared<SetArmAngleCommand>(arm_, -89);
+    arm_extend_mid_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 13.5);
+
+    // to score on the high cone pole
+    arm_angle_high_command_ = std::make_shared<SetArmAngleCommand>(arm_, -104);
+    arm_extend_high_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 90);
+
 
     // claw commands
     manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
