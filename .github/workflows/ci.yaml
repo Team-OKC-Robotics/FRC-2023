@@ -34,6 +34,8 @@ jobs:
       run: |
         mkdir -p $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy
         mkdir -p $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy
+        rm -f $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy/*
+        rm -f $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy/*
         ln -s $GITHUB_WORKSPACE/src/main/deploy/parameters.toml $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/debug/src/main/deploy/parameters.toml
         ln -s $GITHUB_WORKSPACE/src/main/deploy/parameters.toml $GITHUB_WORKSPACE/build/test-results/frcUserProgramTest/linuxx86-64/release/src/main/deploy/parameters.toml
 
