@@ -52,15 +52,28 @@ right_back_offset = 153.0
 offset = -330
 lift_limit = 110
 extend_limit = 100
-max_output = 0.2
+max_output = 1
+
+# right in front of the robot to pick stuff up
+[arm.pickup]
+extend_setpoint = 50
+arm_setpoint = 23
+
+[arm.score_high]
+extend_setpoint = 90
+arm_setpoint = -104
+
+[arm.score_medium]
+extend_setpoint = 13.5
+arm_setpoint = -89
 
 [arm.lift_pid]
-kP = 0.05
+kP = 0.07
 kI = 0
 kD = 0
 
 [arm.extend_pid]
-kP = 0.01
+kP = 0.1
 kI = 0
 kD = 0 
 
