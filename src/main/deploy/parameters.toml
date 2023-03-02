@@ -51,7 +51,7 @@ right_back_offset = 153.0
 [arm]
 offset = -330
 lift_limit = 110
-extend_limit = 100
+extend_limit = 95
 max_output = 1
 
 # right in front of the robot to pick stuff up
@@ -75,7 +75,7 @@ kD = 0
 [arm.extend_pid]
 kP = 0.1
 kI = 0
-kD = 0 
+kD = 0.01
 
 [claw]
 open = 0
