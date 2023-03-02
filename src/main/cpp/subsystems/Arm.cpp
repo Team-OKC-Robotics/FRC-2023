@@ -186,7 +186,7 @@ void Arm::Periodic() {
 
     // and log the values
     arm_lift_output_log_.Append(interface_->arm_lift_power);
-    arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder * 360 + offset_);
+    arm_lift_enc_log_.Append(interface_->arm_duty_cycle_encoder);
     arm_lift_setpoint_log_.Append(arm_pid_->GetSetpoint());
 
     arm_extend_output_log_.Append(interface_->arm_extend_power);
