@@ -260,7 +260,7 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    m_autonomousCommand_ = std::make_shared<AutoSwerveCommand>(swerve_drive_, TeamOKC::Pose(100.0, 100.0, 90.0), true);
+    m_autonomousCommand_ = std::make_shared<AutoDriveCommand>(swerve_drive_, 1, 0.5);
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
