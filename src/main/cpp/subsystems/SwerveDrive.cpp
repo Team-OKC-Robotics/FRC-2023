@@ -63,6 +63,12 @@ bool SwerveDrive::Init() {
 
     heading_pid_ = std::make_shared<frc::PIDController>(headingP, headingI, headingD);
 
+    double distP = RobotParams::GetParam("swerve.dist_pid.kP", 0.01);
+    double distI = RobotParams::GetParam("swerve.dist_pid.kI", 0.0);
+    double distD = RobotParams::GetParam("swerve.dist_pid.kD", 0.0);
+
+    dist_pid_ = std::make_shared<frc::PIDController>(distP, distI, distD);
+
     // setpoint
     at_setpoint_ = false;
 
@@ -239,10 +245,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double final_strafe = strafe * control_decay + last_strafe * (1 - control_decay);
     double final_turn = turn * control_decay  + last_turn * (1 - control_decay);
 
-    //TODO convert `turn` to rad/sec
-    //TODO convert drive and strafe to m/s I think
-    // because tracklength/width are in meters
-
     // copied from ChiefDelphi thread
     //TODO post link here
     double A = final_strafe - final_turn * tracklength_/2;
@@ -255,13 +257,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double left_back_speed = sqrt(pow(A, 2) + pow(D, 2));
     double right_front_speed = sqrt(pow(B, 2) + pow(C, 2));
     double right_back_speed = sqrt(pow(A, 2) + pow(C, 2));
-
-
-    // turn
-    // double left_front_turn = atan2(B, D)  *  180.0/M_PI;
-    // double left_back_turn = atan2(A, D)  *  180.0/M_PI;
-    // double right_front_turn = atan2(B, C)  *  180.0/M_PI;
-    // double right_back_turn = atan2(A, C)  *  180.0/M_PI;
 
     double right_front_turn = atan2(B, D)  *  180.0/M_PI;
     double right_back_turn = atan2(A, D)  *  180.0/M_PI;
@@ -340,16 +335,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         }
     }
 
-    /**
-     * 
-    so the diagonals travel more than 180 degrees for some reason
-    they go from, say, 45 to 315 or something right
-    which is in actuality only like 90 degrees, but
-    315 - 45 > 90 so some wack stuff happens
-     * 
-    */
-
-
     // keep the setpoints within [0, 360]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
@@ -386,6 +371,45 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     last_drive = drive;
     last_strafe = strafe;
     last_turn = turn;
+
+    return true;
+}
+
+bool SwerveDrive::SetDistance(double dist) {
+    this->dist_pid_->SetSetpoint(dist);
+
+    return true;
+}
+
+bool SwerveDrive::DriveAuto(double max_speed) {
+    OKC_CHECK(this->interface_ != nullptr);
+
+    double dist = 0;
+    OKC_CALL(this->left_front_module_->GetDistance(&dist));
+
+    this->interface_->left_front_drive_motor_output = this->dist_pid_->Calculate(dist);
+    this->interface_->left_back_drive_motor_output = this->dist_pid_->Calculate(dist);
+    this->interface_->right_front_drive_motor_output = this->dist_pid_->Calculate(dist);
+    this->interface_->right_back_drive_motor_output = this->dist_pid_->Calculate(dist);
+
+    // clamp the speed
+    TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->left_front_drive_motor_output);
+    TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->left_back_drive_motor_output);
+    TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_front_drive_motor_output);
+    TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_back_drive_motor_output);
+
+
+    // just drive straight
+    OKC_CALL(this->left_front_module_->SetAngle(0));
+    OKC_CALL(this->left_back_module_->SetAngle(0));
+    OKC_CALL(this->right_front_module_->SetAngle(0));
+    OKC_CALL(this->right_back_module_->SetAngle(0));
+
+    OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+    OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+    OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+    OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
 
     return true;
 }

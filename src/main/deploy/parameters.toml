@@ -24,6 +24,11 @@ drive_open_loop = 1
 steer_max_output = 0.6
 steer_open_loop = 1
 
+[swerve.dist_pid]
+kP = 0.01
+kI = 0.0
+kD = 0.0
+
 [swerve.drive_pid]
 kP = 0.5
 kI = 0.0

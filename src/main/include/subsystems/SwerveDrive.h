@@ -58,6 +58,8 @@ public:
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
     bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
+    bool SetDistance(double dist);
+    bool DriveAuto(double max_speed);
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -117,6 +119,7 @@ private:
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;
+    std::shared_ptr<frc::PIDController> dist_pid_;
 
     wpi::log::DoubleLogEntry left_front_setpoint_log_;
     wpi::log::DoubleLogEntry left_front_output_log_;
