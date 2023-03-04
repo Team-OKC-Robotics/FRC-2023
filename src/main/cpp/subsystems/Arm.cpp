@@ -185,6 +185,19 @@ bool Arm::IncrementExtend(double increment) {
     return true;
 }
 
+bool Arm::AtExtendSetpoint(bool *at) {
+    *at = inches_pid_->AtSetpoint();
+
+    return true;
+}
+
+bool Arm::AtLiftSetpoint(bool *at) {
+    *at = arm_pid_->AtSetpoint();
+
+    return true;
+}
+
+
 bool Arm::SetManualLiftPower(double power) {
     lift_power_ = power;
 

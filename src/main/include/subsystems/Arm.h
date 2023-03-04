@@ -27,6 +27,9 @@ public:
     bool SetManualUpPower(double power);
     bool SetManualExtendPower(double power);
 
+    bool AtExtendSetpoint(bool *at);
+    bool AtLiftSetpoint(bool *at);
+
     bool SetControlMode(const ControlMode &mode);
     bool ManualControl();
     bool AutoControl();
