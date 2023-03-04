@@ -116,21 +116,7 @@ bool Arm::SetExtend(double inches) {
 bool Arm::SetPreset(double increment) {
     OKC_CHECK(this->arm_pid_ != nullptr);
 
-    // limit the lift PID setpoint to the actual hardware limits
-    // if the increment is less than our max
-    if (arm_pid_->GetSetpoint() + increment < lift_limit_) {
-        // and greater than our min
-        if (arm_pid_->GetSetpoint() + increment > -lift_limit_) {
-            // let it through
-            this->arm_pid_->SetSetpoint(arm_pid_->GetSetpoint() + increment);
-        } else {
-            // otherwise, don't let it go past our min
-            this->arm_pid_->SetSetpoint(-lift_limit_);
-        }
-    } else {
-        // otherwise, don't let it go past our max
-        this->arm_pid_->SetSetpoint(lift_limit_);
-    }
+    OKC_CALL(this->SetDegrees(this->arm_pid_->GetSetpoint() + increment));
 
     return true;
 }
@@ -138,49 +124,7 @@ bool Arm::SetPreset(double increment) {
 bool Arm::IncrementExtend(double increment) {
     OKC_CHECK(this->inches_pid_ != nullptr);
 
-    // limit the extend PID setpoint to the actual hardware limits
-    // if the increment will be less than our extend limit
-    if (inches_pid_->GetSetpoint() + increment  <  extend_limit_) {
-        // and it's going to remain larger than zero
-        if (inches_pid_->GetSetpoint() + increment > 0) {
-            // then we can go ahead and move the arm
-            this->inches_pid_->SetSetpoint(inches_pid_->GetSetpoint() + increment);
-        
-        // otherwise
-        } else {
-            // don't go below 0
-            this->inches_pid_->SetSetpoint(1);
-        }
-    // otherwise, we're trying to go beyon the extend limit
-    } else {
-        // so set us to the maximum allowed extend
-        this->inches_pid_->SetSetpoint(extend_limit_);
-    }
-
-    // then we need to keep the arm from trying to extend into the robot
-    // if we're on the positive side of the robot
-    if (interface_->arm_duty_cycle_encoder > 0) {
-        // if the arm setpoint is going to take us through the danger zone
-        if (arm_pid_->GetSetpoint() < 25) {
-            // bring the extension in
-            this->inches_pid_->SetSetpoint(0);
-
-            // and let us know we're ridin' through the dangah zone
-            danger_zone_ = true;
-        } else {
-            danger_zone_ = false;
-        }
-    } else {
-        // if we're on the other side of the robot, and we're going to go through the danger zone
-        if (arm_pid_->GetSetpoint() > -25) {
-            // bring the extension back in
-            this->inches_pid_->SetSetpoint(0);
-
-            danger_zone_ = true;
-        } else {
-            danger_zone_ = false;
-        }
-    }
+    OKC_CALL(this->SetExtend(this->inches_pid_->GetSetpoint() + increment));
 
     return true;
 }
