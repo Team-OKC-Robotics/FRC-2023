@@ -50,6 +50,8 @@ private:
 
     double offset_;
 
+    bool danger_zone_ = false;
+
     wpi::log::DoubleLogEntry arm_lift_output_log_;
     wpi::log::DoubleLogEntry arm_lift_enc_log_;
     wpi::log::DoubleLogEntry arm_lift_setpoint_log_;
