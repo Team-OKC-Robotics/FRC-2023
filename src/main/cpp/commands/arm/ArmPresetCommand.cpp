@@ -46,7 +46,7 @@ void ArmPresetCommand::Execute() {
 
     // *then* we can extend it
     if (safe_to_extend_arm) {
-        VOKC_CALL(arm_->SetExtend(extend));
+        VOKC_CALL(arm_->SetExtend(extend_));
         done_ = true;
     }
 }
