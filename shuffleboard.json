@@ -419,6 +419,27 @@
               "Visuals/Show text": true,
               "Visuals/Orientation": "HORIZONTAL"
             }
+          },
+          "7,0": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": 10,
+              "imageWidth": 100,
+              "imageHeight": 50
+            }
           }
         }
       }
@@ -428,6 +449,6 @@
     "x": -8.0,
     "y": -8.0,
     "width": 1936.0,
-    "height": 1048.0
+    "height": 1096.0
   }
 }
