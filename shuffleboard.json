@@ -422,8 +422,8 @@
           },
           "7,0": {
             "size": [
-              3,
-              2
+              5,
+              4
             ],
             "content": {
               "_type": "Camera Stream",
@@ -436,9 +436,9 @@
               "Controls/Show controls": true,
               "Controls/Rotation": "NONE",
               "compression": -1.0,
-              "fps": 10,
-              "imageWidth": 100,
-              "imageHeight": 50
+              "fps": 30,
+              "imageWidth": 300,
+              "imageHeight": 150
             }
           }
         }
