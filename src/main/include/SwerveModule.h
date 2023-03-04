@@ -54,6 +54,7 @@ public:
     bool SetDistance(double distance);
     bool GetDriveError(double *error);
     bool GetDriveOutput(double *output); // PID
+    bool GetDistance(double *dist);
 
     bool SetDrivePID(double kP, double kI, double kD);
     bool SetSteerPID(double kP, double kI, double kD);

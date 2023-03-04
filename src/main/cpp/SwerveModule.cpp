@@ -195,3 +195,9 @@ bool SwerveModule::GetSteerError(double *error) {
     
     return true;
 }
+
+bool SwerveModule::GetDistance(double *dist) {
+    *dist = this->drive_enc_;
+
+    return true;
+}
