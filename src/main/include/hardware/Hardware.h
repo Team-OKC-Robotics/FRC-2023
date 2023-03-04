@@ -8,6 +8,7 @@
 #include "io/SwerveDriveIO.h"
 #include "io/ArmIO.h"
 #include "io/ClawIO.h"
+#include "io/IntakeIO.h"
 
 // Subsystem I/O
 
@@ -53,6 +54,11 @@ bool SetupArmInterface(std::unique_ptr<Hardware> &hardware,
 bool SetupClawInterface(
    std::unique_ptr<Hardware> &hardware,
    std::shared_ptr<ClawHardwareInterface> &interface);
+
+bool SetupIntakeInterface(
+    std::unique_ptr<Hardware> &hardware,
+    std::shared_ptr<IntakeHardwareInterface> &interface);
+
 
 // bool SetupVisionTrackingInterface(
 //    std::unique_ptr<HardwareInterface> &hardware,

@@ -16,17 +16,19 @@
 #include "io/SwerveDriveIO.h"
 #include "io/ArmIO.h"
 #include "io/ClawIO.h"
+#include "io/IntakeIO.h"
 
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
 #include "subsystems/Claw.h"
+#include "subsystems/Intake.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
 #include <frc/Joystick.h>
-#include <frc2/command/button/CommandJoystick.h>
+#include "frc2/command/button/JoystickButton.h"
 
 
 /// Commands
@@ -87,12 +89,14 @@ private:
     bool InitSwerve();
     bool InitArm();
     bool InitClaw();
+    bool InitIntake();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
     std::shared_ptr<ClawHardwareInterface> claw_hw_;
+    std::shared_ptr<IntakeHardwareInterface> intake_hw_;
 
 
 
@@ -100,46 +104,49 @@ private:
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
     std::shared_ptr<ArmIO> arm_io_;
     std::shared_ptr<ClawIO> claw_io_;
+    std::shared_ptr<IntakeIO> intake_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
     std::shared_ptr<ArmSoftwareInterface> arm_sw_;
     std::shared_ptr<ClawSoftwareInterface> claw_sw_;
+    std::shared_ptr<IntakeSoftwareInterface> intake_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
     std::shared_ptr<Arm> arm_;
     std::shared_ptr<Claw> claw_;
+    std::shared_ptr<Intake> intake_;
 
     /**
      * User interfaces
      * - Gamepads
      * - Joystick Buttons
      */
-    std::shared_ptr<frc2::CommandJoystick> gamepad1_;
-    std::shared_ptr<frc2::CommandJoystick> gamepad2_;
+    std::shared_ptr<frc::Joystick> gamepad1_;
+    std::shared_ptr<frc::Joystick> gamepad2_;
 
-    std::shared_ptr<frc2::Trigger> driver_a_button_;
-    std::shared_ptr<frc2::Trigger> driver_b_button_;
-    std::shared_ptr<frc2::Trigger> driver_x_button_;
-    std::shared_ptr<frc2::Trigger> driver_y_button_;
-    std::shared_ptr<frc2::Trigger> driver_start_button_;
-    std::shared_ptr<frc2::Trigger> driver_back_button_;
-    std::shared_ptr<frc2::Trigger> driver_left_stick_button_;
-    std::shared_ptr<frc2::Trigger> driver_right_stick_button_;
-    std::shared_ptr<frc2::Trigger> driver_left_bumper_;
-    std::shared_ptr<frc2::Trigger> driver_right_bumper_;
+    std::shared_ptr<frc2::JoystickButton> driver_a_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_b_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_x_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_y_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_start_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_back_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_right_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> driver_left_bumper_;
+    std::shared_ptr<frc2::JoystickButton> driver_right_bumper_;
 
-    std::shared_ptr<frc2::Trigger> manip_a_button_;
-    std::shared_ptr<frc2::Trigger> manip_b_button_;
-    std::shared_ptr<frc2::Trigger> manip_x_button_;
-    std::shared_ptr<frc2::Trigger> manip_y_button_;
-    std::shared_ptr<frc2::Trigger> manip_back_button_;
-    std::shared_ptr<frc2::Trigger> manip_start_button_;
-    std::shared_ptr<frc2::Trigger> manip_left_bumper_button_;
-    std::shared_ptr<frc2::Trigger> manip_right_bumper_button_;
-    std::shared_ptr<frc2::Trigger> manip_left_stick_button_;
-    std::shared_ptr<frc2::Trigger> manip_right_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_a_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_b_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_x_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_y_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_back_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_start_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_left_bumper_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_right_bumper_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_left_stick_button_;
+    std::shared_ptr<frc2::JoystickButton> manip_right_stick_button_;
 
     /**
      * Commands

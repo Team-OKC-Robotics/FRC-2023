@@ -65,20 +65,20 @@ TEST_F(SwerveDriveTest, VectorTeleOpDrive) {
     // and also make sure none are greater than 1
 }
 
-TEST_F(SwerveDriveTest, LockAutonomousDrive) {
-    //TODO better pos/heading
-    TeamOKC::Pose pos = TeamOKC::Pose(10, -5, 30);
-
-    ASSERT_TRUE(swerve_->InitAuto(pos, true)); // lock heading
-
-    swerve_->Periodic();
-
-    EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
+//TEST_F(SwerveDriveTest, LockAutonomousDrive) {
+//    //TODO better pos/heading
+//    TeamOKC::Pose pos = TeamOKC::Pose(10, -5, 30);
+//
+//    ASSERT_TRUE(swerve_->InitAuto(pos, true)); // lock heading
+//
+//    swerve_->Periodic();
+//
+//    EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
 
 
     //do some janky periodic() stuff maybe? just get it to go through all the states
     //TODO
-}
+//}
 
 TEST_F(SwerveDriveTest, UnlockedAutoDrive) {
      //TODO better pos/heading

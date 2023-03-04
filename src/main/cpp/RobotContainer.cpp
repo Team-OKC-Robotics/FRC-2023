@@ -203,6 +203,20 @@ bool RobotContainer::InitArm() {
     return true;
 }
 
+bool RobotContainer::InitIntake() {
+    OKC_CALL(SetupIntakeInterface(hardware_, intake_hw_));
+
+    intake_sw_ = std::make_shared<IntakeSoftwareInterface>();
+
+    intake_io_ = std::make_shared<IntakeIO>(intake_hw_.get(), intake_sw_.get());
+
+    intake_ = std::make_shared<Intake>(intake_sw_.get());
+
+    OKC_CALL(intake_io_->Init());
+    OKC_CALL(intake_->Init());
+
+    return true;
+}
 bool RobotContainer::InitClaw() {
     OKC_CALL(SetupClawInterface(hardware_, claw_hw_));
 
@@ -222,32 +236,38 @@ bool RobotContainer::InitGamepads() {
     int gamepad1_id = RobotParams::GetParam("gamepad1_id", 0);
     int gamepad2_id = RobotParams::GetParam("gamepad2_id", 1);
 
-    gamepad1_ = std::make_shared<frc2::CommandJoystick>(gamepad1_id);
-    gamepad2_ = std::make_shared<frc2::CommandJoystick>(gamepad2_id);
+    gamepad1_ = std::make_shared<frc::Joystick>(gamepad1_id);
+    gamepad2_ = std::make_shared<frc::Joystick>(gamepad2_id);
 
 
     // Initialize the joystick buttons
-    driver_a_button_ = std::make_shared<frc2::Trigger>();
-    driver_a_button_ = &gamepad1_->Button(A_BUTTON);
-    driver_b_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(B_BUTTON));
-    driver_x_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(X_BUTTON));
-    driver_y_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(Y_BUTTON));
-    driver_start_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(START_BUTTON));
-    driver_back_button_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(BACK_BUTTON));
-    driver_left_bumper_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(LEFT_BUMP));
-    driver_right_bumper_ = std::make_shared<frc2::Trigger>(gamepad1_->Button(RIGHT_BUMP));
+    
+driver_a_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
+    driver_b_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
+    driver_back_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
+    driver_x_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
+    driver_start_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
+    driver_left_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    driver_right_stick_button_ =
+        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
 
     // second driver
-    manip_a_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), A_BUTTON);
-    manip_b_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), B_BUTTON);
-    manip_x_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), X_BUTTON);
-    manip_y_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), Y_BUTTON);
-    manip_back_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), START_BUTTON);
-    manip_start_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), BACK_BUTTON);
-    manip_left_bumper_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), LEFT_BUMP);
-    manip_right_bumper_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), RIGHT_BUMP);
-    manip_left_stick_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), LEFT_STICK_BUTTON);
-    manip_right_stick_button_ = std::make_shared<frc2::Trigger>(gamepad2_.get(), RIGHT_STICK_BUTTON);
+    manip_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), A_BUTTON);
+    manip_b_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), B_BUTTON);
+    manip_x_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), X_BUTTON);
+    manip_y_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), Y_BUTTON);
+    manip_back_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
+    manip_start_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), BACK_BUTTON);
+    manip_left_bumper_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_BUMP);
+    manip_right_bumper_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_BUMP);
+    manip_left_stick_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    manip_right_stick_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
 
     return true;
 }
