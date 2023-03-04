@@ -98,8 +98,10 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
+    actuators_interface->arm_extend_motor->SetInverted(true);
 
     actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
+
     return true;
 }
 
@@ -258,7 +260,7 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    m_autonomousCommand_ = std::make_shared<AutoSwerveCommand>(swerve_drive_, TeamOKC::Pose(10.0, 10.0, 90.0), true);
+    m_autonomousCommand_ = std::make_shared<AutoSwerveCommand>(swerve_drive_, TeamOKC::Pose(100.0, 100.0, 90.0), true);
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
@@ -267,8 +269,8 @@ bool RobotContainer::InitCommands() {
     extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 5); 
     retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -5);
 
-    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 1);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
 
     // to pick stuff up from the back of the robot
     arm_angle_pickup_command_ = std::make_shared<SetArmAngleCommand>(arm_, 23);
