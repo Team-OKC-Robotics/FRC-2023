@@ -25,7 +25,7 @@ steer_max_output = 0.6
 steer_open_loop = 1
 
 [swerve.drive_pid]
-kP = 0.1
+kP = 0.5
 kI = 0.0
 # kI = 0.0
 kD = 0.0
@@ -38,7 +38,7 @@ kI = 0.0
 kD = 0.0004
 
 [swerve.heading_pid]
-kP = 0.0004
+kP = 0.04
 kI = 0.0
 kD = 0.0
 
@@ -52,7 +52,7 @@ right_back_offset = 153.0
 offset = -330
 lift_limit = 110
 extend_limit = 95
-max_output = 1
+max_output = 0.5
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
@@ -68,7 +68,7 @@ extend_setpoint = 13.5
 arm_setpoint = -89
 
 [arm.lift_pid]
-kP = 0.07
+kP = 0.05
 kI = 0
 kD = 0
 
