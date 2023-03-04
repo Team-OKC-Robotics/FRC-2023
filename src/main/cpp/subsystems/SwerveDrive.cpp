@@ -254,6 +254,12 @@ bool SwerveDrive::SetDistance(double dist) {
     return true;
 }
 
+bool SwerveDrive::AtDistSetpoint(bool *at) {
+    *at = this->dist_pid_->AtSetpoint();
+
+    return true;
+}
+
 bool SwerveDrive::DriveAuto(double max_speed) {
     OKC_CHECK(this->interface_ != nullptr);
 

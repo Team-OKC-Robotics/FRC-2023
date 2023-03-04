@@ -60,6 +60,7 @@ public:
     bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
     bool SetDistance(double dist);
     bool DriveAuto(double max_speed);
+    bool AtDistSetpoint(bool *at);
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
