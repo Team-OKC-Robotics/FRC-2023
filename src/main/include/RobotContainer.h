@@ -46,6 +46,9 @@
 // claw
 #include "commands/claw/ManualClawCommand.h"
 
+//intake
+#include "commands/intake/IntakeCommand.h"
+
 // misc
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
@@ -168,6 +171,9 @@ private:
     std::shared_ptr<ManualClawCommand> manual_open_claw;
     std::shared_ptr<ManualClawCommand> manual_close_claw;
     std::shared_ptr<ManualClawCommand> manual_stop_claw;
+
+    //intake
+    std::shared_ptr<IntakeCommand> intake_command;
 };
 
 

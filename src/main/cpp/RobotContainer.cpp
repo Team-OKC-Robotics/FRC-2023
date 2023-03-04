@@ -13,6 +13,7 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
     VOKC_CALL(this->InitClaw());
+    VOKC_CALL(this->InitIntake());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -97,6 +98,8 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
 
     actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
+
+    actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
     return true;
 }
 
@@ -212,7 +215,6 @@ bool RobotContainer::InitIntake() {
 
     intake_ = std::make_shared<Intake>(intake_sw_.get());
 
-    OKC_CALL(intake_io_->Init());
     OKC_CALL(intake_->Init());
 
     return true;

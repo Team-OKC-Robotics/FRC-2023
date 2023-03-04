@@ -24,7 +24,6 @@ bool Intake::SetTurn(double degrees) {
 }
 
 
-
 bool Intake::SetIntakePower(double power) {
     intake_power_ = power;
 
@@ -60,4 +59,6 @@ void Intake::Periodic() {
             VOKC_CHECK_MSG(false, "Unhandled enum");
     }
 }
-    
+
+
+

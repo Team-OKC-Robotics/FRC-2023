@@ -56,7 +56,7 @@ public:
      * Will be called periodically whenever the CommandScheduler runs during
      * simulation.
      */
-    void SimulationPeriodic() override;
+   
 
     bool ProcessIO();
 
