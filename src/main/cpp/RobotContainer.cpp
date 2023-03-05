@@ -97,7 +97,7 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
 
-    actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
+    
 
     actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
     return true;
@@ -166,9 +166,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
-    OKC_CHECK(actuators.claw_motor != nullptr);
 
-    sensor_interface->claw_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.claw_motor->GetEncoder());
 
     return true;
 }
@@ -219,19 +217,7 @@ bool RobotContainer::InitIntake() {
 
     return true;
 }
-bool RobotContainer::InitClaw() {
-    OKC_CALL(SetupClawInterface(hardware_, claw_hw_));
 
-    claw_sw_ = std::make_shared<ClawSoftwareInterface>();
-
-    claw_io_ = std::make_shared<ClawIO>(claw_hw_.get(), claw_sw_.get());
-    
-    claw_ = std::make_shared<Claw>(claw_sw_.get());
-
-    OKC_CALL(claw_->Init());
-
-    return true;
-}
 
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
