@@ -229,17 +229,25 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
     }
 
+    if (abs(drive) < 0.05 && abs(strafe) < 0.05 && abs(turn) < 0.05) {
+        this->interface_->left_front_drive_motor_output = 0.0;
+        this->interface_->left_back_drive_motor_output = 0.0;
+        this->interface_->right_front_drive_motor_output = 0.0;
+        this->interface_->right_back_drive_motor_output = 0.0;
+    } else {
+        this->interface_->left_front_drive_motor_output = left_front_speed;
+        this->interface_->left_back_drive_motor_output = left_back_speed;
+        this->interface_->right_front_drive_motor_output = right_front_speed;
+        this->interface_->right_back_drive_motor_output = right_back_speed;
+    }
+
     OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
     OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
     OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
     OKC_CHECK(this->interface_ != nullptr);
-    this->interface_->left_front_drive_motor_output = left_front_speed;
-    this->interface_->left_back_drive_motor_output = left_back_speed;
-    this->interface_->right_front_drive_motor_output = right_front_speed;
-    this->interface_->right_back_drive_motor_output = right_back_speed;
-
+   
     // for control decay
     last_drive = drive;
     last_strafe = strafe;
