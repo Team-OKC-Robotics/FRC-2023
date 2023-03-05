@@ -15,18 +15,19 @@
 // I/O Subsystems
 #include "io/SwerveDriveIO.h"
 #include "io/ArmIO.h"
-#include "io/ClawIO.h"
+#include "io/IntakeIO.h"
 
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
-#include "subsystems/Claw.h"
+#include "subsystems/Intake.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
 #include <frc/Joystick.h>
-#include <frc2/command/button/JoystickButton.h>
+#include "frc2/command/button/JoystickButton.h"
+
 
 /// Commands
 // swerve
@@ -41,8 +42,10 @@
 #include "commands/arm/SetArmExtensionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
 
-// claw
-#include "commands/claw/ManualClawCommand.h"
+
+
+//intake
+#include "commands/intake/IntakeCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -89,30 +92,30 @@ private:
     // subsystem initialization
     bool InitSwerve();
     bool InitArm();
-    bool InitClaw();
+    bool InitIntake();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
-    std::shared_ptr<ClawHardwareInterface> claw_hw_;
+    std::shared_ptr<IntakeHardwareInterface> intake_hw_;
 
 
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
     std::shared_ptr<ArmIO> arm_io_;
-    std::shared_ptr<ClawIO> claw_io_;
+    std::shared_ptr<IntakeIO> intake_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
     std::shared_ptr<ArmSoftwareInterface> arm_sw_;
-    std::shared_ptr<ClawSoftwareInterface> claw_sw_;
+    std::shared_ptr<IntakeSoftwareInterface> intake_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
     std::shared_ptr<Arm> arm_;
-    std::shared_ptr<Claw> claw_;
+    std::shared_ptr<Intake> intake_;
 
     /**
      * User interfaces
@@ -171,9 +174,11 @@ private:
     std::shared_ptr<SetArmExtensionCommand> arm_extend_high_command_;
 
     // claw
-    std::shared_ptr<ManualClawCommand> manual_open_claw;
-    std::shared_ptr<ManualClawCommand> manual_close_claw;
-    std::shared_ptr<ManualClawCommand> manual_stop_claw;
+  
+
+    //intake
+    std::shared_ptr<IntakeCommand> intake_command;
+    std::shared_ptr<IntakeCommand> other_intake_command;
 };
 
 

@@ -28,6 +28,8 @@
 
 #define CLAW_MOTOR 12
 
+#define INTAKE_MOTOR 12
+
 
 typedef struct actuators_t {
     // Left drivetrain motors
@@ -49,4 +51,7 @@ typedef struct actuators_t {
 
     // Claw things
     std::unique_ptr<rev::CANSparkMax> claw_motor;
+
+    //intake motor
+    std::unique_ptr<rev::CANSparkMax> intake_motor;
 } Actuators;

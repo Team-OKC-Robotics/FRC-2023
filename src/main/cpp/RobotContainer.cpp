@@ -16,7 +16,7 @@ RobotContainer::RobotContainer() {
     // initialize the subsystems
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-    VOKC_CALL(this->InitClaw());
+    VOKC_CALL(this->InitIntake());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -37,8 +37,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     //button bindings
     WPI_IGNORE_DEPRECATED
     // main driver controls
-    driver_left_bumper_->WhileHeld(*manual_open_claw).WhenReleased(*manual_stop_claw);
-    driver_right_bumper_->WhileHeld(*manual_close_claw).WhenReleased(*manual_stop_claw);
+    
     
     // second driver controls
     manip_a_button_->WhenPressed(*arm_angle_pickup_command_);
@@ -51,10 +50,12 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_y_button_->WhenReleased(*arm_extend_high_command_);
   
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
-    driver_a_button_->WhileHeld(*lowerArmCommand);
-    driver_y_button_->WhileHeld(*raiseArmCommand);
-    driver_x_button_->WhileHeld(*retractArmCommand);
-    driver_b_button_->WhileHeld(*extendArmCommand);
+    driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    driver_b_button_->WhileActiveContinous(*extendArmCommand);
+    driver_left_stick_button_->WhileActiveContinous(*intake_command);
+    driver_right_stick_button_->WhileActiveContinous(*other_intake_command);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -105,8 +106,9 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor->SetInverted(true);
 
-    actuators_interface->claw_motor = std::make_unique<rev::CANSparkMax>(CLAW_MOTOR, BRUSHLESS);
+    
 
+    actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
     return true;
 }
 
@@ -173,9 +175,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
-    OKC_CHECK(actuators.claw_motor != nullptr);
 
-    sensor_interface->claw_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.claw_motor->GetEncoder());
 
     // manual_arm_command_->Schedule();
 
@@ -215,19 +215,20 @@ bool RobotContainer::InitArm() {
     return true;
 }
 
-bool RobotContainer::InitClaw() {
-    OKC_CALL(SetupClawInterface(hardware_, claw_hw_));
+bool RobotContainer::InitIntake() {
+    OKC_CALL(SetupIntakeInterface(hardware_, intake_hw_));
 
-    claw_sw_ = std::make_shared<ClawSoftwareInterface>();
+    intake_sw_ = std::make_shared<IntakeSoftwareInterface>();
 
-    claw_io_ = std::make_shared<ClawIO>(claw_hw_.get(), claw_sw_.get());
-    
-    claw_ = std::make_shared<Claw>(claw_sw_.get());
+    intake_io_ = std::make_shared<IntakeIO>(intake_hw_.get(), intake_sw_.get());
 
-    OKC_CALL(claw_->Init());
+    intake_ = std::make_shared<Intake>(intake_sw_.get());
+
+    OKC_CALL(intake_->Init());
 
     return true;
 }
+
 
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
@@ -295,9 +296,10 @@ bool RobotContainer::InitCommands() {
 
 
     // claw commands
-    manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
-    manual_close_claw = std::make_shared<ManualClawCommand>(claw_, 0.1);
-    manual_stop_claw = std::make_shared<ManualClawCommand>(claw_, 0);
-     
+    
+    // intake commands
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.1);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.1);
+   
     return true;
 }

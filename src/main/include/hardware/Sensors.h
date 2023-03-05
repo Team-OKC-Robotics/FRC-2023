@@ -48,4 +48,7 @@ typedef struct sensors_t {
 
     // claw sensors
     std::unique_ptr<rev::SparkMaxRelativeEncoder> claw_encoder;
+
+    //intake sensord
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> intake_encoder;
 } Sensors;
