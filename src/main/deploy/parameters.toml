@@ -21,8 +21,8 @@ wheel_diameter = 4.0
 inches_to_meters = 0.0254 # yo unexpected 254!
 drive_max_output = 1
 drive_open_loop = 1
-steer_max_output = 0.6
-steer_open_loop = 1
+steer_max_output = 1
+steer_open_loop = 0.1
 
 [swerve.dist_pid]
 kP = 0.5
@@ -62,15 +62,15 @@ max_output = 0.5
 # right in front of the robot to pick stuff up
 [arm.pickup]
 extend_setpoint = 50
-arm_setpoint = 23
+arm_setpoint = -30
 
 [arm.score_high]
-extend_setpoint = 90
+extend_setpoint = 80
 arm_setpoint = -104
 
 [arm.score_medium]
-extend_setpoint = 13.5
-arm_setpoint = -89
+extend_setpoint = 70
+arm_setpoint = -80
 
 [arm.lift_pid]
 kP = 0.05
@@ -78,9 +78,9 @@ kI = 0
 kD = 0
 
 [arm.extend_pid]
-kP = 0.1
+kP = 0.01
 kI = 0
-kD = 0.01
+kD = 0.0
 
 [claw]
 open = 0
