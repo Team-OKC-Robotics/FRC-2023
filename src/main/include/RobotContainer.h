@@ -48,6 +48,9 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/SubsystemBase.h>
 
+// autos
+#include "autos/ScorePreloadedAuto.h"
+
 #include "Logging.h"
 
 #include "units/length.h"
@@ -144,7 +147,7 @@ private:
     /**
      * Commands
      */
-    std::shared_ptr<AutoDriveCommand> m_autonomousCommand_;
+    std::shared_ptr<ScorePreloadedAuto> m_autonomousCommand_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
