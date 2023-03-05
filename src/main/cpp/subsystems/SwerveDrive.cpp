@@ -136,7 +136,7 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double left_front_turn = atan2(B, C)  *  180.0/M_PI;
     double left_back_turn = atan2(A, C)  *  180.0/M_PI;
 
-    // keep the setpoints within [0, 360]
+    // keep the setpoints within [-180, 180]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
@@ -155,57 +155,29 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
 
     /**
      * The following if statements exist to make tele-op better by turning the modules less
-     * the basic premise of the code is that you should never have to steer the module more than 90 degrees
+     * the basic premise of the code is that you should never have to steer the module more than 90 degrees.
      * this is because to reverse the direction of travel for a module, you _could_ turn it 180 degrees,
      * but it would be better to simply invert the direction that the drive motor/wheel is spinning, like normal
-     * differential drivetrains do. So you should never need to steer more than 90 degrees. Of coures, in practice
-     * angles and steering and all that can interfere with each other, so our threshold angle of choice for inverting
-     * the motor instead of steering the module is 110 degrees. I don't really know why just 90 degrees doesn't work,
-     * but empirical testing (and first-driver Eli) says that this is good, so I'm not going to mess with it.
-     * What about the nested if statement? Well, sometimes specific cases pass the first if (such as a current angle
-     * of 3 degrees and a desired angle of 340) where the distance is 3-340 = -337, abs(-337) > 110. But it is slower
-     * to turn the wheel all the way around. The steer_pid has continuous input, so it handles the 3 -> 340 transition
-     * well. So we double check, and if after inverting it the difference is still larger than 110, then we just
-     * put it back to how it was, because math. There's probably a proper way to do this, but this right here works.
+     * differential drivetrains do. So you should never need to steer more than 90 degrees.
     */
-    if (abs(left_front_angle - left_front_turn) > 110) {
+    if (abs(left_front_angle - left_front_turn) > 90) {
         left_front_turn -= 180;
         left_front_speed *= -1;
-
-        if (abs(left_front_angle - left_front_turn) > 110) {
-            left_front_turn -= 180;
-            left_front_speed *= -1;
-        }
     }
 
-    if (abs(left_back_angle - left_back_turn) > 110) {
+    if (abs(left_back_angle - left_back_turn) > 90) {
         left_back_turn -= 180;
         left_back_speed *= -1;
-
-        if (abs(left_back_angle - left_back_turn) > 110) {
-            left_back_turn -= 180;
-            left_back_speed *= -1;
-        }
     }
 
-    if (abs(right_front_angle - right_front_turn) > 110) {
+    if (abs(right_front_angle - right_front_turn) > 90) {
         right_front_turn -= 180;
         right_front_speed *= -1;
-
-        if (abs(right_front_angle - right_front_turn) > 110) {
-            right_front_turn -= 180;
-            right_front_speed *= -1;
-        }
     }
 
-    if (abs(right_back_angle - right_back_turn) > 110) {
+    if (abs(right_back_angle - right_back_turn) > 90) {
         right_back_turn -= 180;
         right_back_speed *= -1;
-
-        if (abs(right_back_angle - right_back_turn) > 110) {
-            right_back_turn -= 180;
-            right_back_speed *= -1;
-        }
     }
 
     // keep the setpoints within [0, 360]
