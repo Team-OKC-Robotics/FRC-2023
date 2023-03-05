@@ -58,6 +58,8 @@ namespace ArmUI {
     nt::GenericEntry *const nt_extend_encoder = nt_tab.Add("extend encodoer", 0.0).GetEntry();
     nt::GenericEntry *const nt_extend_setpoint = nt_tab.Add("extend setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_extend_power = nt_tab.Add("extend power", 0.0).GetEntry();
+
+    nt::GenericEntry *const nt_limit_switch = nt_tab.Add("extend limit switch", false).GetEntry();
 }
 
 namespace ClawUI {
