@@ -22,7 +22,7 @@ inches_to_meters = 0.0254 # yo unexpected 254!
 drive_max_output = 1
 drive_open_loop = 1
 steer_max_output = 1
-steer_open_loop = 0.1
+steer_open_loop = 0.0
 
 [swerve.dist_pid]
 kP = 0.5
@@ -36,11 +36,9 @@ kI = 0.0
 kD = 0.0
 
 [swerve.steer_pid]
-# kP = 0.0045
-kP = 0.004
+kP = 0.008
 kI = 0.0
-# kD = 0.00005
-kD = 0.0004
+kD = 0.0001
 
 [swerve.heading_pid]
 kP = 0.04
