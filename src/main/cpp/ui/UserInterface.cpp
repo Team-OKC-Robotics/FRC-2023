@@ -20,16 +20,6 @@ namespace SwerveDriveUI {
     nt::GenericEntry *const nt_right_front_front_steer = nt_tab.Add("right front steer", 0.0).GetEntry();
     nt::GenericEntry *const nt_right_back_front_steer = nt_tab.Add("right back steer", 0.0).GetEntry();
 
-    // Distance PID
-    nt::GenericEntry *const nt_dist_kp = nt_tab.Add("Distance kP", 0.0).GetEntry();
-    nt::GenericEntry *const nt_dist_ki = nt_tab.Add("Distance kI", 0.0).GetEntry();
-    nt::GenericEntry *const nt_dist_kd = nt_tab.Add("Distance kD", 0.0).GetEntry();
-
-    // Steer PID
-    nt::GenericEntry *const nt_steer_kp = nt_tab.Add("Steer kP", 0.0).GetEntry();
-    nt::GenericEntry *const nt_steer_ki = nt_tab.Add("Steer kI", 0.0).GetEntry();
-    nt::GenericEntry *const nt_steer_kd = nt_tab.Add("Steer kD", 0.0).GetEntry();
-
     nt::GenericEntry *const nt_left_front_steer_setpoint = nt_tab.Add("left front setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_left_back_steer_setpoint = nt_tab.Add("left back setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_right_front_steer_setpoint = nt_tab.Add("right front setpoint", 0.0).GetEntry();

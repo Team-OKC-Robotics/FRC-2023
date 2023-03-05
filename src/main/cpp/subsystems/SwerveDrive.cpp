@@ -389,38 +389,12 @@ bool SwerveDrive::ResetGyro() {
 
 
 bool SwerveDrive::InitShuffleboard() {
-    // Get parameters
-    double dist_p = RobotParams::GetParam("swerve.drive_pid.kP", 0.0);
-    double dist_i = RobotParams::GetParam("swerve.drive_pid.kI", 0.0);
-    double dist_d = RobotParams::GetParam("swerve.drive_pid.kD", 0.0);
-
-    double steer_p = RobotParams::GetParam("swerve.steer_pid.kP", 0.0);
-    double steer_i = RobotParams::GetParam("swerve.steer_pid.kI", 0.0);
-    double steer_d = RobotParams::GetParam("swerve.steer_pid.kD", 0.0);
-
-    // null pointer checks
-    OKC_CHECK(SwerveDriveUI::nt_dist_kp);
-    OKC_CHECK(SwerveDriveUI::nt_dist_ki);
-    OKC_CHECK(SwerveDriveUI::nt_dist_kd);
-
-    OKC_CHECK(SwerveDriveUI::nt_steer_kp);
-    OKC_CHECK(SwerveDriveUI::nt_steer_ki);
-    OKC_CHECK(SwerveDriveUI::nt_steer_kd);
-    
     OKC_CHECK(SwerveDriveUI::nt_left_front_front_steer);
     OKC_CHECK(SwerveDriveUI::nt_left_back_front_steer);
     OKC_CHECK(SwerveDriveUI::nt_right_front_front_steer);
     OKC_CHECK(SwerveDriveUI::nt_right_back_front_steer);
 
     // Update dashboard.
-    OKC_CALL(SwerveDriveUI::nt_dist_kp->SetDouble(dist_p));
-    OKC_CALL(SwerveDriveUI::nt_dist_ki->SetDouble(dist_i));
-    OKC_CALL(SwerveDriveUI::nt_dist_kd->SetDouble(dist_d));
-
-    OKC_CALL(SwerveDriveUI::nt_steer_kp->SetDouble(steer_p));
-    OKC_CALL(SwerveDriveUI::nt_steer_ki->SetDouble(steer_i));
-    OKC_CALL(SwerveDriveUI::nt_steer_kd->SetDouble(steer_d));
-
     OKC_CALL(SwerveDriveUI::nt_left_front_front_steer->SetDouble(0.0));
     OKC_CALL(SwerveDriveUI::nt_left_back_front_steer->SetDouble(0.0));
     OKC_CALL(SwerveDriveUI::nt_right_front_front_steer->SetDouble(0.0));
@@ -489,61 +463,6 @@ bool SwerveDrive::UpdateShuffleboard() {
     left_front_output_log_.Append(interface_->right_front_steer_motor_output);
     OKC_CALL(right_front_module_->GetSteerEncoderReading(&encoder_tmp));
     left_front_steer_enc_log_.Append(encoder_tmp);
-
-
-    // If competition mode isn't set to true, then allow the PID gains to be
-    // tuned.
-    bool is_competition = RobotParams::GetParam("competition", false);
-    if (!is_competition) {
-        // Update the PID Gains if write mode is true.
-        if (SwerveDriveUI::nt_write_mode->GetBoolean(false)) {
-            // Get the current PID parameter values
-            double dist_p = RobotParams::GetParam("swerve.distance_pid.Kp", 0.0);
-            double dist_i = RobotParams::GetParam("swerve.distance_pid.Ki", 0.0);
-            double dist_d = RobotParams::GetParam("swerve.distance_pid.Kp", 0.0);
-
-            double steer_p = RobotParams::GetParam("swerve.steer_pid.Kp", 0.0);
-            double steer_i = RobotParams::GetParam("swerve.steer_pid.Ki", 0.0);
-            double steer_d = RobotParams::GetParam("swerve.steer_pid.Kp", 0.0);
-
-            // check for nullptrs
-            OKC_CHECK(SwerveDriveUI::nt_dist_kp != nullptr);
-            OKC_CHECK(SwerveDriveUI::nt_dist_ki);
-            OKC_CHECK(SwerveDriveUI::nt_dist_kd);
-
-            OKC_CHECK(SwerveDriveUI::nt_steer_kp);
-            OKC_CHECK(SwerveDriveUI::nt_steer_ki);
-            OKC_CHECK(SwerveDriveUI::nt_steer_kd);
-
-            // Get the values from shuffleboard.
-            dist_p = SwerveDriveUI::nt_dist_kp->GetDouble(dist_p);
-            dist_i = SwerveDriveUI::nt_dist_ki->GetDouble(dist_i);
-            dist_d = SwerveDriveUI::nt_dist_kd->GetDouble(dist_d);
-
-            steer_p = SwerveDriveUI::nt_steer_kp->GetDouble(steer_p);
-            steer_i = SwerveDriveUI::nt_steer_ki->GetDouble(steer_i);
-            steer_d = SwerveDriveUI::nt_steer_kd->GetDouble(steer_d);
-
-            // Update PIDs with values
-            OKC_CALL(left_front_module_->SetDrivePID(dist_p, dist_i, dist_d));
-            OKC_CALL(left_back_module_->SetDrivePID(dist_p, dist_i, dist_d));
-            OKC_CALL(right_front_module_->SetDrivePID(dist_p, dist_i, dist_d));
-            OKC_CALL(right_back_module_->SetDrivePID(dist_p, dist_i, dist_d));
-
-            OKC_CALL(left_front_module_->SetSteerPID(steer_p, steer_i, steer_d));
-            OKC_CALL(left_back_module_->SetSteerPID(steer_p, steer_i, steer_d));
-            OKC_CALL(right_front_module_->SetSteerPID(steer_p, steer_i, steer_d));
-            OKC_CALL(right_back_module_->SetSteerPID(steer_p, steer_i, steer_d));
-        }
-
-        // Allow saving parameters in non-competition modes
-        OKC_CHECK(SwerveDriveUI::nt_save != nullptr);
-        if (SwerveDriveUI::nt_save->GetBoolean(true)) {
-            // Save the parameters.
-            OKC_CALL(RobotParams::SaveParameters(RobotParams::param_file));
-            OKC_CALL(SwerveDriveUI::nt_save->SetBoolean(false));
-        }
-    }
 
     // Resetting the Gyro needs to always be available.
     OKC_CHECK(SwerveDriveUI::nt_reset_gyro != nullptr);

@@ -26,16 +26,6 @@ namespace SwerveDriveUI {
     extern nt::GenericEntry *const nt_right_front_front_steer;
     extern nt::GenericEntry *const nt_right_back_front_steer;
 
-    // Distance PID
-    extern nt::GenericEntry *const nt_dist_kp;
-    extern nt::GenericEntry *const nt_dist_ki;
-    extern nt::GenericEntry *const nt_dist_kd;
-
-    // Steer PID
-    extern nt::GenericEntry *const nt_steer_kp;
-    extern nt::GenericEntry *const nt_steer_ki;
-    extern nt::GenericEntry *const nt_steer_kd;
-
     extern nt::GenericEntry *const nt_left_front_steer_setpoint;
     extern nt::GenericEntry *const nt_left_back_steer_setpoint;
     extern nt::GenericEntry *const nt_right_front_steer_setpoint;
