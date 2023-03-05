@@ -20,9 +20,9 @@ namespace TeamOKC {
     }
 
     bool WrapAngle(double *angle) {
-        if (*angle < 0) {
+        if (*angle < -180) {
             *angle = *angle + 360;
-        } else if (*angle > 360) {
+        } else if (*angle > 180) {
             *angle = *angle - 360;
         }
         return true;
