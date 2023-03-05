@@ -7,15 +7,15 @@
 #include "commands/intake/IntakeCommand.h"
 
 IntakeCommand::IntakeCommand(std::shared_ptr<Intake> intake,
-                                   double degrees) {
+                                   double power) {
     // Set everything.
     intake_ = intake;
-    degrees_ = degrees;
+    power_ = power;
 
     if (intake_ != nullptr) {
         this->AddRequirements(intake_.get());
     
-        intake_->SetControlMode(Auto);
+        intake_->SetControlMode(Manual);
     }
 }
 
@@ -24,7 +24,7 @@ IntakeCommand::IntakeCommand(std::shared_ptr<Intake> intake,
 
 void IntakeCommand::Execute() {
     VOKC_CHECK(intake_ != nullptr);
-    VOKC_CALL(intake_->SetTurn(turn_))
+    VOKC_CALL(intake_->SetTurn(power_))
 
 
 }

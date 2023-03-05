@@ -5,6 +5,8 @@
 //pulls PID values from the parameters.toml file
 bool Intake::Init() {
 
+    intake_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
+
 this->intake_pid_->SetSetpoint(0);
 
 
@@ -44,6 +46,10 @@ bool Intake::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
     OKC_CHECK(this->intake_pid_ != nullptr);
    return true;
+}
+
+void Intake::SimulationPeriodic() {
+    
 }
 
 void Intake::Periodic() {

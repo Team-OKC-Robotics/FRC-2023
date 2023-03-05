@@ -17,13 +17,12 @@ public:
      *
      * @param arm The subsystem used by this command.
      */
-    explicit IntakeCommand(std::shared_ptr<Intake> intake, double degrees);
+    explicit IntakeCommand(std::shared_ptr<Intake> intake, double power);
 
     void Execute() override;
     bool IsFinished() override;
 
 private:
     std::shared_ptr<Intake> intake_;
-    double degrees_;
-    double turn_;
+    double power_;
 };

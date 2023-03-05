@@ -51,6 +51,7 @@ public:
      * Will be called periodically whenever the CommandScheduler runs.
      */
     void Periodic() override;
+    void SimulationPeriodic() override;
 
     /**
      * Will be called periodically whenever the CommandScheduler runs during

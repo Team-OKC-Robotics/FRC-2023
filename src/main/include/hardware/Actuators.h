@@ -28,7 +28,7 @@
 
 #define CLAW_MOTOR 12
 
-#define INTAKE_MOTOR 13
+#define INTAKE_MOTOR 12
 
 
 typedef struct actuators_t {

@@ -21,6 +21,7 @@ public:
     bool AutoControl();
     bool SetIntakePower(double power);
     void Periodic() override;
+    void SimulationPeriodic() override;
    
     
 

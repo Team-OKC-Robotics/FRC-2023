@@ -108,5 +108,22 @@ bool SetupClawInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<Cla
     interface = std::make_shared<ClawHardwareInterface>(claw_interface);
 
     return true;
+}
 
+bool SetupIntakeInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<IntakeHardwareInterface> &interface) {
+    std::unique_ptr<Actuators> &actuators = hardware->actuators;
+    std::unique_ptr<Sensors> &sensors = hardware->sensors;
+
+    OKC_CHECK(actuators->intake_motor != nullptr);
+    OKC_CHECK(sensors->intake_encoder != nullptr);
+
+    IntakeHardwareInterface intake_interface = {
+        actuators->intake_motor.get(),
+        sensors->intake_encoder.get()
+
+    };
+
+    interface = std::make_shared<IntakeHardwareInterface>(intake_interface);
+
+    return true;
 }

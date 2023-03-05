@@ -12,7 +12,6 @@ RobotContainer::RobotContainer() {
     // initialize the subsystems
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-    VOKC_CALL(this->InitClaw());
     VOKC_CALL(this->InitIntake());
 
     // Initialize the Gamepads
@@ -34,8 +33,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     //button bindings
     WPI_IGNORE_DEPRECATED
     // main driver controls
-    driver_left_bumper_->WhileActiveContinous(*manual_open_claw).WhenInactive(*manual_stop_claw);
-    driver_right_bumper_->WhileActiveContinous(*manual_close_claw).WhenInactive(*manual_stop_claw);
+    
     
     // second driver controls
     manip_a_button_->WhileActiveContinous(*lowerArmCommand);
@@ -48,6 +46,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_y_button_->WhileActiveContinous(*raiseArmCommand);
     driver_x_button_->WhileActiveContinous(*retractArmCommand);
     driver_b_button_->WhileActiveContinous(*extendArmCommand);
+    driver_left_stick_button_->WhileActiveContinous(*intake_command);
+    driver_right_stick_button_->WhileActiveContinous(*other_intake_command);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -291,9 +291,10 @@ bool RobotContainer::InitCommands() {
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
 
     // claw commands
-    manual_open_claw = std::make_shared<ManualClawCommand>(claw_, -0.1);
-    manual_close_claw = std::make_shared<ManualClawCommand>(claw_, 0.1);
-    manual_stop_claw = std::make_shared<ManualClawCommand>(claw_, 0);
-     
+    
+    // intake commands
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.1);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.1);
+   
     return true;
 }
