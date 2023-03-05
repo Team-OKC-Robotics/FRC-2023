@@ -85,11 +85,11 @@ bool Arm::SetExtend(double inches) {
         this->inches_pid_->SetSetpoint(extend_limit_);
     }
 
-        // then we need to keep the arm from trying to extend into the robot
+    // then we need to keep the arm from trying to extend into the robot
     // if we're on the positive side of the robot
     if (interface_->arm_duty_cycle_encoder > 0) {
         // if the arm setpoint is going to take us through the danger zone
-        if (arm_pid_->GetSetpoint() < 25) {
+        if (arm_pid_->GetSetpoint() < 20) {
             // bring the extension in
             this->inches_pid_->SetSetpoint(0);
 
@@ -99,7 +99,7 @@ bool Arm::SetExtend(double inches) {
         }
     } else {
         // if we're on the other side of the robot, and we're going to go through the danger zone
-        if (arm_pid_->GetSetpoint() > -25) {
+        if (arm_pid_->GetSetpoint() > -20) {
             // bring the extension back in
             this->inches_pid_->SetSetpoint(0);
 
@@ -222,6 +222,8 @@ void Arm::Periodic() {
     VOKC_CALL(ArmUI::nt_extend_encoder->SetDouble(interface_->arm_extend_encoder));
     VOKC_CALL(ArmUI::nt_extend_setpoint->SetDouble(this->inches_pid_->GetSetpoint()));
     VOKC_CALL(ArmUI::nt_extend_power->SetDouble(interface_->arm_extend_power));
+
+    VOKC_CALL(ArmUI::nt_limit_switch->SetBoolean(interface_->extend_limit_switch));
 
     // and log the values
     arm_lift_output_log_.Append(interface_->arm_lift_power);
