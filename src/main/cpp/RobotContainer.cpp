@@ -41,9 +41,14 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_right_bumper_->WhileHeld(*manual_close_claw).WhenReleased(*manual_stop_claw);
     
     // second driver controls
-    manip_a_button_->WhenPressed(*arm_angle_pickup_command_).WhenPressed(*arm_extend_pickup_command_);
-    manip_b_button_->WhenPressed(*arm_angle_mid_command_).WhenPressed(*arm_extend_mid_command_);
-    manip_y_button_->WhenPressed(*arm_angle_high_command_).WhenPressed(*arm_extend_high_command_);
+    manip_a_button_->WhenPressed(*arm_angle_pickup_command_);
+    manip_a_button_->WhenReleased(*arm_extend_pickup_command_);
+
+    manip_b_button_->WhenPressed(*arm_angle_mid_command_);
+    manip_b_button_->WhenReleased(*arm_extend_mid_command_);
+
+    manip_y_button_->WhenPressed(*arm_angle_high_command_);
+    manip_y_button_->WhenReleased(*arm_extend_high_command_);
   
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
     driver_a_button_->WhileHeld(*lowerArmCommand);
@@ -162,15 +167,17 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(actuators.arm_extend_motor != nullptr);
 
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
-    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(1);
+    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(ARM_ABS_ENCODER);
     sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
-    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(0);
+    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(EXTEND_LIMIT_SWITCH);
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
     OKC_CHECK(actuators.claw_motor != nullptr);
 
     sensor_interface->claw_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.claw_motor->GetEncoder());
+
+    // manual_arm_command_->Schedule();
 
     return true;
 }
@@ -260,7 +267,7 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    m_autonomousCommand_ = std::make_shared<AutoDriveCommand>(swerve_drive_, 1, 0.5);
+    m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
@@ -273,16 +280,18 @@ bool RobotContainer::InitCommands() {
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -1);
 
     // to pick stuff up from the back of the robot
-    arm_angle_pickup_command_ = std::make_shared<SetArmAngleCommand>(arm_, 23);
+    arm_angle_pickup_command_ = std::make_shared<SetArmAngleCommand>(arm_, -30);
     arm_extend_pickup_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 50);
 
     // to score on the mid cone pole
-    arm_angle_mid_command_ = std::make_shared<SetArmAngleCommand>(arm_, -89);
-    arm_extend_mid_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 13.5);
+    arm_angle_mid_command_ = std::make_shared<SetArmAngleCommand>(arm_, -80);
+    arm_extend_mid_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 70);
 
     // to score on the high cone pole
-    arm_angle_high_command_ = std::make_shared<SetArmAngleCommand>(arm_, -104);
+    arm_angle_high_command_ = std::make_shared<SetArmAngleCommand>(arm_, -100);
     arm_extend_high_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 90);
+
+    // manual_arm_command_ = std::make_shared<ManualArmCommand>(arm_, gamepad1_);
 
 
     // claw commands
