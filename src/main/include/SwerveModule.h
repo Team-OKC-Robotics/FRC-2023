@@ -76,7 +76,7 @@ private:
 
     double offset_;
 
-    double steer_max_output;
+    double steer_max_output_;
 
     double L2_GEAR_RATIO_;
     double WHEEL_DIAMETER_;

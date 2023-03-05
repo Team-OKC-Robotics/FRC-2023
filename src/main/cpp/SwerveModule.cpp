@@ -19,7 +19,7 @@ bool SwerveModule::Init(Location loc) {
     steer_pid_ = std::make_shared<frc::PIDController>(steer_kP, steer_kI, steer_kD);
 
     OKC_CHECK(this->steer_pid_ != nullptr);
-    steer_pid_->EnableContinuousInput(0, 360);
+    steer_pid_->EnableContinuousInput(-180, 180);
     steer_pid_->SetTolerance(2, 2); // tolerate 2 degrees of deviation, which shouldn't be a lot I don't think
 
     // units and conversions and numbers and stuff
@@ -27,7 +27,7 @@ bool SwerveModule::Init(Location loc) {
     WHEEL_DIAMETER_ = RobotParams::GetParam("swerve.wheel_diameter", 4);
     INCHES_TO_METERS_ = RobotParams::GetParam("swerve.inches_to_meters", 0.0254);
 
-    steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
+    steer_max_output_ = RobotParams::GetParam("swerve.steer_max_output", 1);
 
     this->location_ = loc;
 
@@ -111,7 +111,7 @@ bool SwerveModule::GetSteerOutput(double *output) {
     OKC_CHECK(this->steer_pid_ != nullptr);
 
     *output = this->steer_pid_->Calculate(this->steer_enc_);
-    OKC_CALL(TeamOKC::Clamp(-0.4, 0.4, output));
+    OKC_CALL(TeamOKC::Clamp(-steer_max_output_, steer_max_output_, output));
 
     return true;
 }
@@ -154,17 +154,8 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     // this converts to degrees with 0 (and 360) being the front of the robot
     this->steer_enc_ = (steer_ * 360) - offset_;
 
-    // subtracting the offset can lead to values that are outside the 0-360 degree range
-    // this wraps the angle back into the 0-360 range
-    // if the angle is past 360
-    if (this->steer_enc_ > 360) {
-        // put it back in range
-        this->steer_enc_ -=360;
-    // if the angle is less than 360
-    } else if (this->steer_enc_ < 0) {
-        // bring it back into the range
-        this->steer_enc_ += 360;
-    }
+    // keep the angle in bounds
+    TeamOKC::WrapAngle(&this->steer_enc_);
 
     // velocity readings
     this->steer_enc_vel_ = steer_vel;
