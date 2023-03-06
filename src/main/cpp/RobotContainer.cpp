@@ -304,7 +304,7 @@ bool RobotContainer::InitCommands() {
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
-    stop_intake_command = std::make_shared<IntakeCommand>(intake_, 0.0);
+    stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
    
     return true;
 }
