@@ -29,6 +29,7 @@ public:
     void TeleopInit() override;
     void TeleopPeriodic() override;
     void TestPeriodic() override;
+    void TestInit() override;
     void SimulationInit() override;
     void SimulationPeriodic() override;
 

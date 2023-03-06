@@ -36,12 +36,9 @@
 #include "commands/swerve/SlowTeleOpSwerveCommand.h"
 
 // arm
-#include "commands/arm/ManualArmCommand.h"
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
-#include "commands/arm/SetArmAngleCommand.h"
-#include "commands/arm/SetArmExtensionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
-
+#include "commands/arm/ArmSetStateCommand.h"
 
 
 //intake
@@ -74,6 +71,7 @@ public:
 
     std::shared_ptr<frc2::Command> GetAutonomousCommand();
     std::shared_ptr<frc2::Command> GetDriveCommand();
+    std::shared_ptr<Arm> GetArm();
 
 private:
     // Hardware Initialization
@@ -157,21 +155,14 @@ private:
     std::shared_ptr<SlowTeleOpSwerveCommand> slow_swerve_teleop_command_;
 
     //arm
-    std::shared_ptr<ManualArmCommand> manual_arm_command_;
-
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
     std::shared_ptr<IncrementArmExtendCommand> retractArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 
-    std::shared_ptr<SetArmAngleCommand> arm_angle_pickup_command_;
-    std::shared_ptr<SetArmExtensionCommand> arm_extend_pickup_command_;
-
-    std::shared_ptr<SetArmAngleCommand> arm_angle_mid_command_;
-    std::shared_ptr<SetArmExtensionCommand> arm_extend_mid_command_;
-
-    std::shared_ptr<SetArmAngleCommand> arm_angle_high_command_;
-    std::shared_ptr<SetArmExtensionCommand> arm_extend_high_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
 
     // claw
   

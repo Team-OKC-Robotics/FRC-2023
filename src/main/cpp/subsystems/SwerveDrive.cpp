@@ -288,7 +288,6 @@ bool SwerveDrive::InitAuto(TeamOKC::Pose pos, bool keep_heading) {
     this->heading_pid_->SetSetpoint(this->heading_to_goal_);
 
     // initialization has passed, go ahead and start the autonomous
-    auto_state_ = INIT;
     in_auto = true;
 
     return true;
@@ -346,11 +345,7 @@ bool SwerveDrive::GetDriveEncoderAverage(double *avg) {
 bool SwerveDrive::AtSetpoint(bool *at) {
     OKC_CHECK(interface_ != nullptr);
 
-    if (auto_state_ == COMPLETE) {
-        *at = true;
-    } else {
-        *at = false;
-    }
+    *at = false;
 
     return true;
 }

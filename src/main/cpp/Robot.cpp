@@ -10,6 +10,8 @@
 
 void Robot::RobotInit() {
     frc::CameraServer::StartAutomaticCapture().SetResolution(200, 100);
+
+    m_container.GetArm()->SetControlMode(Auto);
 }
 
 /**
@@ -69,7 +71,12 @@ void Robot::TeleopPeriodic() {}
 /**
  * This function is called periodically during test mode.
  */
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() {
+}
+
+void Robot::TestInit() {
+    m_container.GetArm()->SetControlMode(Test);
+}
 
 /**
  * This function is called once when the robot is first started up.

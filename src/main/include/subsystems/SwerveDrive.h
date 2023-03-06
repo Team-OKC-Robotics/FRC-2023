@@ -22,12 +22,6 @@
 #include "Logging.h"
 #include "wpi/DataLog.h"
 
-enum AutoState {
-    INIT,
-    ROTATE,
-    TRANSLATE,
-    COMPLETE
-};
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:
@@ -113,7 +107,6 @@ private:
     double trackwidth_;
     double tracklength_;
 
-    AutoState auto_state_;
     bool in_auto = false;
     bool auto_lock_heading_;
     TeamOKC::Pose position_;

@@ -59,4 +59,8 @@ namespace TeamOKC {
 
     bool WrapAngle(double *angle);
 
+    typedef struct arm_state_t {
+        double extension;
+        double rotation;
+    } ArmState;
 }

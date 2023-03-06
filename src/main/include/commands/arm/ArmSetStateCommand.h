@@ -7,22 +7,23 @@
 #include "subsystems/Arm.h"
 
 /**
- *
+ * Move arm to a preset position
  */
-class SetArmExtensionCommand
-    : public frc2::CommandHelper<frc2::CommandBase, SetArmExtensionCommand> {
+class ArmSetStateCommand
+    : public frc2::CommandHelper<frc2::CommandBase, ArmSetStateCommand> {
 public:
     /**
-     * Creates a new SetArmExtensionCommand.
+     * Creates a new ArmSetStateCommand.
      *
      * @param subsystem The subsystem used by this command.
      */
-    explicit SetArmExtensionCommand(std::shared_ptr<Arm> arm, double extension);
+    explicit ArmSetStateCommand(std::shared_ptr<Arm> arm, TeamOKC::ArmState state);
 
+    void Initialize() override;
     void Execute() override;
     bool IsFinished() override;
 
 private:
     std::shared_ptr<Arm> arm_;
-    double extension_;
+    TeamOKC::ArmState state_;
 };
