@@ -11,11 +11,13 @@ bool Arm::Init() {
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
+    arm_pid_->SetTolerance(2, 2);
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
     double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
     inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
+    inches_pid_->SetTolerance(0.2, 0.2);
 
     // logs
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
@@ -110,7 +112,7 @@ bool Arm::TestControl() {
                 this->desired_state_.extension = 0.5; // slightly not 0 just because
             } else {
                 // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-                this->interface_->arm_extend_power = -0.01;
+                this->interface_->arm_extend_power = -0.1;
             }
         }
 
@@ -148,12 +150,7 @@ bool Arm::AutoControl() {
     OKC_CHECK(this->inches_pid_ != nullptr);
 
     /**
-     * alright, so we gotta do some stuff
-     * TODO:
-        * we want to not extend too far in or out
-        * we want to not rotate too far in either direction
-        * we want to zero the extension because that's a thing we do now yay
-        * zero all flags at start of auto and start of teleop
+     * TODO: zero all flags at start of auto and start of teleop
     */
 
     // zero the extension encoder on startup
@@ -166,10 +163,13 @@ bool Arm::AutoControl() {
                 control_state_ == STANDBY;
 
                 has_calibrated_ = true;
-                //TODO set the initial setpoint of the arm or whatever to what it currently is, for testing and stuff
+
+                this->interface_->arm_extend_power = 0.0;
+                
+                std::cout << "CALIBRATION COMPLETE" << std::endl;
             } else {
                 // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-                this->interface_->arm_extend_power = -0.01;
+                this->interface_->arm_extend_power = -0.1;
             }
         }
 
@@ -193,6 +193,8 @@ bool Arm::AutoControl() {
 
     // if we're not actively trying to go anywhere
     if (control_state_ == STANDBY) {
+        std::cout << "STANDBY" << std::endl;
+
         // keep the arm where it is
         this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
         this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
@@ -200,6 +202,8 @@ bool Arm::AutoControl() {
         return true;
     // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
     } else if (control_state_ == ROTATING) {
+        std::cout << "ROTATING" << std::endl;
+
         // bring the extension in whenever we rotate the arm, to reduce bounce
         this->inches_pid_->SetSetpoint(1);
 
@@ -211,7 +215,8 @@ bool Arm::AutoControl() {
 
             //TODO limit us from rotating too far
 
-            //TODO we still need to power the extend to keep it where it is
+            // keep the extension where it needs to be
+            this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             
             // if we've reached our desired rotation
             if (this->arm_pid_->AtSetpoint()) {
@@ -228,6 +233,8 @@ bool Arm::AutoControl() {
         }
     // we've rotated the arm to the desired setpoint, so now extend it
     } else if (control_state_ == EXTENDING) {
+        std::cout << "EXTENDING" << std::endl;
+
         //TODO limit extension?
         //TODO slew rate limiter on the arm power and stuff
 

@@ -76,7 +76,7 @@ kI = 0
 kD = 0
 
 [arm.extend_pid]
-kP = 0.01
+kP = 0.05
 kI = 0
 kD = 0.0
 
