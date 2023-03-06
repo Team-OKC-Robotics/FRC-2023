@@ -179,6 +179,7 @@ private:
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
     std::shared_ptr<IntakeCommand> other_intake_command;
+    std::shared_ptr<IntakeCommand> stop_intake_command;
 };
 
 

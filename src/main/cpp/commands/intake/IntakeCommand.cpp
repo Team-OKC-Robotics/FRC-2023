@@ -24,7 +24,7 @@ IntakeCommand::IntakeCommand(std::shared_ptr<Intake> intake,
 
 void IntakeCommand::Execute() {
     VOKC_CHECK(intake_ != nullptr);
-    VOKC_CALL(intake_->SetTurn(power_))
+    VOKC_CALL(intake_->SetIntakePower(power_))
 
 
 }

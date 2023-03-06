@@ -54,8 +54,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_y_button_->WhileActiveContinous(*raiseArmCommand);
     driver_x_button_->WhileActiveContinous(*retractArmCommand);
     driver_b_button_->WhileActiveContinous(*extendArmCommand);
-    driver_left_stick_button_->WhileActiveContinous(*intake_command);
-    driver_right_stick_button_->WhileActiveContinous(*other_intake_command);
+    driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
+    driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -67,7 +67,6 @@ std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
-    // VOKC_CHECK(swerve_teleop_command_ != nullptr);
     return swerve_teleop_command_;
 }
 
@@ -105,10 +104,12 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor->SetInverted(true);
-
-    
+    actuators_interface->arm_extend_motor->SetIdleMode(BRAKE);
 
     actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
+
+    OKC_CHECK(actuators_interface->intake_motor != nullptr);
+
     return true;
 }
 
@@ -175,9 +176,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
-
-
-    // manual_arm_command_->Schedule();
+    sensor_interface->intake_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.intake_motor->GetEncoder());
 
     return true;
 }
@@ -218,11 +217,20 @@ bool RobotContainer::InitArm() {
 bool RobotContainer::InitIntake() {
     OKC_CALL(SetupIntakeInterface(hardware_, intake_hw_));
 
+    OKC_CHECK(hardware_ != nullptr);
+    OKC_CHECK(intake_hw_ != nullptr);
+
     intake_sw_ = std::make_shared<IntakeSoftwareInterface>();
+
+    OKC_CHECK(intake_sw_ != nullptr);
 
     intake_io_ = std::make_shared<IntakeIO>(intake_hw_.get(), intake_sw_.get());
 
+    OKC_CHECK(intake_io_ != nullptr);
+
     intake_ = std::make_shared<Intake>(intake_sw_.get());
+
+    OKC_CHECK(intake_ != nullptr);
 
     OKC_CALL(intake_->Init());
 
@@ -268,10 +276,12 @@ bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
     // Placeholder autonomous command.
-    m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
+    // m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
+    m_autonomousCommand_ = nullptr;
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+    OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // arm commands
     extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 5); 
@@ -291,15 +301,11 @@ bool RobotContainer::InitCommands() {
     // to score on the high cone pole
     arm_angle_high_command_ = std::make_shared<SetArmAngleCommand>(arm_, -100);
     arm_extend_high_command_ = std::make_shared<SetArmExtensionCommand>(arm_, 90);
-
-    // manual_arm_command_ = std::make_shared<ManualArmCommand>(arm_, gamepad1_);
-
-
-    // claw commands
     
     // intake commands
-    intake_command = std::make_shared<IntakeCommand>(intake_, 0.1);
-    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.1);
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
+    stop_intake_command = std::make_shared<IntakeCommand>(intake_, 0.0);
    
     return true;
 }

@@ -41,6 +41,8 @@ bool IntakeIO::ProcessIO() {
     
    
     sw_interface_->intake_encoder = hw_interface_->intake_encoder->GetPosition();
+
+    hw_interface_->intake_motor->Set(sw_interface_->intake_power);
   
 
 return true;

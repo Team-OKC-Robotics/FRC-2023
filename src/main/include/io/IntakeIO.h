@@ -21,7 +21,7 @@ typedef struct intake_hardware_interface_t {
   
 
     rev::RelativeEncoder *const intake_encoder;
- 
+
 } IntakeHardwareInterface;
 
 typedef struct intake_software_interface_t {

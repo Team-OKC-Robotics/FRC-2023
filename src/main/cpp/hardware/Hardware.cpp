@@ -120,7 +120,6 @@ bool SetupIntakeInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<I
     IntakeHardwareInterface intake_interface = {
         actuators->intake_motor.get(),
         sensors->intake_encoder.get()
-
     };
 
     interface = std::make_shared<IntakeHardwareInterface>(intake_interface);

@@ -12,6 +12,7 @@
 
 // Coast
 #define COAST rev::CANSparkMax::IdleMode::kCoast
+#define BRAKE rev::CANSparkMax::IdleMode::kBrake
 
 #define LEFT_FRONT_DRIVE_MOTOR 1
 #define LEFT_BACK_DRIVE_MOTOR 3
