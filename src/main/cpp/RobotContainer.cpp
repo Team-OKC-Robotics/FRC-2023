@@ -37,6 +37,12 @@ bool RobotContainer::ConfigureButtonBindings() {
     //button bindings
     WPI_IGNORE_DEPRECATED
     // main driver controls
+    // driver_a_button_->WhenPressed(*slow_swerve_teleop_command_);
+    // driver_a_button_->WhenReleased(*swerve_teleop_command_);
+
+    // intake commands
+    driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
+    driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
     
     
     // second driver controls
@@ -47,12 +53,9 @@ bool RobotContainer::ConfigureButtonBindings() {
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
     driver_a_button_->WhileActiveContinous(*lowerArmCommand);
     driver_y_button_->WhileActiveContinous(*raiseArmCommand);
-
+    
     driver_x_button_->WhileActiveContinous(*retractArmCommand);
     driver_b_button_->WhileActiveContinous(*extendArmCommand);
-
-    driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
-    driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -272,14 +275,14 @@ bool RobotContainer::InitGamepads() {
 bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
-    double pickup_rotation_ = RobotParams::GetParam("arm.pickup.extend_setpoint", 0);
-    double pickup_extension_ = RobotParams::GetParam("arm.pickup.arm_setpoint", 0);
+    double pickup_rotation_ = RobotParams::GetParam("arm.pickup.arm_setpoint", 0);
+    double pickup_extension_ = RobotParams::GetParam("arm.pickup.extend_setpoint", 0);
 
-    double score_mid_rotation_ = RobotParams::GetParam("arm.score_mid.extend_setpoint", 0);
-    double score_mid_extension_ = RobotParams::GetParam("arm.score_mid.arm_setpoint", 0);
+    double score_mid_rotation_ = RobotParams::GetParam("arm.score_medium.arm_setpoint", 0);
+    double score_mid_extension_ = RobotParams::GetParam("arm.score_medium.extend_setpoint", 0);
 
-    double score_high_rotation_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0);
-    double score_high_extension_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0);
+    double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0);
+    double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0);
 
     // Placeholder autonomous command.
     // m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
@@ -287,6 +290,7 @@ bool RobotContainer::InitCommands() {
 
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+    slow_swerve_teleop_command_ = std::make_shared<SlowTeleOpSwerveCommand>(swerve_drive_, gamepad1_);
     OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // test arm commands

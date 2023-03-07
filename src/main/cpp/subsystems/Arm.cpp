@@ -183,18 +183,9 @@ bool Arm::AutoControl() {
     }
 
     // alright, we've made it thus far, so we need to get down to business and start moving
-    // set setpoints (no limiting because this is auto-preset-control, it's your fault if you're setting bad setpoints)
-    this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
-    this->inches_pid_->SetSetpoint(this->desired_state_.extension);
-
-    // calculate output
-    double lift_power = this->arm_pid_->Calculate(this->state_.rotation);
-    double extend_power = this->arm_pid_->Calculate(this->state_.extension);
-
+    
     // if we're not actively trying to go anywhere
     if (control_state_ == STANDBY) {
-        std::cout << "STANDBY" << std::endl;
-
         // keep the arm where it is
         this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
         this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
@@ -202,13 +193,14 @@ bool Arm::AutoControl() {
         return true;
     // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
     } else if (control_state_ == ROTATING) {
-        std::cout << "ROTATING" << std::endl;
-
         // bring the extension in whenever we rotate the arm, to reduce bounce
         this->inches_pid_->SetSetpoint(1);
 
+        std::cout << state_.extension << std::endl;
+
         // if we have brought the extension in
-        if (this->inches_pid_->AtSetpoint()) {
+        if (abs(1.0 - state_.extension) < 1.0) {
+            std::cout << "moving arm" << std::endl;
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -219,11 +211,12 @@ bool Arm::AutoControl() {
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             
             // if we've reached our desired rotation
-            if (this->arm_pid_->AtSetpoint()) {
-                // move to the nex stage
+            if (abs(desired_state_.rotation - state_.rotation) < 1.5) {
+                // move to the next stage
                 this->control_state_ = EXTENDING;
             }
         } else { // otherwise we haven't brought the extension in
+            // std::cout << "reeling in the extension" << std::endl;
             // so keep the arm where it is
             this->arm_pid_->SetSetpoint(this->state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -233,8 +226,6 @@ bool Arm::AutoControl() {
         }
     // we've rotated the arm to the desired setpoint, so now extend it
     } else if (control_state_ == EXTENDING) {
-        std::cout << "EXTENDING" << std::endl;
-
         //TODO limit extension?
         //TODO slew rate limiter on the arm power and stuff
 

@@ -15,6 +15,8 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
+
+        arm_->SetControlMode(Test);
     }
 }
 

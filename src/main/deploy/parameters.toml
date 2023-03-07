@@ -9,6 +9,7 @@ gamepad2_id = 1
 neo_550_ticks_per_rev = 42
 neo_ticks_per_rev = 42
 falcon_ticks_per_rev = 2048
+work = true
 
 [swerve]
 # assumes our modules are located in a square, everything should be the same distance from the center
@@ -55,7 +56,9 @@ right_back_offset = 153.0
 offset = -330
 lift_limit = 110
 extend_limit = 95
-max_output = 0.5
+max_output = 1
+arm_open_loop = 0.5
+extend_open_loop = 0.5
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
