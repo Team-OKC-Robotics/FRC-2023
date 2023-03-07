@@ -5,12 +5,12 @@
 
 #include "subsystems/Arm.h"
 #include "subsystems/SwerveDrive.h"
-#include "subsystems/Claw.h"
+#include "subsystems/Intake.h"
 
 
 class ScorePreloadedAuto : public frc2::CommandHelper<frc2::SequentialCommandGroup, ScorePreloadedAuto> {
 public:
-    explicit ScorePreloadedAuto(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<Arm> arm, std::shared_ptr<Claw> claw);
+    explicit ScorePreloadedAuto(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<Arm> arm, std::shared_ptr<Intake> intake);
 private:
     
 };
