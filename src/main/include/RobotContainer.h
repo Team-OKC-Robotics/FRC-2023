@@ -160,6 +160,7 @@ private:
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 
+    std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;

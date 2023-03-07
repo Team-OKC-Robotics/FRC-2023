@@ -46,6 +46,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     
     
     // second driver controls
+    manip_x_button_->WhenPressed(*arm_carry_command_);
     manip_a_button_->WhenPressed(*arm_pickup_command_);
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
@@ -304,6 +305,7 @@ bool RobotContainer::InitCommands() {
     arm_pickup_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(pickup_extension_, pickup_rotation_));
     arm_score_mid_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_));
     arm_score_high_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_));
+    arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
     
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
