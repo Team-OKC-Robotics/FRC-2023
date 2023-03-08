@@ -15,8 +15,6 @@ ArmSetStateCommand::ArmSetStateCommand(std::shared_ptr<Arm> arm, TeamOKC::ArmSta
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
-
-        arm_->SetControlMode(Auto);
     }
 }
 

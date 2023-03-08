@@ -15,13 +15,12 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
-
-        arm_->SetControlMode(Test);
     }
 }
 
-
-
+void IncrementArmPresetPositionCommand::Initialize() {
+    arm_->SetControlMode(Test);
+}
 
 void IncrementArmPresetPositionCommand::Execute() {
     VOKC_CHECK(arm_ != nullptr);

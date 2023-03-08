@@ -19,6 +19,7 @@ public:
      */
     explicit IncrementArmExtendCommand(std::shared_ptr<Arm> arm, double extend);
 
+    void Initialize() override;
     void Execute() override;
     bool IsFinished() override;
 
