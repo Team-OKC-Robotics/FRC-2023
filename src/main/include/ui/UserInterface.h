@@ -52,6 +52,9 @@ namespace ArmUI {
     extern nt::GenericEntry *const nt_extend_setpoint;
     extern nt::GenericEntry *const nt_extend_power;
     extern nt::GenericEntry *const nt_limit_switch;
+
+    // arm state
+    extern nt::GenericEntry *const arm_control_state;
 }
 
 namespace ClawUI {
