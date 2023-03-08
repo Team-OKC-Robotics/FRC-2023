@@ -59,9 +59,10 @@ bool Arm::SetDesiredState(TeamOKC::ArmState state) {
 }
 
 bool Arm::IncrementRotation(double increment) {
-    this->desired_state_.extension += increment;
+    this->desired_state_.rotation += increment;
 
     has_been_commanded_ = true;
+    control_state_ = ROTATING;
 
     return true;
 }
@@ -70,6 +71,7 @@ bool Arm::IncrementExtend(double increment) {
     this->desired_state_.extension += increment;
 
     has_been_commanded_ = true;
+    control_state_ = ROTATING;
 
     return true;
 }
@@ -103,13 +105,13 @@ bool Arm::TestControl() {
             // check the limit switch
             if (this->interface_->extend_limit_switch) {
                 // we're hitting the limit switch, so we're done calibrating
-                control_state_ == STANDBY;
+                control_state_ = STANDBY;
 
                 has_calibrated_ = true;
 
                 // initialize the desired state to the state when we are calibrated                
                 this->desired_state_.rotation = this->interface_->arm_duty_cycle_encoder;
-                this->desired_state_.extension = 0.5; // slightly not 0 just because
+                this->desired_state_.extension = 1; // slightly not 0 just because
             } else {
                 // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
                 this->interface_->arm_extend_power = -0.1;
@@ -139,7 +141,7 @@ bool Arm::TestControl() {
 
     // set output
     this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation);
-    this->interface_->arm_extend_power = this->arm_pid_->Calculate(this->state_.extension);
+    this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
 
     return true;
 }
@@ -160,7 +162,7 @@ bool Arm::AutoControl() {
             // check the limit switch
             if (this->interface_->extend_limit_switch) {
                 // we're hitting the limit switch, so we're done calibrating
-                control_state_ == STANDBY;
+                control_state_ = STANDBY;
 
                 has_calibrated_ = true;
 
@@ -196,11 +198,8 @@ bool Arm::AutoControl() {
         // bring the extension in whenever we rotate the arm, to reduce bounce
         this->inches_pid_->SetSetpoint(1);
 
-        std::cout << state_.extension << std::endl;
-
         // if we have brought the extension in
-        if (abs(1.0 - state_.extension) < 1.0) {
-            std::cout << "moving arm" << std::endl;
+        if (abs(1.0 - state_.extension) < 2.0) {
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -211,12 +210,11 @@ bool Arm::AutoControl() {
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             
             // if we've reached our desired rotation
-            if (abs(desired_state_.rotation - state_.rotation) < 1.5) {
+            if (abs(desired_state_.rotation - state_.rotation) < 2) {
                 // move to the next stage
                 this->control_state_ = EXTENDING;
             }
         } else { // otherwise we haven't brought the extension in
-            // std::cout << "reeling in the extension" << std::endl;
             // so keep the arm where it is
             this->arm_pid_->SetSetpoint(this->state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -257,7 +255,7 @@ void Arm::Periodic() {
 
     // update state
     this->state_.rotation = this->interface_->arm_duty_cycle_encoder;
-    this->state_.extension - this->interface_->arm_extend_encoder;
+    this->state_.extension = this->interface_->arm_extend_encoder;
 
     // shuffleboard value updating
     VOKC_CALL(ArmUI::nt_arm_duty_cycle_encoder->SetDouble(interface_->arm_duty_cycle_encoder));
@@ -269,6 +267,26 @@ void Arm::Periodic() {
     VOKC_CALL(ArmUI::nt_extend_power->SetDouble(interface_->arm_extend_power));
 
     VOKC_CALL(ArmUI::nt_limit_switch->SetBoolean(interface_->extend_limit_switch));
+
+    switch(control_state_) {
+        case INIT:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("INIT"));
+            break;
+        case STANDBY:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("STANDBY"));
+            break;
+        case CALIBRATING:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("CALIBRATING"));
+            break;
+        case ROTATING:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("ROTATING"));
+            break;
+        case EXTENDING:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("EXTENDING"));
+            break;
+        default:
+            VOKC_CALL(ArmUI::arm_control_state->SetString("unknown"));
+    }
 
     // and log the values
     arm_lift_output_log_.Append(interface_->arm_lift_power);
