@@ -102,7 +102,10 @@ void SwerveDrive::SimulationPeriodic() {
 bool SwerveDrive::SetOpenLoopRampDrive(const double &open_loop_ramp) {
     OKC_CHECK(interface_ != nullptr);
 
+    // update interface config with new open loop ramp rate
     interface_->drive_config.open_loop_ramp_rate_drive = open_loop_ramp;
+    interface_->update_config = true;
+
     return true;
 }
 
