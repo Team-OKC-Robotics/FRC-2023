@@ -33,7 +33,6 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoDriveCommand.h"
-#include "commands/swerve/SlowTeleOpSwerveCommand.h"
 
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
@@ -71,6 +70,8 @@ public:
 
     std::shared_ptr<frc2::Command> GetAutonomousCommand();
     std::shared_ptr<frc2::Command> GetDriveCommand();
+    // std::shared_ptr<frc2::Command> GetSlowDriveCommand();
+    // std::shared_ptr<frc2::Command> GetBoostDriveCommand();
     std::shared_ptr<Arm> GetArm();
 
 private:
@@ -152,7 +153,8 @@ private:
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
-    std::shared_ptr<SlowTeleOpSwerveCommand> slow_swerve_teleop_command_;
+    std::shared_ptr<TeleOpSwerveCommand> slow_swerve_teleop_command_;
+    std::shared_ptr<TeleOpSwerveCommand> fast_swerve_teleop_command_;
 
     //arm
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
@@ -164,9 +166,6 @@ private:
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
-
-    // claw
-  
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;

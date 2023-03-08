@@ -18,18 +18,13 @@ typedef struct intake_config_t {
 
 typedef struct intake_hardware_interface_t {
     rev::CANSparkMax *const  intake_motor;
-  
-
     rev::RelativeEncoder *const intake_encoder;
-
 } IntakeHardwareInterface;
 
 typedef struct intake_software_interface_t {
     // actuator outputs
     double intake_power;
     
-
-
     // sensor inputs
     double intake_encoder;
   
@@ -71,8 +66,5 @@ private:
     IntakeHardwareInterface *const hw_interface_;
     IntakeSoftwareInterface *const sw_interface_;
 
-    double offset;
-    double lift_limit;
-    double extend_limit;
     double max_output;
 };
