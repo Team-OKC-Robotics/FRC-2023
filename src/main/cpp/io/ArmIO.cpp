@@ -9,8 +9,8 @@ bool ArmIO::Init() {
     extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
     max_output = RobotParams::GetParam("arm.max_output", 0.2);
 
-    double arm_open_loop_ = RobotParams::GetParam("arm.arm_open_loop", 0);
-    double extend_open_loop_ = RobotParams::GetParam("arm.extend_open_loop", 0);
+    double arm_open_loop_ = RobotParams::GetParam("arm.arm_open_loop", 1);
+    double extend_open_loop_ = RobotParams::GetParam("arm.extend_open_loop", 1);
 
     this->sw_interface_->arm_config = ArmConfig {
         arm_open_loop_, // that's what we're here for
