@@ -2,7 +2,7 @@
 #include "Parameters.h"
 
 bool IntakeIO::Init() {
-   
+   return true;
 }
 
 void IntakeIO::Periodic() {
