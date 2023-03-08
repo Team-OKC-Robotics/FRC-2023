@@ -43,6 +43,9 @@ bool RobotContainer::ConfigureButtonBindings() {
     // intake commands
     driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
     driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
+
+    // driver_left_trigger_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+    // driver_right_trigger_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
     
     
     // second driver controls
@@ -257,6 +260,8 @@ bool RobotContainer::InitGamepads() {
     driver_back_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
     driver_left_bumper_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), LEFT_BUMP);
     driver_right_bumper_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), RIGHT_BUMP);
+    // driver_left_trigger_ = std::make_shared<TriggerButton(gamepad1_.get(), LEFT_TRIGGER);
+    // driver_right_trigger_ = std::make_shared<TriggerButton(gamepad1_.get(), RIGHT_TRIGGER);
 
     // second driver
     manip_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), A_BUTTON);
@@ -276,22 +281,23 @@ bool RobotContainer::InitGamepads() {
 bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
-    double pickup_rotation_ = RobotParams::GetParam("arm.pickup.arm_setpoint", 0);
-    double pickup_extension_ = RobotParams::GetParam("arm.pickup.extend_setpoint", 0);
+    double pickup_rotation_ = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
+    double pickup_extension_ = RobotParams::GetParam("arm.pickup.extend_setpoint", 0.0);
 
-    double score_mid_rotation_ = RobotParams::GetParam("arm.score_medium.arm_setpoint", 0);
-    double score_mid_extension_ = RobotParams::GetParam("arm.score_medium.extend_setpoint", 0);
+    double score_mid_rotation_ = RobotParams::GetParam("arm.score_medium.arm_setpoint", 0.0);
+    double score_mid_extension_ = RobotParams::GetParam("arm.score_medium.extend_setpoint", 0.0);
 
-    double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0);
-    double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0);
+    double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
+    double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0.0);
 
     // Placeholder autonomous command.
     // m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
     m_autonomousCommand_ = nullptr;
 
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
-    slow_swerve_teleop_command_ = std::make_shared<SlowTeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.75, 0.75); // speed mod, open loop
+    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1);
+    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1);
     OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // test arm commands
