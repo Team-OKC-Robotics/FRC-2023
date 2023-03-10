@@ -22,6 +22,12 @@
 #include "Logging.h"
 #include "wpi/DataLog.h"
 
+#include <rev/CANSparkMax.h>
+
+#define COAST rev::CANSparkMax::IdleMode::kCoast
+#define BRAKE rev::CANSparkMax::IdleMode::kBrake
+
+
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:
@@ -46,6 +52,7 @@ public:
     bool SetSpeedModifierSteer(const double &speed_mod);
     bool SetOpenLoopRampDrive(const double &open_loop_ramp);
     bool SetOpenLoopRampSteer(const double &open_loop_ramp);
+    bool SetIdleMode(rev::CANSparkMax::IdleMode mode);
     bool SetMaxOutputDrive(const double &max_output);
     bool SetMaxOutputSteer(const double &max_output);
 

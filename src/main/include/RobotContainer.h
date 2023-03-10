@@ -166,6 +166,7 @@ private:
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
     std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_short_carry_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
