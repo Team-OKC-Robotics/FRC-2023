@@ -16,7 +16,7 @@ steerEncLog = [[], []]
 outputLog = [[], []]
 setpointLog = [[], []]
 
-with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230308_004454.csv") as f:
+with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230309_235848_OKOK_P32.csv") as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
