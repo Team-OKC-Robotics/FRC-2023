@@ -1,11 +1,12 @@
 
 #include "commands/swerve/TeleOpSwerveCommand.h"
 
-TeleOpSwerveCommand::TeleOpSwerveCommand(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<frc::Joystick> gamepad, double speed_mod, double open_loop_ramp_rate) {
+TeleOpSwerveCommand::TeleOpSwerveCommand(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<frc::Joystick> gamepad, double speed_mod, double open_loop_ramp_rate, bool brake_mode) {
     swerve_ = swerve;
     gamepad_ = gamepad;
     speed_mod_ = speed_mod;
     open_loop_ramp_rate_ = open_loop_ramp_rate;
+    brake_mode_ = brake_mode;
 
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());
@@ -16,6 +17,12 @@ void TeleOpSwerveCommand::Initialize() {
     VOKC_CHECK(swerve_ != nullptr);
 
     swerve_->SetOpenLoopRampDrive(open_loop_ramp_rate_);
+    
+    if (brake_mode_) {
+        swerve_->SetIdleMode(BRAKE);
+    } else {
+        swerve_->SetIdleMode(COAST);
+    }
 }
 
 void TeleOpSwerveCommand::Execute() {

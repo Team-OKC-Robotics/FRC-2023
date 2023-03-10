@@ -88,10 +88,10 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     hw_interface_->right_front_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
     hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
 
-    hw_interface_->left_front_drive_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    hw_interface_->left_back_drive_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    hw_interface_->right_front_drive_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    hw_interface_->right_back_drive_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+    hw_interface_->left_front_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->left_back_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->right_front_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->right_back_drive_motor->SetIdleMode(config.idle_mode);
 
     hw_interface_->left_front_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     hw_interface_->left_back_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);

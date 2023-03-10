@@ -22,7 +22,8 @@ bool SwerveDrive::Init() {
         drive_max_output,
         drive_open_loop,
         steer_max_output,
-        steer_open_loop
+        steer_open_loop,
+        COAST // don't start in brake mode
     };
     interface_->update_config = true;
 
@@ -113,6 +114,15 @@ bool SwerveDrive::SetOpenLoopRampSteer(const double &open_loop_ramp) {
     OKC_CHECK(interface_ != nullptr);
 
     interface_->drive_config.open_loop_ramp_rate_steer = open_loop_ramp;
+    return true;
+}
+
+bool SwerveDrive::SetIdleMode(rev::CANSparkMax::IdleMode mode) {
+    OKC_CHECK(interface_ != nullptr);
+
+    interface_->drive_config.idle_mode = mode;
+    interface_->update_config = true;
+
     return true;
 }
 

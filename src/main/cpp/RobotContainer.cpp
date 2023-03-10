@@ -4,8 +4,6 @@ RobotContainer::RobotContainer() {
     // Load robot parameters
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
     
-    frc::DataLogManager::Start();
-    
     // reduce the size of the logs
     frc::DataLogManager::LogNetworkTables(false);
 
@@ -44,8 +42,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
     driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
 
-    // driver_left_trigger_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
-    // driver_right_trigger_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+    driver_b_button_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+    driver_a_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
     
     
     // second driver controls
@@ -53,13 +51,16 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_a_button_->WhenPressed(*arm_pickup_command_);
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
+    manip_left_bumper_button_->WhenPressed(*arm_short_carry_command_);
+
+    // manip_start_button_->WhenPressed(*ArmSetStateDpadCommand);
   
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
-    driver_a_button_->WhileActiveContinous(*lowerArmCommand);
-    driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    // driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    // driver_y_button_->WhileActiveContinous(*raiseArmCommand);
     
-    driver_x_button_->WhileActiveContinous(*retractArmCommand);
-    driver_b_button_->WhileActiveContinous(*extendArmCommand);
+    // driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    // driver_b_button_->WhileActiveContinous(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -291,13 +292,13 @@ bool RobotContainer::InitCommands() {
     double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0.0);
 
     // Placeholder autonomous command.
-    // m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, claw_);
-    m_autonomousCommand_ = nullptr;
+    m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
+    // m_autonomousCommand_ = nullptr;
 
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.75, 0.75); // speed mod, open loop
-    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1);
-    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1);
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.75, 0.75, false); // speed mod, open loop
+    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
+    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
     OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // test arm commands
@@ -312,6 +313,7 @@ bool RobotContainer::InitCommands() {
     arm_score_mid_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_));
     arm_score_high_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_));
     arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
+    arm_short_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(2, pickup_rotation_)); // just bring teh arm a little in whenever we're moving in the community
     
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
