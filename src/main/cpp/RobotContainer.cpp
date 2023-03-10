@@ -313,7 +313,7 @@ bool RobotContainer::InitCommands() {
     arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
     arm_short_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(2, pickup_rotation_)); // just bring teh arm a little in whenever we're moving in the community
 
-    arm_short_carry_command_ = std::make_shared<ArmSetStateDpadCommand>(arm_, gamepad2_);
+    arm_dpad_set_state_command_ = std::make_shared<ArmSetStateDpadCommand>(arm_, gamepad2_);
     
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
