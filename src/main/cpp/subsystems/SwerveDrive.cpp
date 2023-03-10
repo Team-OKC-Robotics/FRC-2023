@@ -259,10 +259,12 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     double dist = 0;
     OKC_CALL(this->left_front_module_->GetDistance(&dist));
 
-    this->interface_->left_front_drive_motor_output = this->dist_pid_->Calculate(dist);
-    this->interface_->left_back_drive_motor_output = this->dist_pid_->Calculate(dist);
-    this->interface_->right_front_drive_motor_output = this->dist_pid_->Calculate(dist);
-    this->interface_->right_back_drive_motor_output = this->dist_pid_->Calculate(dist);
+    double drive_power = this->dist_pid_->Calculate(dist);
+
+    this->interface_->left_front_drive_motor_output = drive_power;
+    this->interface_->left_back_drive_motor_output = drive_power;
+    this->interface_->right_front_drive_motor_output = drive_power;
+    this->interface_->right_back_drive_motor_output = drive_power;
 
     // clamp the speed
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->left_front_drive_motor_output);
