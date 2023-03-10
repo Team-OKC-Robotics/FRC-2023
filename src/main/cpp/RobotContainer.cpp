@@ -57,7 +57,9 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_y_button_->WhenPressed(*arm_score_high_command_);
     manip_left_bumper_button_->WhenPressed(*arm_short_carry_command_);
 
-    manip_start_button_->WhenPressed(*arm_dpad_set_state_command_);
+    manip_right_bumper_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*slow_swerve_teleop_command_);
+
+    manip_start_button_->WhileHeld(*arm_dpad_set_state_command_);
   
     WPI_UNIGNORE_DEPRECATED
   

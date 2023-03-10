@@ -14,14 +14,14 @@ ArmSetStateDpadCommand::ArmSetStateDpadCommand(std::shared_ptr<Arm> arm, std::sh
     arm_ = arm;
     gamepad_ = gamepad;
 
-    negative_pickup_rotation_ = RobotParams::GetParam("arm.", 0.0);
-    negative_pickup_extension_ = RobotParams::GetParam("arm.", 1.0);
+    negative_pickup_rotation_ = RobotParams::GetParam("arm.negative_pickup.arm_setpoint", 0.0);
+    negative_pickup_extension_ = RobotParams::GetParam("arm.negative_pickup.extend_setpoint", 1.0);
 
-    negative_score_mid_rotation_ = RobotParams::GetParam("arm.", 0.0);
-    negative_score_mid_extension_ = RobotParams::GetParam("arm.", 1.0);
+    negative_score_mid_rotation_ = RobotParams::GetParam("arm.negative_score_medium.arm_setpoint", 0.0);
+    negative_score_mid_extension_ = RobotParams::GetParam("arm.negative_score_medium.extend_setpoint", 1.0);
     
-    negative_score_high_rotation_ = RobotParams::GetParam("arm.", 0.0);
-    negative_score_high_extension_ = RobotParams::GetParam("arm.", 1.0);
+    negative_score_high_rotation_ = RobotParams::GetParam("arm.negative_score_high.arm_setpoint", 0.0);
+    negative_score_high_extension_ = RobotParams::GetParam("arm.negative_score_high.extend_setpoint", 1.0);
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
