@@ -63,7 +63,7 @@ extend_open_loop = 0.5
 # right in front of the robot to pick stuff up
 [arm.pickup]
 extend_setpoint = 79.5
-arm_setpoint = 33
+arm_setpoint = 32
 
 [arm.score_high]
 extend_setpoint = 90.5
@@ -72,6 +72,19 @@ arm_setpoint = 94
 [arm.score_medium]
 extend_setpoint = 61.5
 arm_setpoint = 72
+
+[arm.negative_pickup]
+extend_setpoint = 79.5
+arm_setpoint = -33
+
+[arm.negative_score_high]
+extend_setpoint = 90.5
+arm_setpoint = -94
+
+[arm.negative_score_medium]
+extend_setpoint = 61.5
+arm_setpoint = -72
+
 
 [arm.lift_pid]
 kP = 0.05

@@ -35,16 +35,20 @@ bool RobotContainer::ConfigureButtonBindings() {
     //button bindings
     WPI_IGNORE_DEPRECATED
     // main driver controls
-    // driver_a_button_->WhenPressed(*slow_swerve_teleop_command_);
-    // driver_a_button_->WhenReleased(*swerve_teleop_command_);
+    // swerve
+    driver_b_button_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+    driver_a_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
 
     // intake commands
     driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
     driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
-
-    driver_b_button_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
-    driver_a_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
     
+    // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
+    driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    
+    driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    driver_b_button_->WhileActiveContinous(*extendArmCommand);
     
     // second driver controls
     manip_x_button_->WhenPressed(*arm_carry_command_);
@@ -53,14 +57,8 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_y_button_->WhenPressed(*arm_score_high_command_);
     manip_left_bumper_button_->WhenPressed(*arm_short_carry_command_);
 
-    // manip_start_button_->WhenPressed(*ArmSetStateDpadCommand);
+    manip_start_button_->WhenPressed(*arm_dpad_set_state_command_);
   
-    // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
-    // driver_a_button_->WhileActiveContinous(*lowerArmCommand);
-    // driver_y_button_->WhileActiveContinous(*raiseArmCommand);
-    
-    // driver_x_button_->WhileActiveContinous(*retractArmCommand);
-    // driver_b_button_->WhileActiveContinous(*extendArmCommand);
     WPI_UNIGNORE_DEPRECATED
   
     return true;
@@ -314,6 +312,8 @@ bool RobotContainer::InitCommands() {
     arm_score_high_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_));
     arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
     arm_short_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(2, pickup_rotation_)); // just bring teh arm a little in whenever we're moving in the community
+
+    arm_short_carry_command_ = std::make_shared<ArmSetStateDpadCommand>(arm_, gamepad2_);
     
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
