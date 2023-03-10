@@ -78,7 +78,7 @@ public:
     std::shared_ptr<Arm> GetArm();
 
 private:
-    AutoChooser m_chooser_;+
+    // AutoChooser m_chooser_;
 
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);

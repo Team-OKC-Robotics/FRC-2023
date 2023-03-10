@@ -1,18 +1,18 @@
 #include "AutoChooser.h"
 
-void AutoChooser::AddAutos(Auton auto) {
-    autos.push_back(auto);
+void AutoChooserTeamOKC::AddAutos(Auton auton) {
+    // autos.push_back(auton);
 }
 
-void AutoChooser::AddGamepad(std::shared_ptr<frc::Joystick> gamepad) {
+void AutoChooserTeamOKC::AddGamepad(std::shared_ptr<frc::Joystick> gamepad) {
     gamepad_ = gamepad;
 }
 
-std::shared_ptr<frc2::Command> AutoChooser::GetAutoCommand() {
+std::shared_ptr<frc2::Command> AutoChooserTeamOKC::GetAutoCommand() {
     return autos.at(index);
 }
 
-void AutoChooser::Update() {
+void AutoChooserTeamOKC::Update() {
     int pov = gamepad_->GetPOV();
 
     if(pov == -1) {

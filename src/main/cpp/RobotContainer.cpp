@@ -44,11 +44,11 @@ bool RobotContainer::ConfigureButtonBindings() {
     driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
     
     // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
-    driver_a_button_->WhileActiveContinous(*lowerArmCommand);
-    driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    // driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    // driver_y_button_->WhileActiveContinous(*raiseArmCommand);
     
-    driver_x_button_->WhileActiveContinous(*retractArmCommand);
-    driver_b_button_->WhileActiveContinous(*extendArmCommand);
+    // driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    // driver_b_button_->WhileActiveContinous(*extendArmCommand);
     
     // second driver controls
     manip_x_button_->WhenPressed(*arm_carry_command_);

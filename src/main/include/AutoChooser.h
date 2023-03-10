@@ -5,7 +5,7 @@
 #include "frc2/command/Command.h"
 
 
-class AutoChooser {
+class AutoChooserTeamOKC {
 private:
     std::vector<std::shared_ptr<Auton>> autos;
     int index = 0;
@@ -14,7 +14,7 @@ private:
     bool wasPressed = false;
 
 public:
-    void AddAutos(Auton auto);
+    void AddAutos(Auton auton);
     void AddGamepad(std::shared_ptr<frc::Joystick> gamepad);
     std::shared_ptr<frc2::Command> GetAutoCommand();
     void Update();
