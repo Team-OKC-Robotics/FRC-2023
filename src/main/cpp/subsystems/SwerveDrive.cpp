@@ -162,9 +162,9 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double right_back_angle = 0.0;
 
     left_front_module_->GetAngle(&left_front_angle);
-    left_back_module_->GetAngle(&left_front_angle);
-    right_front_module_->GetAngle(&left_front_angle);
-    right_back_module_->GetAngle(&left_front_angle);
+    left_back_module_->GetAngle(&left_back_angle);
+    right_front_module_->GetAngle(&right_front_angle);
+    right_back_module_->GetAngle(&right_back_angle);
 
     /**
      * The following if statements exist to make tele-op better by turning the modules less
