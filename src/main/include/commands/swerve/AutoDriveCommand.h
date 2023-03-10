@@ -23,6 +23,7 @@ public:
 
     void Initialize() override;
     void Execute() override;
+    void End(bool interrupted) override;
     bool IsFinished() override;
 
 private:

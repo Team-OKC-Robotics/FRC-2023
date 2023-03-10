@@ -24,6 +24,11 @@ void AutoDriveCommand::Execute() {
     VOKC_CALL(swerve_->DriveAuto(max_speed_));
 }
 
+void AutoDriveCommand::End(bool interrupted) {
+    // stop the motors
+    VOKC_CALL(swerve_->VectorTeleOpDrive(0, 0, 0));
+}
+
 bool AutoDriveCommand::IsFinished() {
     bool done_ = false;
 
