@@ -14,14 +14,15 @@ ScorePreloadedAuto::ScorePreloadedAuto(std::shared_ptr<SwerveDrive> swerve, std:
 
 
     AddCommands(
-        IntakeCommand(intake, -0.3), // hold the cube/cone in
-        frc2::WaitCommand(units::second_t(0.3)),
+        IntakeCommand(intake, -0.1), // hold the cube/cone in
         ArmSetStateCommand(arm, TeamOKC::ArmState(extend, degrees)),
-        frc2::WaitCommand(units::second_t(4)), // wait for the command to finish
-        IntakeCommand(intake, 0.3), // drop the cube
+        frc2::WaitCommand(units::second_t(4.5)), // wait for the command to finish
+        IntakeCommand(intake, 0.5), // drop the cube
         frc2::WaitCommand(units::second_t(0.5)), // wait for cube to be dropped
+        IntakeCommand(intake, 0), // stop the intake
         ArmSetStateCommand(arm, TeamOKC::ArmState(1, 0)), // bring the arm back in the robot
-        AutoDriveCommand(swerve, -4, 0.75), // back slowly away
-        ArmSetStateCommand(arm, TeamOKC::ArmState(pickup_extend, pickup_degrees)) // get ready to pick another one up
+        frc2::WaitCommand(units::second_t(2)), // wait a second
+        AutoDriveCommand(swerve, 4, 0.6), // back slowly away
+        ArmSetStateCommand(arm, TeamOKC::ArmState(pickup_extend, -pickup_degrees - 10)) // get ready to pick another one up
     );
 }
