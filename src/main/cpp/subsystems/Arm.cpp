@@ -98,6 +98,13 @@ bool Arm::AtLiftSetpoint(bool *at) {
 bool Arm::TestControl() {
     OKC_CHECK(interface_ != nullptr);
 
+{}        // if we haven't actually started
+    if (!calibration_allowed_) {
+        // don't let the arm do anything
+        return true;
+    }
+
+
     // zero the extension encoder on startup
     if (!has_calibrated_) {
         // if we should be calibrating
@@ -146,6 +153,14 @@ bool Arm::TestControl() {
     return true;
 }
 
+bool Arm::AllowCalibration() {
+    OKC_CHECK(interface_ != nullptr);
+
+    calibration_allowed_ = true;
+
+    return true;
+}
+
 bool Arm::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
     OKC_CHECK(this->arm_pid_ != nullptr);
@@ -154,6 +169,12 @@ bool Arm::AutoControl() {
     /**
      * TODO: zero all flags at start of auto and start of teleop
     */
+
+    // if we haven't actually started
+    if (!calibration_allowed_) {
+        // don't let the arm do anything
+        return true;
+    }
 
     // zero the extension encoder on startup
     if (!has_calibrated_) {

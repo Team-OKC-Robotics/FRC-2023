@@ -44,6 +44,7 @@ public:
     bool SetControlMode(const ControlMode &mode);
     bool AutoControl();
     bool TestControl();
+    bool AllowCalibration();
     
 
 
@@ -64,6 +65,7 @@ private:
     // control flags
     bool has_been_commanded_ = false;
     bool has_calibrated_ = false;
+    bool calibration_allowed_ = false; // to avoid accidentally triggering the limit switch during setup
     
     // limits
     double lift_limit_;

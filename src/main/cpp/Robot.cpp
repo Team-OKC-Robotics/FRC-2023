@@ -40,6 +40,10 @@ void Robot::DisabledPeriodic() {}
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
+    frc::DataLogManager::Start();
+
+    m_container.GetArm()->AllowCalibration();
+
     m_autonomousCommand = m_container.GetAutonomousCommand();
 
     if (m_autonomousCommand != nullptr) {
@@ -58,9 +62,13 @@ void Robot::TeleopInit() {
         m_autonomousCommand->Cancel();
     }
 
+    frc::DataLogManager::Start();
+
     teleop_command_ = m_container.GetDriveCommand();
     VOKC_CALL(teleop_command_ != nullptr);
     teleop_command_->Schedule();
+
+    m_container.GetArm()->AllowCalibration();
 }
 
 /**
