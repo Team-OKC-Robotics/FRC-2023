@@ -49,7 +49,7 @@ kD = 0.0
 [swerve.offset]
 left_front_offset = 210.0
 left_back_offset = 79.0
-right_front_offset = 9.2
+right_front_offset = 10.0
 right_back_offset = 153.0
 
 [arm]
