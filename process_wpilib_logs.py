@@ -1,4 +1,5 @@
 import tkinter
+from tkinter import filedialog
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -16,7 +17,13 @@ steerEncLog = [[], []]
 outputLog = [[], []]
 setpointLog = [[], []]
 
-with open(r"C:\Users\isasq\Documents\GitHub\FRC-2023\logs\good logs\FRC_20230309_235848_OKOK_P32.csv") as f:
+root = tkinter.Tk()
+root.withdraw()
+
+log_path = filedialog.askopenfilename()
+
+
+with open(log_path) as f:
     log = f.read().split("\n")
 
 for index, line in enumerate(log):
