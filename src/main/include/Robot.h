@@ -9,6 +9,7 @@
 
 
 #include "RobotContainer.h"
+#include "AutoChooser.h"
 
 
  //Arm hardware 

@@ -67,23 +67,23 @@ arm_setpoint = 31
 
 [arm.score_high]
 extend_setpoint = 90.5
-arm_setpoint = 94
+arm_setpoint = 94.0
 
 [arm.score_medium]
 extend_setpoint = 61.5
-arm_setpoint = 72
+arm_setpoint = 72.0
 
 [arm.negative_pickup]
 extend_setpoint = 88.5
-arm_setpoint = -45
+arm_setpoint = -45.0
 
 [arm.negative_score_high]
 extend_setpoint = 90.5
-arm_setpoint = -100
+arm_setpoint = -100.0
 
 [arm.negative_score_medium]
 extend_setpoint = 61.5
-arm_setpoint = -76
+arm_setpoint = -76.0
 
 
 [arm.lift_pid]

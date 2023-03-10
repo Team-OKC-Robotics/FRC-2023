@@ -18,6 +18,7 @@ void AutoDriveCommand::Initialize() {
     VOKC_CALL(swerve_->ResetPIDs());
 
     VOKC_CALL(swerve_->SetDistance(dist_));
+    VOKC_CALL(swerve_->SetIdleMode(BRAKE));
 }
 
 void AutoDriveCommand::Execute() {

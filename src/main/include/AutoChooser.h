@@ -1,15 +1,21 @@
-#include "Auto.h"
+#include "Auton.h"
+#include "vector"
+
+#include <frc/Joystick.h>
+#include "frc2/command/Command.h"
+
+
 class AutoChooser {
 private:
-    ArrayList<Auto> autos;
-     int index = 0;
-    Joystick gamepad;
-    private bool wasPressed = false;
+    std::vector<std::shared_ptr<Auton>> autos;
+    int index = 0;
 
-    public:
-    void AddAutos(Auto auto);
+    std::shared_ptr<frc::Joystick> gamepad_;
+    bool wasPressed = false;
+
 public:
-void addGamepad(JoystickGamepad_);
-void Command getAutoCommand();
-void update();
-}
+    void AddAutos(Auton auto);
+    void AddGamepad(std::shared_ptr<frc::Joystick> gamepad);
+    std::shared_ptr<frc2::Command> GetAutoCommand();
+    void Update();
+};

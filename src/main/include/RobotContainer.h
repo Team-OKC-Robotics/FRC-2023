@@ -17,6 +17,8 @@
 #include "io/ArmIO.h"
 #include "io/IntakeIO.h"
 
+#include "AutoChooser.h"
+
 
 // Subsystems
 #include "subsystems/SwerveDrive.h"
@@ -76,6 +78,8 @@ public:
     std::shared_ptr<Arm> GetArm();
 
 private:
+    AutoChooser m_chooser_;+
+
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
     bool InitActuators(Actuators *actuators_interface);
