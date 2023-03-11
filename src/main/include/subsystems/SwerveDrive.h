@@ -21,6 +21,7 @@
 #include "SwerveModule.h"
 #include "Logging.h"
 #include "wpi/DataLog.h"
+#include "SlewRateLimiter.h"
 
 #include <rev/CANSparkMax.h>
 
@@ -94,9 +95,11 @@ private:
     std::shared_ptr<SwerveModule> right_front_module_;
     std::shared_ptr<SwerveModule> right_back_module_;
 
-    // Speed modifier (the joystick input is multiplied by this value)
-    double speed_modifier_drive_ = 0.75;
-    double speed_modifier_steer_ = 0.75;
+    // slew rate limiters for steer
+    std::shared_ptr<SlewRateLimiter> left_front_limiter_;
+    std::shared_ptr<SlewRateLimiter> left_back_limiter_;
+    std::shared_ptr<SlewRateLimiter> right_front_limiter_;
+    std::shared_ptr<SlewRateLimiter> right_back_limiter_;
 
     double last_drive = 0.0;
     double last_strafe = 0.0;
@@ -105,6 +108,7 @@ private:
     double control_decay = 0.1;
 
     bool balanced_ = false;
+    bool tilted_ = false;
     double last_yaw_ = 0.0;
 
     // max output
@@ -131,4 +135,10 @@ private:
     wpi::log::DoubleLogEntry left_front_setpoint_log_;
     wpi::log::DoubleLogEntry left_front_output_log_;
     wpi::log::DoubleLogEntry left_front_steer_enc_log_;
+
+    wpi::log::DoubleLogEntry left_front_motor_output_log_;
+
+    wpi::log::DoubleLogEntry drive_log_;
+    wpi::log::DoubleLogEntry strafe_log_;
+    wpi::log::DoubleLogEntry turn_log_;
 };
