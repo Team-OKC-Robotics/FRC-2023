@@ -24,6 +24,13 @@ RobotContainer::RobotContainer() {
 
     // Configure the button bindings
     VOKC_CALL(ConfigureButtonBindings());
+
+    // create the autonomous chooser
+    m_chooser_ = std::make_shared<AutoChooserTeamOKC>();
+    m_chooser_->AddGamepad(gamepad2_);
+    m_chooser_->AddAutos(score_preload_backup_auto_);
+    m_chooser_->AddAutos(score_preload_balance_auto_);
+    m_chooser_->AddAutos(score_preload_auto_);
 }
 
 bool RobotContainer::ConfigureButtonBindings() {
@@ -67,8 +74,7 @@ bool RobotContainer::ConfigureButtonBindings() {
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
-    // An example command will be run in autonomous
-    return m_autonomousCommand_;
+    return m_chooser_->GetAutoCommand();
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
@@ -291,10 +297,11 @@ bool RobotContainer::InitCommands() {
     double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
     double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0.0);
 
-    // Placeholder autonomous command.
-    m_autonomousCommand_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
-    // m_autonomousCommand_ = nullptr;
-
+    // autons
+    score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
+    score_preload_auto_ = std::make_shared<ScorePreloadedNoDriveAuto>(arm_, intake_);
+    score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
+    
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.75, 0.75, false); // speed mod, open loop
     slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
@@ -327,4 +334,8 @@ bool RobotContainer::InitCommands() {
 
 std::shared_ptr<Arm> RobotContainer::GetArm() {
     return arm_;
+}
+
+std::shared_ptr<AutoChooserTeamOKC> RobotContainer::GetAutoChooser() {
+    return m_chooser_;
 }

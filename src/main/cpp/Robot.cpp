@@ -31,9 +31,13 @@ void Robot::RobotPeriodic() {
  * can use it to reset any subsystem information you want to clear when the
  * robot is disabled.
  */
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+    m_auto_chooser_ = m_container.GetAutoChooser();
+}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
+    m_auto_chooser_->Update();
+}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link

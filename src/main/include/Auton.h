@@ -12,6 +12,7 @@
 class Auton : public frc2::CommandHelper<frc2::SequentialCommandGroup, Auton> {
 public:
     bool SetName(std::string name);
+    std::string GetAutonName();
 private:
-    std::string name;
+    std::string name_;
 };

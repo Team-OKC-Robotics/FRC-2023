@@ -52,6 +52,9 @@
 
 // autos
 #include "autos/ScorePreloadedAuto.h"
+#include "autos/ScorePreloadedBalanceAuto.h"
+#include "autos/ScorePreloadedNoDriveAuto.h"
+#include "autos/ScoreTwoAuto.h"
 
 #include "Logging.h"
 
@@ -73,12 +76,11 @@ public:
 
     std::shared_ptr<frc2::Command> GetAutonomousCommand();
     std::shared_ptr<frc2::Command> GetDriveCommand();
-    // std::shared_ptr<frc2::Command> GetSlowDriveCommand();
-    // std::shared_ptr<frc2::Command> GetBoostDriveCommand();
     std::shared_ptr<Arm> GetArm();
+    std::shared_ptr<AutoChooserTeamOKC> GetAutoChooser();
 
 private:
-    // AutoChooser m_chooser_;
+    std::shared_ptr<AutoChooserTeamOKC> m_chooser_;
 
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
@@ -154,7 +156,10 @@ private:
     /**
      * Commands
      */
-    std::shared_ptr<ScorePreloadedAuto> m_autonomousCommand_;
+    // autos
+    std::shared_ptr<ScorePreloadedAuto> score_preload_backup_auto_;
+    std::shared_ptr<ScorePreloadedNoDriveAuto> score_preload_auto_;
+    std::shared_ptr<ScorePreloadedBalanceAuto> score_preload_balance_auto_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;

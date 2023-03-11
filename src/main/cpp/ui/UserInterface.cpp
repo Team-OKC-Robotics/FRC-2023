@@ -1,5 +1,11 @@
 #include "ui/UserInterface.h"
 
+namespace AutonUI {
+    frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Autos");
+
+    nt::GenericEntry *const nt_auton_name = nt_tab.Add("current auton", "no auto selected").GetEntry();
+}
+
 namespace SwerveDriveUI {
     // Get the tab
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("SwerveDrive");

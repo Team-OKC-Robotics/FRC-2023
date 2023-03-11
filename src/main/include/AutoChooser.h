@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Auton.h"
 #include "vector"
 
@@ -6,16 +8,16 @@
 
 
 class AutoChooserTeamOKC {
-private:
-    std::vector<std::shared_ptr<Auton>> autos;
-    int index = 0;
-
-    std::shared_ptr<frc::Joystick> gamepad_;
-    bool wasPressed = false;
-
 public:
-    void AddAutos(Auton auton);
+    void AddAutos(std::shared_ptr<Auton> auton);
     void AddGamepad(std::shared_ptr<frc::Joystick> gamepad);
     std::shared_ptr<frc2::Command> GetAutoCommand();
     void Update();
+
+private:
+    std::vector<std::shared_ptr<Auton>> autos;
+    unsigned int index = 0;
+
+    std::shared_ptr<frc::Joystick> gamepad_;
+    bool wasPressed = false;
 };

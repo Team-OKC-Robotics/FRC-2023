@@ -1,7 +1,8 @@
 #include "AutoChooser.h"
+#include "ui/UserInterface.h"
 
-void AutoChooserTeamOKC::AddAutos(Auton auton) {
-    // autos.push_back(auton);
+void AutoChooserTeamOKC::AddAutos(std::shared_ptr<Auton> auton) {
+    autos.push_back(auton);
 }
 
 void AutoChooserTeamOKC::AddGamepad(std::shared_ptr<frc::Joystick> gamepad) {
@@ -26,4 +27,6 @@ void AutoChooserTeamOKC::Update() {
             wasPressed = true;
         }
     }
+
+    AutonUI::nt_auton_name->SetString(autos.at(index)->GetAutonName());
 }

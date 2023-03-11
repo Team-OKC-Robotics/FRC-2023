@@ -39,6 +39,7 @@ private:
     // doesn't have undefined behavior and potentially crash.
     std::shared_ptr<frc2::Command> m_autonomousCommand = nullptr;
     std::shared_ptr<frc2::Command> teleop_command_ = nullptr;
+    std::shared_ptr<AutoChooserTeamOKC> m_auto_chooser_;
 
     RobotContainer m_container;
 };

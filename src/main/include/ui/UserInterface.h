@@ -7,6 +7,10 @@
 
 #include "Parameters.h"
 
+namespace AutonUI {
+    extern nt::GenericEntry *const nt_auton_name;
+}
+
 namespace SwerveDriveUI {
     // Get the tab
     extern frc::ShuffleboardTab &nt_tab;
