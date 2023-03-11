@@ -16,6 +16,11 @@ extendSetpointLog = [[], []]
 steerEncLog = [[], []]
 outputLog = [[], []]
 setpointLog = [[], []]
+driveOutputLog = [[], []]
+
+joystickDriveLog = [[], []]
+joystickStrafeLog = [[], []]
+joystickTurnLog = [[], []]
 
 root = tkinter.Tk()
 root.withdraw()
@@ -64,6 +69,19 @@ for index, line in enumerate(log):
     elif id == '"/swerve/setpoint"':
         setpointLog[0].append(float(timestamp))
         setpointLog[1].append(float(data))
+    elif id == '"/swerve/drive_output"':
+        driveOutputLog[0].append(float(timestamp))
+        driveOutputLog[1].append(float(data))
+    
+    if (id == '"/joystick/drive"'):
+        joystickDriveLog[0].append(float(timestamp))
+        joystickDriveLog[1].append(float(data))
+    elif id == '"/joystick/strafe"':
+        joystickStrafeLog[0].append(float(timestamp))
+        joystickStrafeLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/joystick/turn"':
+        joystickTurnLog[0].append(float(timestamp))
+        joystickTurnLog[1].append(float(data))
 
 plt.figure()
 plt.plot(liftEncLog[0], liftEncLog[1])
@@ -82,10 +100,19 @@ plt.ylabel("data")
 plt.legend(("extend enc", "output", "setpoint"))
 
 plt.figure()
+plt.plot(joystickDriveLog[0], joystickDriveLog[1])
+plt.plot(joystickStrafeLog[0], joystickStrafeLog[1])
+plt.plot(joystickTurnLog[0], joystickTurnLog[1])
+plt.xlabel("Time (sec)")
+plt.ylabel("data")
+plt.legend(("joystick drive", "joystick strafe", "joystick turn"))
+
+plt.figure()
 plt.plot(steerEncLog[0], steerEncLog[1])
 plt.plot(outputLog[0], outputLog[1])
 plt.plot(setpointLog[0], setpointLog[1])
+plt.plot(driveOutputLog[0], driveOutputLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
-plt.legend(("steer enc", "output", "setpoint"))
+plt.legend(("steer enc", "output", "setpoint", "drive output"))
 plt.show()
