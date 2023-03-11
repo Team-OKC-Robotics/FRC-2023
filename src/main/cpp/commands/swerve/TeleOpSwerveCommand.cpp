@@ -33,7 +33,7 @@ void TeleOpSwerveCommand::Execute() {
     double strafe_power_ = this->gamepad_->GetRawAxis(0);
     double turn_power_ = this->gamepad_->GetRawAxis(4);
 
-    VOKC_CALL(swerve_->VectorTeleOpDrive(drive_power_*speed_mod_, strafe_power_*speed_mod_, -turn_power_*speed_mod_*3));
+    VOKC_CALL(swerve_->VectorTeleOpDrive(drive_power_*speed_mod_, strafe_power_*speed_mod_, -turn_power_*3));
 }
 
 bool TeleOpSwerveCommand::IsFinished() {

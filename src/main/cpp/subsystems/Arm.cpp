@@ -112,7 +112,7 @@ bool Arm::TestControl() {
             // check the limit switch
             if (this->interface_->extend_limit_switch) {
                 // we're hitting the limit switch, so we're done calibrating
-                control_state_ = STANDBY;
+                control_state_ = ROTATING;
 
                 has_calibrated_ = true;
 
@@ -183,7 +183,7 @@ bool Arm::AutoControl() {
             // check the limit switch
             if (this->interface_->extend_limit_switch) {
                 // we're hitting the limit switch, so we're done calibrating
-                control_state_ = STANDBY;
+                control_state_ = ROTATING;
 
                 has_calibrated_ = true;
 
