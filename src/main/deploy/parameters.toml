@@ -37,7 +37,7 @@ kI = 0.0
 kD = 0.0
 
 [swerve.steer_pid]
-kP = 0.004
+kP = 0.005
 kI = 0.0
 kD = 0.0
 

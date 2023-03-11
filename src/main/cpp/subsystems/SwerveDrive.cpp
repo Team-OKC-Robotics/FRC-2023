@@ -288,7 +288,39 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     return true;
 }
 
+bool SwerveDrive::AutoBalance() {
+    // if we've started to go back down
+    if (last_yaw_ - this->interface_->imu_yaw < 0.1 && !balanced_) {
+        // then STOP ALL THE MOTORS RIGHT NOW and call it done
+        this->interface_->left_front_drive_motor_output = 0.0;
+        this->interface_->left_back_drive_motor_output = 0.0;
+        this->interface_->right_front_drive_motor_output = 0.0;
+        this->interface_->right_back_drive_motor_output = 0.0;
 
+        OKC_CALL(this->left_front_module_->SetAngle(45));
+        OKC_CALL(this->left_back_module_->SetAngle(45));
+        OKC_CALL(this->right_front_module_->SetAngle(45));
+        OKC_CALL(this->right_back_module_->SetAngle(45));
+    
+        OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+        OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+        OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+        OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
+        balanced_ = true;
+    // otherwise keep going
+    } else {
+        // drive slowly backwards
+        this->interface_->left_front_drive_motor_output = -0.4;
+        this->interface_->left_back_drive_motor_output = -0.4;
+        this->interface_->right_front_drive_motor_output = -0.4;
+        this->interface_->right_back_drive_motor_output = -0.4;
+    }
+
+    last_yaw_ = this->interface_->imu_yaw;
+    
+    return true;
+}
 
 bool SwerveDrive::InitAuto(TeamOKC::Pose pos, bool keep_heading) {
     this->auto_lock_heading_ = keep_heading;

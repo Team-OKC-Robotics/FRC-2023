@@ -63,6 +63,9 @@ public:
     bool DriveAuto(double max_speed);
     bool AtDistSetpoint(bool *at);
 
+    bool AutoBalance();
+    bool AtBalanceSetpoint(bool *at);
+
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
     bool GetDriveEncoderAverage(double *avg);
@@ -100,6 +103,9 @@ private:
     double last_turn = 0.0;
 
     double control_decay = 0.1;
+
+    bool balanced_ = false;
+    double last_yaw_ = 0.0;
 
     // max output
     double max_output_drive_ = 1;
