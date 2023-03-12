@@ -468,6 +468,32 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Autos/current auton",
+              "_title": "Shuffleboard/Autos/current auton",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/SwerveDrive/Heading",
+              "_title": "Shuffleboard/SwerveDrive/Heading",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
