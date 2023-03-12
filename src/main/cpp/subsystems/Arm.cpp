@@ -179,23 +179,20 @@ bool Arm::AutoControl() {
     // zero the extension encoder on startup
     if (!has_calibrated_) {
         // if we should be calibrating
-        if (control_state_ == CALIBRATING) {
-            // check the limit switch
-            if (this->interface_->extend_limit_switch) {
-                // we're hitting the limit switch, so we're done calibrating
-                control_state_ = ROTATING;
+        if (this->interface_->extend_limit_switch) {
+            // we're hitting the limit switch, so we're done calibrating
+            control_state_ = ROTATING;
 
-                has_calibrated_ = true;
+            has_calibrated_ = true;
 
-                this->interface_->arm_extend_power = 0.0;
-                
-                std::cout << "CALIBRATION COMPLETE" << std::endl;
-            } else {
-                // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-                this->interface_->arm_extend_power = -0.1;
-            }
+            this->interface_->arm_extend_power = 0.0;
+            
+            std::cout << "CALIBRATION COMPLETE" << std::endl;
+        } else {
+            // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
+            this->interface_->arm_extend_power = -0.1;
         }
-
+    
         return true;
     }
 
