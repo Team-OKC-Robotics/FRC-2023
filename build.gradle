@@ -1,7 +1,10 @@
+import org.gradle.internal.os.OperatingSystem
+
 plugins {
     id "cpp"
     id "google-test-test-suite"
-    id "edu.wpi.first.GradleRIO" version "2023.3.2"
+    id "edu.wpi.first.GradleRIO" version "2023.4.2"
+    id "com.dorongold.task-tree" version "2.1.0"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -95,5 +98,111 @@ model {
             wpi.cpp.deps.wpilib(it)
             wpi.cpp.deps.googleTest(it)
         }
+    }
+}
+
+task copyDeployDir {
+    String prefix = 'test-results/frcUserProgramTest/'
+    String suffix = 'src/main/deploy'
+
+    // Linux is the default for deploy and CI
+    if (OperatingSystem.current().isLinux()) {
+        // Make the directories
+        def d1 = new File(prefix + "linuxathena/debug/" + suffix)
+        def d2 = new File(prefix + "linuxx86-64/debug/" + suffix)
+        def d3 = new File(prefix + "linuxathena/release/" + suffix)
+        def d4 = new File(prefix + "linuxx86-64/release/" + suffix)
+        d1.mkdirs()
+        d2.mkdirs() 
+        d3.mkdirs()
+        d4.mkdirs() 
+
+        // Linux Athena
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxathena/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxathena/release/" + suffix)
+        }
+        // Linux x86-64
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxx86-64/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "linuxx86-64/release/" + suffix)
+        }
+    } else if(OperatingSystem.current().isWindows()){
+        // Windows is used by most of the team for development.
+        def d1 = new File(prefix + "windowsx86-64/debug/" + suffix)
+        def d2 = new File(prefix + "windowsx86/debug/" + suffix)
+        def d3 = new File(prefix + "windowsx86-64/release/" + suffix)
+        def d4 = new File(prefix + "windowsx86/release/" + suffix)
+        d1.mkdirs()
+        d2.mkdirs() 
+        d3.mkdirs()
+        d4.mkdirs() 
+
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86-64/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86-64/release/" + suffix)
+        }
+
+        // Non 64 bit version just in case
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "windowsx86/release/" + suffix)
+        }
+        
+    } else {
+        // Otherwise this is a Mac
+        def d1 = new File(prefix + "osxuniversal/debug/" + suffix)
+        def d2 = new File(prefix + "osxuniversal/release/" + suffix)
+        d1.mkdirs()
+        d2.mkdirs()
+
+        // Copy debug
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "osxuniversal/debug/" + suffix)
+        }
+        // Copy release
+        copy {
+            from project.fileTree('src/main/deploy')
+            into layout.buildDirectory.dir(prefix + "osxuniversal/release/" + suffix)
+        }
+    }
+    
+}
+
+// Copy the deploy/ folder when doing unit tests (check) in order to load things like parameters.
+check.dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
+    }
+}
+
+build.dependsOn {
+    tasks.findAll {
+        task -> task.name.startsWith('copyDeployDir')
     }
 }
