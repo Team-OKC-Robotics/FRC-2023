@@ -39,13 +39,13 @@ void ArmSetStateDpadCommand::Execute() {
 
     // use the directional pad for presets on the other side of the robot
     switch (gamepad_->GetPOV()) {
-        case 0:
+        case 180:
             VOKC_CALL(arm_->SetDesiredState(TeamOKC::ArmState(negative_pickup_extension_, negative_pickup_rotation_)));
             break;
         case 90:
             VOKC_CALL(arm_->SetDesiredState(TeamOKC::ArmState(negative_score_mid_extension_, negative_score_mid_rotation_)));
             break;
-        case 180:
+        case 0:
             VOKC_CALL(arm_->SetDesiredState(TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_)));
             break;
         default:
