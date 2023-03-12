@@ -26,6 +26,7 @@ ScorePreloadedAuto::ScorePreloadedAuto(std::shared_ptr<SwerveDrive> swerve, std:
         IntakeCommand(intake, 0), // stop the intake
         ArmSetStateCommand(arm, TeamOKC::ArmState(1, 0)), // bring the arm back in the robot
         frc2::WaitCommand(units::second_t(2)), // wait a second
+        IntakeCommand(intake, -0.3), // suck in the cube at the end 
         AutoDriveCommand(swerve, 4.7, 1), // back slowly away
         // LockWheelsCommand(swerve),
         ArmSetStateCommand(arm, TeamOKC::ArmState(negative_pickup_extend, negative_pickup_degrees)) // get ready to pick another one up
