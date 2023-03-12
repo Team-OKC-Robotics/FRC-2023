@@ -60,6 +60,7 @@ typedef struct swerve_drive_software_interface_t {
     // SW INPUTS
     // IMU yaw angle
     double imu_yaw;
+    double imu_pitch;
 
     // Encoders
     double left_front_drive_motor_enc;

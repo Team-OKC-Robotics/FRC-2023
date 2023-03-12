@@ -40,6 +40,7 @@ namespace SwerveDriveUI {
 
     // Gyro
     extern nt::GenericEntry *const nt_heading;
+    extern nt::GenericEntry *const nt_pitch;
     extern nt::GenericEntry *const nt_reset_gyro;
 
     // Save drivetrain parameters

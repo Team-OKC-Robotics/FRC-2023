@@ -147,6 +147,7 @@ bool SwerveDriveIO::ProcessInputs() {
     // navX IMU:
     OKC_CHECK(hw_interface_->ahrs != nullptr);
     sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+    sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
 
     // Encoders
     // position

@@ -228,10 +228,10 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CHECK(this->right_front_module_ != nullptr);
     OKC_CHECK(this->right_back_module_ != nullptr);
 
-    left_front_turn = left_front_limiter_->Calculate(left_front_turn);
-    left_back_turn = left_back_limiter_->Calculate(left_back_turn);
-    right_front_turn = right_front_limiter_->Calculate(right_front_turn);
-    right_back_turn = right_back_limiter_->Calculate(right_back_turn);
+    // left_front_turn = left_front_limiter_->Calculate(left_front_turn);
+    // left_back_turn = left_back_limiter_->Calculate(left_back_turn);
+    // right_front_turn = right_front_limiter_->Calculate(right_front_turn);
+    // right_back_turn = right_back_limiter_->Calculate(right_back_turn);
 
     // really nice convoluted deadband
     // this is to stop the swerve modules from immediately trying to center themselves instead of
@@ -328,11 +328,11 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 
 bool SwerveDrive::AutoBalance() {
     // if we've started to go back down
-    if (abs(this->interface_->imu_yaw) > 1) {
+    if (abs(this->interface_->imu_pitch) > -70) {
         tilted_ = true;
     }
 
-    if (last_yaw_ > this->interface_->imu_yaw && !balanced_) {
+    if (last_yaw_ < this->interface_->imu_pitch && !balanced_) {
         // then STOP ALL THE MOTORS RIGHT NOW and call it done
         this->interface_->left_front_drive_motor_output = 0.0;
         this->interface_->left_back_drive_motor_output = 0.0;
@@ -368,10 +368,10 @@ bool SwerveDrive::AutoBalance() {
         OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
     } else {
         // otherwise keep going
-        this->interface_->left_front_drive_motor_output = 0.3;
-        this->interface_->left_back_drive_motor_output = 0.3;
-        this->interface_->right_front_drive_motor_output = 0.3;
-        this->interface_->right_back_drive_motor_output = 0.3;
+        this->interface_->left_front_drive_motor_output = 0.4;
+        this->interface_->left_back_drive_motor_output = 0.4;
+        this->interface_->right_front_drive_motor_output = 0.4;
+        this->interface_->right_back_drive_motor_output = 0.4;
 
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));
@@ -384,7 +384,7 @@ bool SwerveDrive::AutoBalance() {
         OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
     }
 
-    last_yaw_ = this->interface_->imu_yaw;
+    last_yaw_ = this->interface_->imu_pitch;
     
     return true;
 }
@@ -565,6 +565,8 @@ bool SwerveDrive::UpdateShuffleboard() {
     double heading_tmp = 0.0;
     OKC_CALL(this->GetHeading(&heading_tmp));
     OKC_CALL(SwerveDriveUI::nt_heading->SetDouble(heading_tmp));
+
+    OKC_CALL(SwerveDriveUI::nt_pitch->SetDouble(this->interface_->imu_pitch));
 
     // === LOGGING ===
     OKC_CALL(right_front_module_->GetAngle(&encoder_tmp));

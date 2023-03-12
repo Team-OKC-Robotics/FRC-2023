@@ -36,6 +36,7 @@ namespace SwerveDriveUI {
 
     // Gyro
     nt::GenericEntry *const nt_heading = nt_tab.Add("Heading", 0.0).GetEntry();
+    nt::GenericEntry *const nt_pitch = nt_tab.Add("Pitch", 0.0).GetEntry();
     nt::GenericEntry *const nt_reset_gyro =
         nt_tab.Add("Reset Gyro", false).GetEntry();
 
