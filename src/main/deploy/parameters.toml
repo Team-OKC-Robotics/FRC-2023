@@ -38,7 +38,7 @@ kI = 0.0
 kD = 0.0
 
 [swerve.steer_pid]
-kP = 0.006
+kP = 0.005
 kI = 0.0
 kD = 0.0
 
@@ -50,6 +50,7 @@ kD = 0.0
 [swerve.offset]
 left_front_offset = 210.0
 left_back_offset = 79.0
+
 right_front_offset = 10.0
 right_back_offset = 153.0
 
@@ -57,7 +58,7 @@ right_back_offset = 153.0
 offset = -330
 lift_limit = 110
 extend_limit = 95
-max_output = 0.7
+max_output = 1
 arm_open_loop = 1
 extend_open_loop = 0.5
 
@@ -80,11 +81,11 @@ arm_setpoint = -45.0
 
 [arm.negative_score_high]
 extend_setpoint = 90.5
-arm_setpoint = -100.0
+arm_setpoint = -103.0
 
 [arm.negative_score_medium]
 extend_setpoint = 61.5
-arm_setpoint = -76.0
+arm_setpoint = -80.0
 
 
 [arm.lift_pid]
