@@ -6,8 +6,13 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+#include <cameraserver/CameraServer.h>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+    frc::CameraServer::StartAutomaticCapture().SetResolution(480, 240);
+
+    m_container.GetArm()->SetControlMode(Auto);
+}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
@@ -26,15 +31,23 @@ void Robot::RobotPeriodic() {
  * can use it to reset any subsystem information you want to clear when the
  * robot is disabled.
  */
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+    m_auto_chooser_ = m_container.GetAutoChooser();
+}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
+    m_auto_chooser_->Update();
+}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
 void Robot::AutonomousInit() {
+    frc::DataLogManager::Start();
+
+    m_container.GetArm()->AllowCalibration();
+
     m_autonomousCommand = m_container.GetAutonomousCommand();
 
     if (m_autonomousCommand != nullptr) {
@@ -53,9 +66,13 @@ void Robot::TeleopInit() {
         m_autonomousCommand->Cancel();
     }
 
+    frc::DataLogManager::Start();
+
     teleop_command_ = m_container.GetDriveCommand();
     VOKC_CALL(teleop_command_ != nullptr);
     teleop_command_->Schedule();
+
+    m_container.GetArm()->AllowCalibration();
 }
 
 /**
@@ -66,7 +83,17 @@ void Robot::TeleopPeriodic() {}
 /**
  * This function is called periodically during test mode.
  */
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() {
+}
+
+void Robot::TestInit() {
+    m_container.GetArm()->SetControlMode(Test);
+
+    teleop_command_ = m_container.GetDriveCommand();
+    VOKC_CALL(teleop_command_ != nullptr);
+    teleop_command_->Schedule();
+    VOKC_CHECK_MSG(false, "we are in fact reaching test init");
+}
 
 /**
  * This function is called once when the robot is first started up.

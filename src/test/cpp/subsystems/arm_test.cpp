@@ -77,8 +77,11 @@ TEST_F(ArmTest, SetManual) {
 } 
 
 TEST_F(ArmTest, SetControl) {
-    ASSERT_TRUE(arm_->SetControlMode(Manual));
-    ASSERT_TRUE(arm_->ManualControl());
+    ASSERT_TRUE(arm_->SetControlMode(Test));
+    ASSERT_TRUE(arm_->TestControl());
+
+    ASSERT_TRUE(arm_->SetControlMode(Auto));
+    ASSERT_TRUE(arm_->AutoControl());
 }
 
     

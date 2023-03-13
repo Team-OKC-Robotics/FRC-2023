@@ -19,6 +19,7 @@ public:
      */
     explicit IncrementArmPresetPositionCommand(std::shared_ptr<Arm> arm, double increment);
 
+    void Initialize() override;
     void Execute() override;
     bool IsFinished() override;
 

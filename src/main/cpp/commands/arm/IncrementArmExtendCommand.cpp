@@ -14,19 +14,17 @@ IncrementArmExtendCommand::IncrementArmExtendCommand(std::shared_ptr<Arm> arm,
 
     if (arm_ != nullptr) {
         this->AddRequirements(arm_.get());
-    
-        arm_->SetControlMode(Auto);
     }
 }
 
-
+void IncrementArmExtendCommand::Initialize() {
+    arm_->SetControlMode(Test);
+}
 
 
 void IncrementArmExtendCommand::Execute() {
     VOKC_CHECK(arm_ != nullptr);
     VOKC_CALL(arm_->IncrementExtend(extend_))
-
-
 }
 
 bool IncrementArmExtendCommand::IsFinished() {

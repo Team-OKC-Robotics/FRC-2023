@@ -141,7 +141,7 @@
               "_showGlyph": false
             }
           },
-          "4,4": {
+          "4,3": {
             "size": [
               1,
               1
@@ -154,7 +154,7 @@
               "_showGlyph": false
             }
           },
-          "5,4": {
+          "5,3": {
             "size": [
               1,
               1
@@ -193,7 +193,7 @@
               "_showGlyph": false
             }
           },
-          "6,4": {
+          "6,3": {
             "size": [
               1,
               1
@@ -232,7 +232,7 @@
               "_showGlyph": false
             }
           },
-          "4,5": {
+          "4,4": {
             "size": [
               1,
               1
@@ -245,7 +245,7 @@
               "_showGlyph": false
             }
           },
-          "5,5": {
+          "5,4": {
             "size": [
               1,
               1
@@ -258,7 +258,7 @@
               "_showGlyph": false
             }
           },
-          "7,5": {
+          "7,4": {
             "size": [
               1,
               1
@@ -271,7 +271,7 @@
               "_showGlyph": false
             }
           },
-          "6,5": {
+          "6,4": {
             "size": [
               1,
               1
@@ -312,12 +312,197 @@
         "titleType": 0,
         "tiles": {}
       }
+    },
+    {
+      "title": "armtab",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/Arm/Arm Duty Cycles Encoder",
+              "_title": "Shuffleboard/Arm/Arm Duty Cycles Encoder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -110.0,
+              "Range/Max": 110.0,
+              "Visuals/Show value": true
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Arm/arm power",
+              "_title": "Shuffleboard/Arm/arm power",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/Arm/arm setpoint",
+              "_title": "Shuffleboard/Arm/arm setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -110.0,
+              "Range/Max": 110.0,
+              "Visuals/Show value": true
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Arm/extend encodoer",
+              "_title": "Shuffleboard/Arm/extend encodoer",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Arm/extend power",
+              "_title": "Shuffleboard/Arm/extend power",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/Arm/extend setpoint",
+              "_title": "Shuffleboard/Arm/extend setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "5,0": {
+            "size": [
+              8,
+              6
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": false,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 240,
+              "imageHeight": 120
+            }
+          },
+          "4,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Arm/arm control state",
+              "_title": "Shuffleboard/Arm/arm control state",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///Shuffleboard/Arm/extend limit switch",
+              "_title": "Shuffleboard/Arm/extend limit switch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/Autos/current auton",
+              "_title": "Shuffleboard/Autos/current auton",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Shuffleboard/SwerveDrive/Heading",
+              "_title": "Shuffleboard/SwerveDrive/Heading",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
     "x": -8.0,
     "y": -8.0,
     "width": 1936.0,
-    "height": 1048.0
+    "height": 1096.0
   }
 }

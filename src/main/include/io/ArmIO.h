@@ -64,6 +64,8 @@ public:
 
     bool ProcessIO();
 
+    bool Init();
+
 private:
     bool UpdateArmConfig(ArmConfig &config);
     bool ResetEncoders();
