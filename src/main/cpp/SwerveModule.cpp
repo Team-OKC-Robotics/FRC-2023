@@ -155,7 +155,7 @@ bool SwerveModule::Update(double drive_, double steer_, double drive_vel, double
     this->steer_enc_ = (steer_ * 360) - offset_;
 
     // keep the angle in bounds
-    TeamOKC::WrapAngle(&this->steer_enc_);
+    OKC_CALL(TeamOKC::WrapAngle(&this->steer_enc_));
 
     // velocity readings
     this->steer_enc_vel_ = steer_vel;
