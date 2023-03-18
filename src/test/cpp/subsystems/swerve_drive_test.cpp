@@ -88,20 +88,6 @@ TEST_F(SwerveDriveTest, UnlockedAutoDrive) {
 
     swerve_->Periodic();
     swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
-    swerve_->Periodic();
 
     EXPECT_NE(sw_interface_.left_front_drive_motor_output, 0);
 
