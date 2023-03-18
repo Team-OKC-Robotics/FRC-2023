@@ -38,6 +38,13 @@ bool RobotContainer::ConfigureButtonBindings() {
     OKC_CHECK(driver_b_button_ != nullptr);
     OKC_CHECK(driver_back_button_ != nullptr);
     OKC_CHECK(driver_x_button_ != nullptr);
+    OKC_CHECK(manip_x_button_ != nullptr);
+    OKC_CHECK(manip_a_button_ != nullptr);
+    OKC_CHECK(manip_b_button_ != nullptr);
+    OKC_CHECK(manip_y_button_ != nullptr);
+    OKC_CHECK(manip_left_bumper_button_ != nullptr);
+    OKC_CHECK(manip_right_bumper_button_ != nullptr);
+    OKC_CHECK(manip_start_button_ != nullptr);
 
     //button bindings
     WPI_IGNORE_DEPRECATED
