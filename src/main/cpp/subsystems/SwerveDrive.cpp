@@ -217,7 +217,7 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         right_back_speed *= -1;
     }
 
-    // keep the setpoints within [0, 360]
+    // keep the setpoints within [-180, 180]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
