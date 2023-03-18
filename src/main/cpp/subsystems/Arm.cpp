@@ -98,7 +98,7 @@ bool Arm::AtLiftSetpoint(bool *at) {
 bool Arm::TestControl() {
     OKC_CHECK(interface_ != nullptr);
 
-{}        // if we haven't actually started
+    // if we haven't actually started
     if (!calibration_allowed_) {
         // don't let the arm do anything
         return true;

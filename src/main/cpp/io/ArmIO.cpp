@@ -16,15 +16,7 @@ bool ArmIO::Init() {
         arm_open_loop_, // that's what we're here for
         80 // default current limit
     };
-
-    // bool workey_or_no_workey_ = RobotParams::GetParam("robot.work", false);
-
-    // if (workey_or_no_workey_) {
-    //     std::cout << "ARM INITIALIZED" << std::endl;
-    // } else {
-    //     return false; // break the init chain so everything fails
-    // }
-
+    
     return true;
 }
 
