@@ -9,11 +9,13 @@
 #include "frc/DigitalInput.h"
 
 // == sensor ports ==
+// analog ports (on the RIO)
 #define LEFT_FRONT_STEER_ENCODER 0
 #define LEFT_BACK_STEER_ENCODER 1
 #define RIGHT_FRONT_STEER_ENCODER 2
 #define RIGHT_BACK_STEER_ENCODER 3
 
+// DIO ports (on the RIO)
 #define EXTEND_LIMIT_SWITCH 9
 #define ARM_ABS_ENCODER 1
 
