@@ -14,30 +14,26 @@ public:
     Intake(IntakeSoftwareInterface *interface) : interface_(interface) {}
     ~Intake() {}
 
-    bool SetControlMode(const ControlMode &mode);
     bool Init();
-    bool SetTurn(double degrees);
+
+    bool SetIntakePower(double power);
+    bool SetIntakeTilt(double tilt);
+
+    bool SetControlMode(const ControlMode &mode);
     bool ManualControl();
     bool AutoControl();
-    bool SetIntakePower(double power);
+
+    bool Reset();
+
     void Periodic() override;
     void SimulationPeriodic() override;
-   
-    
-
-
-   
-    
-
 
 private:
     IntakeSoftwareInterface *const interface_;
-    std::shared_ptr<frc::PIDController> intake_pid_;
-   
-    double preset_;
-    double intake_power_;
 
+    std::shared_ptr<frc::PIDController> wrist_pid_;
    
-    ControlMode mode_;
-    
+    double intake_power_;
+   
+    ControlMode mode_;    
 };

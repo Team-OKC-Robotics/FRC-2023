@@ -24,9 +24,12 @@ typedef struct intake_hardware_interface_t {
 typedef struct intake_software_interface_t {
     // actuator outputs
     double intake_power;
+    double tilt_power;
     
+
     // sensor inputs
     double intake_encoder;
+    double tilt_encoder;
   
 
     // config

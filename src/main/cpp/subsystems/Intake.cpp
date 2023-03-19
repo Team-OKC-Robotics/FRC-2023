@@ -4,30 +4,46 @@
 
 //pulls PID values from the parameters.toml file
 bool Intake::Init() {
+    OKC_CHECK(this->interface_ != nullptr);
 
-    intake_pid_ = std::make_shared<frc::PIDController>(0, 0, 0);
+    // the PID controller for the wrist
+    double wrist_kP = RobotParams::GetParam("intale.wrist_pid.kP", 0.005);
+    double wrist_kI = RobotParams::GetParam("intale.wrist_pid.kI", 0.0);
+    double wrist_kD = RobotParams::GetParam("intale.wrist_pid.kD", 0.0);
+    wrist_pid_ = std::make_shared<frc::PIDController>(wrist_kP, wrist_kI, wrist_kD);
+    
+    // wrist_pid_->SetTolerance(1, 1);
 
-this->intake_pid_->SetSetpoint(0);
+    //TODO verify that this is a good idea
+    this->wrist_pid_->SetSetpoint(0.0);
 
+    return true;
+}
 
-return true;
+bool Intake::Reset() {
+    OKC_CHECK(this->interface_ != nullptr);
+
+    this->wrist_pid_->Reset();
+
+    return true;
+}
+
+bool Intake::SetIntakePower(double power) {
+    intake_power_ = power;
+
+    return true;
+}
+
+bool Intake::SetIntakeTilt(double degrees) {
+    OKC_CHECK(this->wrist_pid_ != nullptr);
+
+    this->wrist_pid_->SetSetpoint(degrees);
+    
+    return true;
 }
 
 bool Intake::SetControlMode(const ControlMode &mode){
     mode_= mode;
-
-    return true;
-
-}
-bool Intake::SetTurn(double degrees) {
-    
-    OKC_CHECK(this->intake_pid_ != nullptr);
- return true;
-}
-
-
-bool Intake::SetIntakePower(double power) {
-    intake_power_ = power;
 
     return true;
 }
@@ -37,15 +53,16 @@ bool Intake::ManualControl() {
 
     interface_->intake_power = intake_power_;
    
-
     return true;
 }
 
-
 bool Intake::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
-    OKC_CHECK(this->intake_pid_ != nullptr);
-   return true;
+    OKC_CHECK(this->wrist_pid_ != nullptr);
+    
+    interface_->tilt_power = this->wrist_pid_->Calculate(interface_->tilt_encoder);
+ 
+    return true;
 }
 
 void Intake::SimulationPeriodic() {
@@ -53,7 +70,6 @@ void Intake::SimulationPeriodic() {
 }
 
 void Intake::Periodic() {
-        
     switch (mode_) {
         case Manual:
             VOKC_CALL(this->ManualControl());
@@ -62,7 +78,7 @@ void Intake::Periodic() {
             VOKC_CALL(this->AutoControl());
             break;
         default:
-            VOKC_CHECK_MSG(false, "Unhandled enum");
+            VOKC_CHECK_MSG(false, "unhandled intake enum");
     }
 }
 
