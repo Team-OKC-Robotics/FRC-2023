@@ -146,8 +146,14 @@ bool SwerveDriveIO::ProcessInputs() {
     // Get the hardware sensor values.
     // navX IMU:
     OKC_CHECK(hw_interface_->ahrs != nullptr);
-    sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
-    sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
+    #ifdef __FRC_ROBORIO__
+        sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+        sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
+    #endif
+    #ifndef __FRC_ROBORIO__
+        sw_interface_->imu_yaw = 0.0;
+        sw_interface_->imu_pitch = 0.0;
+    #endif
 
     // Encoders
     // position
