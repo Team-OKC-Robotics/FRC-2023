@@ -21,13 +21,14 @@
 #include "SwerveModule.h"
 #include "Logging.h"
 #include "wpi/DataLog.h"
+#include "SlewRateLimiter.h"
 
-enum AutoState {
-    INIT,
-    ROTATE,
-    TRANSLATE,
-    COMPLETE
-};
+#include <rev/CANSparkMax.h>
+
+#define COAST rev::CANSparkMax::IdleMode::kCoast
+#define BRAKE rev::CANSparkMax::IdleMode::kBrake
+
+
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:
@@ -52,16 +53,19 @@ public:
     bool SetSpeedModifierSteer(const double &speed_mod);
     bool SetOpenLoopRampDrive(const double &open_loop_ramp);
     bool SetOpenLoopRampSteer(const double &open_loop_ramp);
+    bool SetIdleMode(rev::CANSparkMax::IdleMode mode);
     bool SetMaxOutputDrive(const double &max_output);
     bool SetMaxOutputSteer(const double &max_output);
 
-    bool TeleOpDrive(const double &drive, const double &strafe, const double &turn);
-    bool DumbTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     bool VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn);
     
-    bool InitAuto(frc::Pose2d pos, bool keep_heading);
+    bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
+    bool SetDistance(double dist);
+    bool DriveAuto(double max_speed);
+    bool AtDistSetpoint(bool *at);
 
-    bool UpdateModules();
+    bool AutoBalance();
+    bool AtBalanceSetpoint(bool *at);
 
     bool GetLeftDriveEncoderAverage(double *avg);
     bool GetRightDriveEncoderAverage(double *avg);
@@ -91,33 +95,21 @@ private:
     std::shared_ptr<SwerveModule> right_front_module_;
     std::shared_ptr<SwerveModule> right_back_module_;
 
-    // swerve module positions
-    std::shared_ptr<frc::Translation2d> left_front_loc_;
-    std::shared_ptr<frc::Translation2d> left_back_loc_;
-    std::shared_ptr<frc::Translation2d> right_front_loc_;
-    std::shared_ptr<frc::Translation2d> right_back_loc_;
+    // slew rate limiters for steer
+    std::shared_ptr<SlewRateLimiter> left_front_limiter_;
+    std::shared_ptr<SlewRateLimiter> left_back_limiter_;
+    std::shared_ptr<SlewRateLimiter> right_front_limiter_;
+    std::shared_ptr<SlewRateLimiter> right_back_limiter_;
 
-    // swerve module states
-    std::shared_ptr<frc::SwerveModulePosition> left_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> left_back_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_front_pos_;
-    std::shared_ptr<frc::SwerveModulePosition> right_back_pos_;    
+    double last_drive = 0.0;
+    double last_strafe = 0.0;
+    double last_turn = 0.0;
 
-    // swerve module positions
-    std::shared_ptr<wpi::array<frc::SwerveModulePosition, 4>> positions_;
+    double control_decay = 0.1;
 
-    // kinematics
-    std::shared_ptr<frc::SwerveDriveKinematics<4>> swerve_kinematics_;
-
-    // odometry
-    std::shared_ptr<frc::SwerveDriveOdometry<4>> swerve_odometry_;
-
-    // position
-    std::shared_ptr<frc::Pose2d> position_;
-
-    // Speed modifier (the joystick input is multiplied by this value)
-    double speed_modifier_drive_ = 0.75;
-    double speed_modifier_steer_ = 0.75;
+    bool balanced_ = false;
+    bool tilted_ = false;
+    double last_yaw_ = 0.0;
 
     // max output
     double max_output_drive_ = 1;
@@ -132,14 +124,21 @@ private:
     double trackwidth_;
     double tracklength_;
 
-    AutoState auto_state_;
     bool in_auto = false;
     bool auto_lock_heading_;
+    TeamOKC::Pose position_;
 
     // pid controllers
     std::shared_ptr<frc::PIDController> heading_pid_;
+    std::shared_ptr<frc::PIDController> dist_pid_;
 
     wpi::log::DoubleLogEntry left_front_setpoint_log_;
     wpi::log::DoubleLogEntry left_front_output_log_;
     wpi::log::DoubleLogEntry left_front_steer_enc_log_;
+
+    wpi::log::DoubleLogEntry left_front_motor_output_log_;
+
+    wpi::log::DoubleLogEntry drive_log_;
+    wpi::log::DoubleLogEntry strafe_log_;
+    wpi::log::DoubleLogEntry turn_log_;
 };
