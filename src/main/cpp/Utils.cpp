@@ -18,5 +18,14 @@ namespace TeamOKC {
 
         return true;
     }
+
+    bool WrapAngle(double *angle) {
+        if (*angle < -180) {
+            *angle = *angle + 360;
+        } else if (*angle > 180) {
+            *angle = *angle - 360;
+        }
+        return true;
+    }
 } // namespace TeamOKC
 

@@ -16,6 +16,8 @@ typedef struct swerve_drive_config_t {
 
     double max_output_steer;
     double open_loop_ramp_rate_steer;
+
+    rev::CANSparkMax::IdleMode idle_mode;
 } SwerveDriveConfig;
 
 typedef struct swerve_drive_hardware_interface_t {
@@ -58,6 +60,7 @@ typedef struct swerve_drive_software_interface_t {
     // SW INPUTS
     // IMU yaw angle
     double imu_yaw;
+    float imu_pitch;
 
     // Encoders
     double left_front_drive_motor_enc;

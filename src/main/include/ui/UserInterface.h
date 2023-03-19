@@ -7,6 +7,10 @@
 
 #include "Parameters.h"
 
+namespace AutonUI {
+    extern nt::GenericEntry *const nt_auton_name;
+}
+
 namespace SwerveDriveUI {
     // Get the tab
     extern frc::ShuffleboardTab &nt_tab;
@@ -26,16 +30,6 @@ namespace SwerveDriveUI {
     extern nt::GenericEntry *const nt_right_front_front_steer;
     extern nt::GenericEntry *const nt_right_back_front_steer;
 
-    // Distance PID
-    extern nt::GenericEntry *const nt_dist_kp;
-    extern nt::GenericEntry *const nt_dist_ki;
-    extern nt::GenericEntry *const nt_dist_kd;
-
-    // Steer PID
-    extern nt::GenericEntry *const nt_steer_kp;
-    extern nt::GenericEntry *const nt_steer_ki;
-    extern nt::GenericEntry *const nt_steer_kd;
-
     extern nt::GenericEntry *const nt_left_front_steer_setpoint;
     extern nt::GenericEntry *const nt_left_back_steer_setpoint;
     extern nt::GenericEntry *const nt_right_front_steer_setpoint;
@@ -46,6 +40,7 @@ namespace SwerveDriveUI {
 
     // Gyro
     extern nt::GenericEntry *const nt_heading;
+    extern nt::GenericEntry *const nt_pitch;
     extern nt::GenericEntry *const nt_reset_gyro;
 
     // Save drivetrain parameters
@@ -61,6 +56,10 @@ namespace ArmUI {
     extern nt::GenericEntry *const nt_extend_encoder;
     extern nt::GenericEntry *const nt_extend_setpoint;
     extern nt::GenericEntry *const nt_extend_power;
+    extern nt::GenericEntry *const nt_limit_switch;
+
+    // arm state
+    extern nt::GenericEntry *const arm_control_state;
 }
 
 namespace ClawUI {

@@ -3,16 +3,18 @@
 RobotContainer::RobotContainer() {
     // Load robot parameters
     VOKC_CALL(RobotParams::LoadParameters(RobotParams::param_file));
-    frc::DataLogManager::Start();
+    
+    // reduce the size of the logs
+    frc::DataLogManager::LogNetworkTables(false);
 
     // Initialize the hardware interface.
     hardware_ = std::make_unique<Hardware>();
     VOKC_CALL(this->InitHardware(hardware_));
 
+    // initialize the subsystems
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
-
-    
+    VOKC_CALL(this->InitIntake());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -21,32 +23,68 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(InitCommands());
 
     // Configure the button bindings
-    ConfigureButtonBindings();
+    VOKC_CALL(ConfigureButtonBindings());
+
+    // create the autonomous chooser
+    m_chooser_ = std::make_shared<AutoChooserTeamOKC>();
+    m_chooser_->AddGamepad(gamepad2_);
+    m_chooser_->AddAutos(score_preload_backup_auto_);
+    m_chooser_->AddAutos(score_preload_balance_auto_);
+    m_chooser_->AddAutos(score_preload_auto_);
 }
 
-void RobotContainer::ConfigureButtonBindings() {
-    VOKC_CHECK(driver_a_button_ != nullptr);
-    VOKC_CHECK(driver_b_button_ != nullptr);
-    VOKC_CHECK(driver_back_button_ != nullptr);
-    VOKC_CHECK(driver_x_button_ != nullptr);
+bool RobotContainer::ConfigureButtonBindings() {
+    OKC_CHECK(driver_a_button_ != nullptr);
+    OKC_CHECK(driver_b_button_ != nullptr);
+    OKC_CHECK(driver_back_button_ != nullptr);
+    OKC_CHECK(driver_x_button_ != nullptr);
+    OKC_CHECK(manip_x_button_ != nullptr);
+    OKC_CHECK(manip_a_button_ != nullptr);
+    OKC_CHECK(manip_b_button_ != nullptr);
+    OKC_CHECK(manip_y_button_ != nullptr);
+    OKC_CHECK(manip_left_bumper_button_ != nullptr);
+    OKC_CHECK(manip_right_bumper_button_ != nullptr);
+    OKC_CHECK(manip_start_button_ != nullptr);
 
     //button bindings
     WPI_IGNORE_DEPRECATED
-    driver_a_button_->WhileHeld(*extendArmCommand);
-    driver_b_button_->WhileHeld(*retractArmCommand);
-    driver_back_button_->WhileHeld(*raiseArmCommand);
-    driver_x_button_->WhileHeld(*lowerArmCommand);
+    // main driver controls
+    // swerve
+    driver_b_button_->WhenPressed(*fast_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+    driver_a_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*swerve_teleop_command_);
+
+    // intake commands
+    driver_left_bumper_->WhenPressed(*intake_command).WhenReleased(*stop_intake_command);
+    driver_right_bumper_->WhenPressed(*other_intake_command).WhenReleased(*stop_intake_command);
+    
+    // HACK XXX BUG TODO temporary first driver controls arm stuff for testing so only one person is needed to test the robot
+    // driver_a_button_->WhileActiveContinous(*lowerArmCommand);
+    // driver_y_button_->WhileActiveContinous(*raiseArmCommand);
+    
+    // driver_x_button_->WhileActiveContinous(*retractArmCommand);
+    // driver_b_button_->WhileActiveContinous(*extendArmCommand);
+    
+    // second driver controls
+    manip_x_button_->WhenPressed(*arm_carry_command_);
+    manip_a_button_->WhenPressed(*arm_pickup_command_);
+    manip_b_button_->WhenPressed(*arm_score_mid_command_);
+    manip_y_button_->WhenPressed(*arm_score_high_command_);
+    manip_left_bumper_button_->WhenPressed(*arm_short_carry_command_);
+
+    manip_right_bumper_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*slow_swerve_teleop_command_);
+
+    manip_start_button_->WhenPressed(*arm_dpad_set_state_command_);
+  
     WPI_UNIGNORE_DEPRECATED
   
+    return true;
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetAutonomousCommand() {
-    // An example command will be run in autonomous
-    return m_autonomousCommand_;
+    return m_chooser_->GetAutoCommand();
 }
 
 std::shared_ptr<frc2::Command> RobotContainer::GetDriveCommand() {
-    // VOKC_CHECK(swerve_teleop_command_ != nullptr);
     return swerve_teleop_command_;
 }
 
@@ -83,6 +121,13 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_lift_motor = std::make_unique<rev::CANSparkMax>(ARM_LIFT_MOTOR, BRUSHLESS);
     actuators_interface->arm_up_motor = std::make_unique<rev::CANSparkMax>(ARM_UP_MOTOR, BRUSHLESS);
     actuators_interface->arm_extend_motor = std::make_unique<rev::CANSparkMax>(ARM_EXTEND_MOTOR, BRUSHLESS);
+    actuators_interface->arm_extend_motor->SetInverted(true);
+    actuators_interface->arm_extend_motor->SetIdleMode(BRAKE);
+
+    actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
+
+    OKC_CHECK(actuators_interface->intake_motor != nullptr);
+
     return true;
 }
 
@@ -143,11 +188,13 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(actuators.arm_extend_motor != nullptr);
 
     sensor_interface->arm_lift_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_lift_motor->GetEncoder());
-    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(1);
+    sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(ARM_ABS_ENCODER);
     sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
-    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(0);
+    sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(EXTEND_LIMIT_SWITCH);
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
+
+    sensor_interface->intake_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.intake_motor->GetEncoder());
 
     return true;
 }
@@ -179,10 +226,35 @@ bool RobotContainer::InitArm() {
     
     arm_ = std::make_shared<Arm>(arm_sw_.get());
 
+    OKC_CALL(arm_io_->Init());
     OKC_CALL(arm_->Init());
 
     return true;
 }
+
+bool RobotContainer::InitIntake() {
+    OKC_CALL(SetupIntakeInterface(hardware_, intake_hw_));
+
+    OKC_CHECK(hardware_ != nullptr);
+    OKC_CHECK(intake_hw_ != nullptr);
+
+    intake_sw_ = std::make_shared<IntakeSoftwareInterface>();
+
+    OKC_CHECK(intake_sw_ != nullptr);
+
+    intake_io_ = std::make_shared<IntakeIO>(intake_hw_.get(), intake_sw_.get());
+
+    OKC_CHECK(intake_io_ != nullptr);
+
+    intake_ = std::make_shared<Intake>(intake_sw_.get());
+
+    OKC_CHECK(intake_ != nullptr);
+
+    OKC_CALL(intake_->Init());
+
+    return true;
+}
+
 
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
@@ -194,21 +266,28 @@ bool RobotContainer::InitGamepads() {
 
 
     // Initialize the joystick buttons
-    driver_a_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
-    driver_b_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
-    driver_back_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
-    driver_x_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
-    driver_start_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
-    driver_left_stick_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
-    driver_right_stick_button_ =
-        std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
-    
+    driver_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), A_BUTTON);
+    driver_b_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), B_BUTTON);
+    driver_x_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), X_BUTTON);
+    driver_y_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), Y_BUTTON);
+    driver_start_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), START_BUTTON);
+    driver_back_button_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), BACK_BUTTON);
+    driver_left_bumper_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), LEFT_BUMP);
+    driver_right_bumper_ = std::make_shared<frc2::JoystickButton>(gamepad1_.get(), RIGHT_BUMP);
+    // driver_left_trigger_ = std::make_shared<TriggerButton(gamepad1_.get(), LEFT_TRIGGER);
+    // driver_right_trigger_ = std::make_shared<TriggerButton(gamepad1_.get(), RIGHT_TRIGGER);
+
+    // second driver
+    manip_a_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), A_BUTTON);
+    manip_b_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), B_BUTTON);
+    manip_x_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), X_BUTTON);
+    manip_y_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), Y_BUTTON);
+    manip_back_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), START_BUTTON);
+    manip_start_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), BACK_BUTTON);
+    manip_left_bumper_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_BUMP);
+    manip_right_bumper_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_BUMP);
+    manip_left_stick_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), LEFT_STICK_BUTTON);
+    manip_right_stick_button_ = std::make_shared<frc2::JoystickButton>(gamepad2_.get(), RIGHT_STICK_BUTTON);
 
     return true;
 }
@@ -216,19 +295,54 @@ bool RobotContainer::InitGamepads() {
 bool RobotContainer::InitCommands() {
     OKC_CHECK(swerve_drive_ != nullptr);
 
-    // Placeholder autonomous command.
-    //m_autonomousCommand = std::make_shared<AutoSwerveCommand>(swerve_drive_.get(), frc::Pose2d());
-    m_autonomousCommand_ = nullptr;
+    double pickup_rotation_ = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
+    double pickup_extension_ = RobotParams::GetParam("arm.pickup.extend_setpoint", 0.0);
 
+    double score_mid_rotation_ = RobotParams::GetParam("arm.score_medium.arm_setpoint", 0.0);
+    double score_mid_extension_ = RobotParams::GetParam("arm.score_medium.extend_setpoint", 0.0);
+
+    double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
+    double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0.0);
+
+    // autons
+    score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
+    score_preload_auto_ = std::make_shared<ScorePreloadedNoDriveAuto>(arm_, intake_);
+    score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
+    
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_);
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.9, 0.6, false); // speed mod, open loop
+    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
+    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
+    OKC_CHECK(swerve_teleop_command_ != nullptr);
+
+    // test arm commands
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 0.5); 
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -0.5);
+
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 0.5);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -0.5);
 
     // arm commands
-    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 3); 
-    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -3);
+    arm_pickup_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(pickup_extension_, pickup_rotation_));
+    arm_score_mid_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_));
+    arm_score_high_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_));
+    arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
+    arm_short_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(2, pickup_rotation_)); // just bring teh arm a little in whenever we're moving in the community
 
-    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 3);
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -3);
-     
+    arm_dpad_set_state_command_ = std::make_shared<ArmSetStateDpadCommand>(arm_, gamepad2_);
+    
+    // intake commands
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
+    stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
+   
     return true;
+}
+
+std::shared_ptr<Arm> RobotContainer::GetArm() {
+    return arm_;
+}
+
+std::shared_ptr<AutoChooserTeamOKC> RobotContainer::GetAutoChooser() {
+    return m_chooser_;
 }
