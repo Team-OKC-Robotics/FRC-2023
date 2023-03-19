@@ -179,6 +179,20 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
 
+    // field-orient the turning stuff
+    double heading = 0.0;
+    OKC_CALL(this->GetHeading(&heading));
+    left_front_turn += heading;
+    left_back_turn += heading;
+    right_front_turn += heading;
+    right_back_turn += heading;
+
+    // keep the setpoints within [-180, 180]
+    OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
+    OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
+
     // get current angle of all the modules
     double left_front_angle = 0.0;
     double left_back_angle = 0.0;
