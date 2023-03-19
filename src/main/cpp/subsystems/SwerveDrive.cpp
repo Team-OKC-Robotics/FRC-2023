@@ -267,10 +267,10 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         double right_front_steer_error = 0.0;
         double right_back_steer_error = 0.0;
 
-        this->interface_->left_front_drive_motor_output = cos(left_front_module_->GetSteerError(&left_front_steer_error)) * left_front_speed;
-        this->interface_->left_back_drive_motor_output = cos(left_front_module_->GetSteerError(&left_back_steer_error)) * left_back_speed;
-        this->interface_->right_front_drive_motor_output = cos(left_front_module_->GetSteerError(&right_front_steer_error)) * right_front_speed;
-        this->interface_->right_back_drive_motor_output = cos(left_front_module_->GetSteerError(&right_back_steer_error)) * right_back_speed;
+        this->interface_->left_front_drive_motor_output = cos(TeamOKC::Radians(left_front_module_->GetSteerError(&left_front_steer_error))) * left_front_speed;
+        this->interface_->left_back_drive_motor_output = cos(TeamOKC::Radians(left_back_module_->GetSteerError(&left_back_steer_error))) * left_back_speed;
+        this->interface_->right_front_drive_motor_output = cos(TeamOKC::Radians(right_front_module_->GetSteerError(&right_front_steer_error))) * right_front_speed;
+        this->interface_->right_back_drive_motor_output = cos(TeamOKC::Radians(right_back_module_->GetSteerError(&right_back_steer_error))) * right_back_speed;
     }
 
     OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
