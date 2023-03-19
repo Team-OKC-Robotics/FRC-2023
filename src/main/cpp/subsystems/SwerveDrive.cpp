@@ -155,6 +155,13 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         final_strafe = 0.0; // then zero it
     }
 
+    double heading = 0.0;
+    OKC_CALL(this->GetHeading(&heading));
+
+    // field oriented drive (page 10 of https://www.first1684.com/uploads/2/0/1/6/20161347/chimiswerve_whitepaper__2_.pdf)
+    final_drive = final_drive * cos(TeamOKC::Radians(heading))  +  final_strafe * sin(TeamOKC::Radians(heading));
+    final_strafe = final_strafe * cos(TeamOKC::Radians(heading))  - final_drive * sin(TeamOKC::Radians(heading));
+
     // copied from ChiefDelphi thread
     //TODO post link here
     double A = final_strafe - final_turn * tracklength_/2;
@@ -178,14 +185,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
-
-    // field-orient the turning stuff
-    double heading = 0.0;
-    OKC_CALL(this->GetHeading(&heading));
-    left_front_turn += heading;
-    left_back_turn += heading;
-    right_front_turn += heading;
-    right_back_turn += heading;
 
     // keep the setpoints within [-180, 180]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
