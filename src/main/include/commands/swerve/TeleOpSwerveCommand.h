@@ -19,14 +19,17 @@ public:
      *
      * @param swerve The swerve drive subsystem used by this command.
      */
-    explicit TeleOpSwerveCommand(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<frc::Joystick> gamepad);
+    explicit TeleOpSwerveCommand(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<frc::Joystick> gamepad, double speed_mod, double open_loop_ramp_rate, bool brake_mode);
 
     void Initialize() override;
     void Execute() override;
-    void End(bool executed) override;
     bool IsFinished() override;
 
 private:
     std::shared_ptr<SwerveDrive> swerve_;
     std::shared_ptr<frc::Joystick> gamepad_;
+
+    double speed_mod_;
+    double open_loop_ramp_rate_;
+    bool brake_mode_;
 };

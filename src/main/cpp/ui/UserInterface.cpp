@@ -1,5 +1,11 @@
 #include "ui/UserInterface.h"
 
+namespace AutonUI {
+    frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Autos");
+
+    nt::GenericEntry *const nt_auton_name = nt_tab.Add("current auton", "no auto selected").GetEntry();
+}
+
 namespace SwerveDriveUI {
     // Get the tab
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("SwerveDrive");
@@ -20,16 +26,6 @@ namespace SwerveDriveUI {
     nt::GenericEntry *const nt_right_front_front_steer = nt_tab.Add("right front steer", 0.0).GetEntry();
     nt::GenericEntry *const nt_right_back_front_steer = nt_tab.Add("right back steer", 0.0).GetEntry();
 
-    // Distance PID
-    nt::GenericEntry *const nt_dist_kp = nt_tab.Add("Distance kP", 0.0).GetEntry();
-    nt::GenericEntry *const nt_dist_ki = nt_tab.Add("Distance kI", 0.0).GetEntry();
-    nt::GenericEntry *const nt_dist_kd = nt_tab.Add("Distance kD", 0.0).GetEntry();
-
-    // Steer PID
-    nt::GenericEntry *const nt_steer_kp = nt_tab.Add("Steer kP", 0.0).GetEntry();
-    nt::GenericEntry *const nt_steer_ki = nt_tab.Add("Steer kI", 0.0).GetEntry();
-    nt::GenericEntry *const nt_steer_kd = nt_tab.Add("Steer kD", 0.0).GetEntry();
-
     nt::GenericEntry *const nt_left_front_steer_setpoint = nt_tab.Add("left front setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_left_back_steer_setpoint = nt_tab.Add("left back setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_right_front_steer_setpoint = nt_tab.Add("right front setpoint", 0.0).GetEntry();
@@ -40,6 +36,7 @@ namespace SwerveDriveUI {
 
     // Gyro
     nt::GenericEntry *const nt_heading = nt_tab.Add("Heading", 0.0).GetEntry();
+    nt::GenericEntry *const nt_pitch = nt_tab.Add("Pitch", 0.0).GetEntry();
     nt::GenericEntry *const nt_reset_gyro =
         nt_tab.Add("Reset Gyro", false).GetEntry();
 
@@ -58,6 +55,10 @@ namespace ArmUI {
     nt::GenericEntry *const nt_extend_encoder = nt_tab.Add("extend encodoer", 0.0).GetEntry();
     nt::GenericEntry *const nt_extend_setpoint = nt_tab.Add("extend setpoint", 0.0).GetEntry();
     nt::GenericEntry *const nt_extend_power = nt_tab.Add("extend power", 0.0).GetEntry();
+
+    nt::GenericEntry *const nt_limit_switch = nt_tab.Add("extend limit switch", false).GetEntry();
+
+    nt::GenericEntry *const arm_control_state = nt_tab.Add("arm control state", "init").GetEntry();
 }
 
 namespace ClawUI {

@@ -2,6 +2,24 @@
 #include "io/ArmIO.h"
 #include "Parameters.h"
 
+bool ArmIO::Init() {
+    // read limits and stuff from the parameters file
+    offset = RobotParams::GetParam("arm.offset", -330);
+    lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
+    extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
+    max_output = RobotParams::GetParam("arm.max_output", 0.2);
+
+    double arm_open_loop_ = RobotParams::GetParam("arm.arm_open_loop", 1);
+    double extend_open_loop_ = RobotParams::GetParam("arm.extend_open_loop", 1);
+
+    this->sw_interface_->arm_config = ArmConfig {
+        arm_open_loop_, // that's what we're here for
+        80 // default current limit
+    };
+    
+    return true;
+}
+
 void ArmIO::Periodic() {
     // Process all the inputs and outputs to/from high level software.
     
@@ -13,19 +31,6 @@ void ArmIO::SimulationPeriodic() {
 }
 
 bool ArmIO::ProcessIO() {
-    bool hasReadParameters = false;
-
-    // if we haven't read the parameters
-    if (!hasReadParameters) {
-        // update the variables
-        offset = RobotParams::GetParam("arm.offset", -330);
-        lift_limit = RobotParams::GetParam("arm.lift_limit", 100);
-        extend_limit = RobotParams::GetParam("arm.extend_limit", 100);
-        max_output = RobotParams::GetParam("arm.max_output", 0.2);
-
-        // raise the flag
-        hasReadParameters = true;
-    }
     OKC_CHECK(sw_interface_ != nullptr);
     OKC_CHECK(hw_interface_ != nullptr);
 
@@ -64,32 +69,32 @@ bool ArmIO::ProcessIO() {
     TeamOKC::Clamp(-max_output, max_output, &sw_interface_->arm_extend_power);
 
     // if the absolute encoder is >110 degrees
-    if (sw_interface_->arm_duty_cycle_encoder >= lift_limit) {
-        // and we're trying to go farther positive
-        if (sw_interface_->arm_lift_power > 0) {
-            // stop it
-            hw_interface_->arm_lift_motor->Set(0);
-            hw_interface_->arm_up_motor->Set(0);
-        } else {
-            // otherwise, it's cool
+    // if (sw_interface_->arm_duty_cycle_encoder >= lift_limit) {
+    //     // and we're trying to go farther positive
+    //     if (sw_interface_->arm_lift_power > 0) {
+    //         // stop it
+    //         hw_interface_->arm_lift_motor->Set(0);
+    //         hw_interface_->arm_up_motor->Set(0);
+    //     } else {
+    //         // otherwise, it's cool
+    //         hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+    //         hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
+    //     }
+    // } else if (sw_interface_->arm_duty_cycle_encoder <= -lift_limit) {
+    //     // and we're trying to go farther negative
+    //     if (sw_interface_->arm_lift_power < 0) {
+    //         // stop it
+    //         hw_interface_->arm_lift_motor->Set(0);
+    //         hw_interface_->arm_up_motor->Set(0);
+    //     } else {
+    //         // otherwise, it's cool
             hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
             hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
-        }
-    } else if (sw_interface_->arm_duty_cycle_encoder <= -lift_limit) {
-        // and we're trying to go farther negative
-        if (sw_interface_->arm_lift_power < 0) {
-            // stop it
-            hw_interface_->arm_lift_motor->Set(0);
-            hw_interface_->arm_up_motor->Set(0);
-        } else {
-            // otherwise, it's cool
-            hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
-            hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
-        }
-    } else { // if neither limit is reached
-        hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
-        hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
-    }
+    //     }
+    // } else { // if neither limit is reached
+    //     hw_interface_->arm_lift_motor->Set(sw_interface_->arm_lift_power);
+    //     hw_interface_->arm_up_motor->Set(-sw_interface_->arm_lift_power);
+    // }
 
     sw_interface_->extend_limit_switch = !hw_interface_->extend_limit_switch->Get(); // limit switch is inverse logic
 
@@ -108,20 +113,20 @@ bool ArmIO::ProcessIO() {
         }
     } else { // if the limit switch isn't pressed
         // if we're instead at the farthest point
-        if (sw_interface_->arm_extend_encoder > extend_limit) {
-            // and power is positive
-            if (sw_interface_->arm_extend_power > 0) {
-                // don't let it go farther
-                hw_interface_->arm_extend_motor->Set(0);
-            } else {
-                // otherwise let the arm go wherever the heck it wants to go
+        // if (sw_interface_->arm_extend_encoder > extend_limit) {
+            // // and power is positive
+            // if (sw_interface_->arm_extend_power > 0) {
+            //     // don't let it go farther
+            //     hw_interface_->arm_extend_motor->Set(0);
+            // } else {
+            //     // otherwise let the arm go wherever the heck it wants to go
                 hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
-            }
-        // else, if neither limit is reached
-        } else {
-            // set the power of the motor
-            hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
-        }
+        //     }
+        // // else, if neither limit is reached
+        // } else {
+        //     // set the power of the motor
+        //     hw_interface_->arm_extend_motor->Set(sw_interface_->arm_extend_power);
+        // }
     }
 
     return true;

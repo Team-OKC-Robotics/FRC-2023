@@ -9,10 +9,15 @@
 #include "frc/DigitalInput.h"
 
 // == sensor ports ==
+// analog ports (on the RIO)
 #define LEFT_FRONT_STEER_ENCODER 0
 #define LEFT_BACK_STEER_ENCODER 1
 #define RIGHT_FRONT_STEER_ENCODER 2
 #define RIGHT_BACK_STEER_ENCODER 3
+
+// DIO ports (on the RIO)
+#define EXTEND_LIMIT_SWITCH 9
+#define ARM_ABS_ENCODER 1
 
 typedef struct sensors_t {
     // navX IMU
@@ -43,5 +48,9 @@ typedef struct sensors_t {
     std::unique_ptr<rev::SparkMaxRelativeEncoder> arm_extend_encoder;
     std::unique_ptr<frc::DigitalInput> extend_limit_switch;
 
+    // claw sensors
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> claw_encoder;
 
+    //intake sensord
+    std::unique_ptr<rev::SparkMaxRelativeEncoder> intake_encoder;
 } Sensors;

@@ -11,7 +11,8 @@
 
 
 typedef struct claw_config_t {
-    
+    double current_limit;
+    double max_output;
 } ClawConfig;
 
 typedef struct claw_hardware_interface_t {
@@ -25,6 +26,9 @@ typedef struct claw_software_interface_t {
     double claw_open_and_close_power; 
     double encoder_reading;
     bool reset_claw_open_and_close;
+
+    ClawConfig config;
+    bool update_config;
 } ClawSoftwareInterface;
 
 class ClawIO : public frc2::SubsystemBase {
@@ -45,6 +49,7 @@ public:
     void SimulationPeriodic() override;
 
     bool ProcessIO();
+    bool UpdateConfig(ClawConfig &config);
 
 private:
     ClawHardwareInterface *const hw_interface_;

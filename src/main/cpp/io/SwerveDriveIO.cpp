@@ -95,6 +95,16 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(
         open_loop_ramp_steer);
 
+    hw_interface_->left_front_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->left_back_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->right_front_drive_motor->SetIdleMode(config.idle_mode);
+    hw_interface_->right_back_drive_motor->SetIdleMode(config.idle_mode);
+
+    hw_interface_->left_front_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    hw_interface_->left_back_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    hw_interface_->right_front_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    hw_interface_->right_back_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
     return true;
 }
 
@@ -143,7 +153,14 @@ bool SwerveDriveIO::ProcessInputs() {
     // Get the hardware sensor values.
     // navX IMU:
     OKC_CHECK(hw_interface_->ahrs != nullptr);
-    sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+    #ifdef __FRC_ROBORIO__
+        sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+        sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
+    #endif
+    #ifndef __FRC_ROBORIO__
+        sw_interface_->imu_yaw = 0.0;
+        sw_interface_->imu_pitch = 0.0;
+    #endif
 
     // Encoders
     // position
