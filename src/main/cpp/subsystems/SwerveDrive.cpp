@@ -329,13 +329,28 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 bool SwerveDrive::AutoBalance() {
     // if we've started to tilt upwards as we climb the thing
     //TODO parameterize
-    if (abs(this->interface_->imu_pitch) > 10.0) {
+    if (this->interface_->imu_pitch > 10.0) {
         // then we should go slower to avoid overshooting too much
         tilted_ = true;
     }
 
+    if (balanced_) {
+        // and lock the wheels so we don't slide off or anything
+        OKC_CALL(this->left_front_module_->SetAngle(45));
+        OKC_CALL(this->left_back_module_->SetAngle(135));
+        OKC_CALL(this->right_front_module_->SetAngle(45));
+        OKC_CALL(this->right_back_module_->SetAngle(135));
+    
+        OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+        OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+        OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+        OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+    
+        return true;
+    }
+
     // if our current pitch has gone down from what it was
-    if (last_pitch_ < this->interface_->imu_pitch) {
+    if (last_pitch_ > this->interface_->imu_pitch+1 && !balanced_ && tilted_) {
         // then stop driving
         this->interface_->left_front_drive_motor_output = 0.0;
         this->interface_->left_back_drive_motor_output = 0.0;
@@ -344,9 +359,9 @@ bool SwerveDrive::AutoBalance() {
 
         // and lock the wheels so we don't slide off or anything
         OKC_CALL(this->left_front_module_->SetAngle(45));
-        OKC_CALL(this->left_back_module_->SetAngle(45));
+        OKC_CALL(this->left_back_module_->SetAngle(135));
         OKC_CALL(this->right_front_module_->SetAngle(45));
-        OKC_CALL(this->right_back_module_->SetAngle(45));
+        OKC_CALL(this->right_back_module_->SetAngle(135));
     
         OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
         OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
@@ -476,6 +491,9 @@ bool SwerveDrive::ResetPIDs() {
     OKC_CALL(right_back_module_->Reset());
 
     this->heading_pid_->Reset();
+
+    tilted_ = false;
+    balanced_ = false;
 
     return true;
 }
