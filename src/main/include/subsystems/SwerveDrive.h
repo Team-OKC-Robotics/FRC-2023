@@ -109,7 +109,7 @@ private:
 
     bool balanced_ = false;
     bool tilted_ = false;
-    double last_yaw_ = 0.0;
+    float last_pitch_ = 0.0;
 
     // max output
     double max_output_drive_ = 1;
