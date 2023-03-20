@@ -19,6 +19,9 @@ typedef struct intake_config_t {
 typedef struct intake_hardware_interface_t {
     rev::CANSparkMax *const  intake_motor;
     rev::RelativeEncoder *const intake_encoder;
+
+    rev::CANSparkMax *const wrist_motor;
+    frc::DutyCycleEncoder *const wrist_encoder; // (rev through-bore encoder in the absolute position mode)
 } IntakeHardwareInterface;
 
 typedef struct intake_software_interface_t {
