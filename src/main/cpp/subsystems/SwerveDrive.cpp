@@ -140,27 +140,33 @@ bool SwerveDrive::SetIdleMode(rev::CANSparkMax::IdleMode mode) {
 }
 
 bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, const double &turn) {
-    double final_drive = drive * control_decay + last_drive * (1 - control_decay);
-    double final_strafe = strafe * control_decay + last_strafe * (1 - control_decay);
-    double final_turn = turn * control_decay  + last_turn * (1 - control_decay);
+    OKC_CHECK(this->interface_ != nullptr);
+    double drive_ = drive;
+    double strafe_ = strafe;
+    double turn_ = turn;
 
     // if turn is very small
-    if (abs(final_turn) < 0.3) {
-        final_turn = 0.0; // then zero it
+    if (abs(turn_) < 0.3) {
+        turn_ = 0.0; // then zero it
     // } else if (final_turn)
     }
 
     // if strafe is very small
-    if (abs(final_strafe) < 0.15) {
-        final_strafe = 0.0; // then zero it
+    if (abs(strafe_) < 0.15) {
+        strafe_ = 0.0; // then zero it
+    }
+
+    // if drive is very small
+    if (abs(drive_) < 0.1) {
+        drive_ = 0.0; // then zero it
     }
 
     // copied from ChiefDelphi thread
     //TODO post link here
-    double A = final_strafe - final_turn * tracklength_/2;
-    double B = final_strafe + final_turn * tracklength_/2;
-    double C = final_drive - final_turn * trackwidth_/2;
-    double D = final_drive + final_turn * trackwidth_/2;
+    double A = strafe_ - turn_ * tracklength_/2;
+    double B = strafe_ + turn_ * tracklength_/2;
+    double C = drive_ - turn_ * trackwidth_/2;
+    double D = drive_ + turn_ * trackwidth_/2;
 
     // speed
     double left_front_speed = sqrt(pow(B, 2) + pow(D, 2));
@@ -180,6 +186,11 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
 
     // get current angle of all the modules
+    OKC_CHECK(this->left_front_module_ != nullptr);
+    OKC_CHECK(this->left_back_module_ != nullptr);
+    OKC_CHECK(this->right_front_module_ != nullptr);
+    OKC_CHECK(this->right_back_module_ != nullptr);
+
     double left_front_angle = 0.0;
     double left_back_angle = 0.0;
     double right_front_angle = 0.0;
@@ -223,58 +234,48 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
 
-    OKC_CHECK(this->left_front_module_ != nullptr);
-    OKC_CHECK(this->left_back_module_ != nullptr);
-    OKC_CHECK(this->right_front_module_ != nullptr);
-    OKC_CHECK(this->right_back_module_ != nullptr);
-
-    // left_front_turn = left_front_limiter_->Calculate(left_front_turn);
-    // left_back_turn = left_back_limiter_->Calculate(left_back_turn);
-    // right_front_turn = right_front_limiter_->Calculate(right_front_turn);
-    // right_back_turn = right_back_limiter_->Calculate(right_back_turn);
-
     // really nice convoluted deadband
     // this is to stop the swerve modules from immediately trying to center themselves instead of
     // coasting until receiving another instruction so we don't tip
-    if (abs(final_drive) > 0.05 || abs(final_strafe) > 0.05 || abs(final_turn) > 0.3) {
+    // if any of the joystick values are significant
+    if (abs(drive_) > 0.05 || abs(strafe_) > 0.05 || abs(turn_) > 0.3) {
+        // then we can go ahead and steer the modules to the calculated setpoint
         OKC_CALL(this->left_front_module_->SetAngle(left_front_turn));
         OKC_CALL(this->left_back_module_->SetAngle(left_back_turn));
         OKC_CALL(this->right_front_module_->SetAngle(right_front_turn));
         OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
-    }
 
-    if (abs(final_drive) < 0.05 && abs(final_strafe) < 0.05 && abs(final_turn) < 0.3) {
-        this->interface_->left_front_drive_motor_output = 0.0;
-        this->interface_->left_back_drive_motor_output = 0.0;
-        this->interface_->right_front_drive_motor_output = 0.0;
-        this->interface_->right_back_drive_motor_output = 0.0;
-    } else {
         double left_front_steer_error = 0.0;
         double left_back_steer_error = 0.0;
         double right_front_steer_error = 0.0;
         double right_back_steer_error = 0.0;
 
+        // limit the drive motors so they can't go full speed if the module hasn't turned to the right direction yet
         this->interface_->left_front_drive_motor_output = cos(TeamOKC::Radians(left_front_module_->GetSteerError(&left_front_steer_error))) * left_front_speed;
         this->interface_->left_back_drive_motor_output = cos(TeamOKC::Radians(left_back_module_->GetSteerError(&left_back_steer_error))) * left_back_speed;
         this->interface_->right_front_drive_motor_output = cos(TeamOKC::Radians(right_front_module_->GetSteerError(&right_front_steer_error))) * right_front_speed;
         this->interface_->right_back_drive_motor_output = cos(TeamOKC::Radians(right_back_module_->GetSteerError(&right_back_steer_error))) * right_back_speed;
+
+    // if none of them are outside the deadband values
+    } else {
+        // then don't move the drive motors
+        this->interface_->left_front_drive_motor_output = 0.0;
+        this->interface_->left_back_drive_motor_output = 0.0;
+        this->interface_->right_front_drive_motor_output = 0.0;
+        this->interface_->right_back_drive_motor_output = 0.0;
+
     }
 
+    // go ahead and set the steer outputs
     OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
     OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
     OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
-    OKC_CHECK(this->interface_ != nullptr);
-
-    drive_log_.Append(drive);
-    strafe_log_.Append(strafe);
-    turn_log_.Append(turn);
-   
-    // for control decay
-    last_drive = drive;
-    last_strafe = strafe;
-    last_turn = turn;
+    // and append our joystick values
+    drive_log_.Append(drive_);
+    strafe_log_.Append(strafe_);
+    turn_log_.Append(turn_);
 
     return true;
 }
