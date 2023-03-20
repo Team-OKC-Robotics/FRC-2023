@@ -329,7 +329,7 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 bool SwerveDrive::AutoBalance() {
     // if we've started to tilt upwards as we climb the thing
     //TODO parameterize
-    if (abs(this->interface_->imu_pitch) > 1.0) {
+    if (abs(this->interface_->imu_pitch) > 10.0) {
         // then we should go slower to avoid overshooting too much
         tilted_ = true;
     }
@@ -360,16 +360,16 @@ bool SwerveDrive::AutoBalance() {
     // otherwise, if we're still climbing up
     } else if (tilted_) {
         // drive slowly field-forwards, robot-backwards
-        this->interface_->left_front_drive_motor_output = 0.1;
-        this->interface_->left_back_drive_motor_output = 0.1;
-        this->interface_->right_front_drive_motor_output = 0.1;
-        this->interface_->right_back_drive_motor_output = 0.1;
+        this->interface_->left_front_drive_motor_output = 0.2;
+        this->interface_->left_back_drive_motor_output = 0.2;
+        this->interface_->right_front_drive_motor_output = 0.2;
+        this->interface_->right_back_drive_motor_output = 0.2;
     // otherwise we haven't even reached the switch yet, so go a little faster
     } else {
-        this->interface_->left_front_drive_motor_output = 0.4;
-        this->interface_->left_back_drive_motor_output = 0.4;
-        this->interface_->right_front_drive_motor_output = 0.4;
-        this->interface_->right_back_drive_motor_output = 0.4;
+        this->interface_->left_front_drive_motor_output = 0.6;
+        this->interface_->left_back_drive_motor_output = 0.6;
+        this->interface_->right_front_drive_motor_output = 0.6;
+        this->interface_->right_back_drive_motor_output = 0.6;
     }
 
     // set the steer motors to drive us straight if we don't need to lock our wheels
