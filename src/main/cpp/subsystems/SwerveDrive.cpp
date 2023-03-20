@@ -476,6 +476,7 @@ bool SwerveDrive::ResetPIDs() {
     OKC_CALL(right_back_module_->Reset());
 
     this->heading_pid_->Reset();
+    this->dist_pid_->Reset();
 
     return true;
 }
