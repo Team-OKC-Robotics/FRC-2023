@@ -296,32 +296,6 @@
               "_glyph": 148,
               "_showGlyph": false
             }
-          },
-          "4,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Shuffleboard/SwerveDrive/Heading",
-              "_title": "Shuffleboard/SwerveDrive/Heading",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "5,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Shuffleboard/SwerveDrive/Pitch",
-              "_title": "Shuffleboard/SwerveDrive/Pitch",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
           }
         }
       }

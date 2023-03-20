@@ -212,25 +212,25 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
      * but it would be better to simply invert the direction that the drive motor/wheel is spinning, like normal
      * differential drivetrains do. So you should never need to steer more than 90 degrees.
     */
-    // if (abs(left_front_angle - left_front_turn) > 100) {
-    //     left_front_turn -= 180;
-    //     left_front_speed *= -1;
-    // }
+    if (abs(left_front_angle - left_front_turn) > 100) {
+        left_front_turn -= 180;
+        left_front_speed *= -1;
+    }
 
-    // if (abs(left_back_angle - left_back_turn) > 100) {
-    //     left_back_turn -= 180;
-    //     left_back_speed *= -1;
-    // }
+    if (abs(left_back_angle - left_back_turn) > 100) {
+        left_back_turn -= 180;
+        left_back_speed *= -1;
+    }
 
-    // if (abs(right_front_angle - right_front_turn) > 100) {
-    //     right_front_turn -= 180;
-    //     right_front_speed *= -1;
-    // }
+    if (abs(right_front_angle - right_front_turn) > 100) {
+        right_front_turn -= 180;
+        right_front_speed *= -1;
+    }
 
-    // if (abs(right_back_angle - right_back_turn) > 100) {
-    //     right_back_turn -= 180;
-    //     right_back_speed *= -1;
-    // }
+    if (abs(right_back_angle - right_back_turn) > 100) {
+        right_back_turn -= 180;
+        right_back_speed *= -1;
+    }
 
     // keep the setpoints within [-180, 180]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
