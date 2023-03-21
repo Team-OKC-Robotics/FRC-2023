@@ -88,6 +88,12 @@ bool SwerveDrive::Init() {
     // setpoint
     at_setpoint_ = false;
 
+    // auton parameters
+    run_up_speed_ = RobotParams::GetParam("auto_balance.run_up_speed", 0.4);
+    tilted_speed_ = RobotParams::GetParam("auto_balance.tilted_speed", 0.2);
+    tilted_threshold_ = RobotParams::GetParam("auto_balance.tilted_threshold", 13.0);
+    reverse_threshold_ = RobotParams::GetParam("auto_balance.reverse_threshold", 1.0);
+
     // Reset everything
     OKC_CALL(ResetDriveEncoders());
     OKC_CALL(ResetGyro());
@@ -333,7 +339,7 @@ bool SwerveDrive::AutoBalance() {
 
     // if we've started to tilt upwards as we climb the thing
     //TODO parameterize
-    if (this->interface_->imu_pitch > 10.0) {
+    if (this->interface_->imu_pitch > 13.0) {
         // then we should go slower to avoid overshooting too much
         tilted_ = true;
     }
@@ -385,10 +391,10 @@ bool SwerveDrive::AutoBalance() {
         this->interface_->right_back_drive_motor_output = 0.2;
     // otherwise we haven't even reached the switch yet, so go a little faster
     } else {
-        this->interface_->left_front_drive_motor_output = 0.6;
-        this->interface_->left_back_drive_motor_output = 0.6;
-        this->interface_->right_front_drive_motor_output = 0.6;
-        this->interface_->right_back_drive_motor_output = 0.6;
+        this->interface_->left_front_drive_motor_output = 0.4;
+        this->interface_->left_back_drive_motor_output = 0.4;
+        this->interface_->right_front_drive_motor_output = 0.4;
+        this->interface_->right_back_drive_motor_output = 0.4;
     }
 
     // set the steer motors to drive us straight if we don't need to lock our wheels

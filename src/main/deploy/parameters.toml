@@ -54,6 +54,12 @@ left_back_offset = 79.0
 right_front_offset = 10.0
 right_back_offset = 153.0
 
+[auto_balance]
+run_up_speed = 0.4
+tilted_speed = 0.2
+tilted_threshold = 13.0
+reverse_threshold = 1.0
+
 [arm]
 offset = -384
 lift_limit = 110

@@ -107,9 +107,15 @@ private:
 
     double control_decay = 0.1;
 
+    // auton
     bool balanced_ = false;
     bool tilted_ = false;
     float last_pitch_ = 0.0;
+
+    double run_up_speed_;
+    double tilted_speed_;
+    double tilted_threshold_;
+    double reverse_threshold_;
 
     // max output
     double max_output_drive_ = 1;
