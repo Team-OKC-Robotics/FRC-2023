@@ -18,6 +18,8 @@ bool SwerveDrive::Init() {
     strafe_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/joystick/strafe");
     turn_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/joystick/turn");
 
+    imu_pitch_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/robot/pitch");
+
     double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1);
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
     double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
@@ -327,6 +329,8 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 }
 
 bool SwerveDrive::AutoBalance() {
+    imu_pitch_log_.Append(interface_->imu_pitch);
+
     // if we've started to tilt upwards as we climb the thing
     //TODO parameterize
     if (this->interface_->imu_pitch > 10.0) {

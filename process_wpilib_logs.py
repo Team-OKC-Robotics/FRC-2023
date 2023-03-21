@@ -22,6 +22,8 @@ joystickDriveLog = [[], []]
 joystickStrafeLog = [[], []]
 joystickTurnLog = [[], []]
 
+pitchLog = [[], []]
+
 root = tkinter.Tk()
 root.withdraw()
 
@@ -82,6 +84,10 @@ for index, line in enumerate(log):
     elif id == '"/joystick/turn"':
         joystickTurnLog[0].append(float(timestamp))
         joystickTurnLog[1].append(float(data))
+    
+    if (id == '"/robot/pitch"'):
+        pitchLog[0].append(float(timestamp))
+        pitchLog[1].append(float(data))
 
 plt.figure()
 plt.plot(liftEncLog[0], liftEncLog[1])
@@ -115,4 +121,11 @@ plt.plot(driveOutputLog[0], driveOutputLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
 plt.legend(("steer enc", "output", "setpoint", "drive output"))
+
+plt.figure()
+plt.plot(pitchLog[0], pitchLog[1])
+plt.xlabel("Time (sec)")
+plt.ylabel("data")
+plt.legend(("pitch"))
+
 plt.show()

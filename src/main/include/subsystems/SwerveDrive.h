@@ -141,4 +141,6 @@ private:
     wpi::log::DoubleLogEntry drive_log_;
     wpi::log::DoubleLogEntry strafe_log_;
     wpi::log::DoubleLogEntry turn_log_;
+
+    wpi::log::DoubleLogEntry imu_pitch_log_;
 };
