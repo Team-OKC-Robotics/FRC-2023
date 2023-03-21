@@ -155,6 +155,10 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         strafe_ = 0.0; // then zero it
     }
 
+    if (abs(drive) < 0.1) {
+        drive_ = 0.0;
+    }
+
     double heading = 0.0;
     OKC_CALL(this->GetHeading(&heading));
     heading *= -1;
@@ -185,10 +189,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double left_back_turn = atan2(A, C)  *  180.0/M_PI;
 
     // keep the setpoints within [-180, 180]
-    OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
-    OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
-    OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
-    OKC_CALL(TeamOKC::WrapAngle(&right_back_turn));
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
     OKC_CALL(TeamOKC::WrapAngle(&left_back_turn));
     OKC_CALL(TeamOKC::WrapAngle(&right_front_turn));
