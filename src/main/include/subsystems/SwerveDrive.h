@@ -28,7 +28,12 @@
 #define COAST rev::CANSparkMax::IdleMode::kCoast
 #define BRAKE rev::CANSparkMax::IdleMode::kBrake
 
-
+enum BalanceState {
+    RUN_UP,
+    CLIMB,
+    DRIVE_BACKWARDS,
+    FINISHED
+};
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:
@@ -108,9 +113,10 @@ private:
     double control_decay = 0.1;
 
     // auton
-    bool balanced_ = false;
-    bool tilted_ = false;
+    bool probably_balanced_ = false;
     float last_pitch_ = 0.0;
+
+    BalanceState balance_state_ = RUN_UP;
 
     double run_up_speed_;
     double tilted_speed_;

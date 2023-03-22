@@ -337,19 +337,83 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 }
 
 bool SwerveDrive::AutoBalance() {
-    // if we've started to tilt upwards as we climb the thing
-    //TODO parameterize
-    if (this->interface_->imu_pitch > tilted_threshold_) {
-        // then we should go slower to avoid overshooting too much
-        tilted_ = true;
-    }
+    if (balance_state_ == RUN_UP) {
+        // drive forwards fast
+        this->interface_->left_front_drive_motor_output = run_up_speed_;
+        this->interface_->left_back_drive_motor_output = run_up_speed_;
+        this->interface_->right_front_drive_motor_output = run_up_speed_;
+        this->interface_->right_back_drive_motor_output = run_up_speed_;
 
-    if (balanced_) {
-        // and lock the wheels so we don't slide off or anything
-        OKC_CALL(this->left_front_module_->SetAngle(45));
+        // and keep our wheels straight
+        OKC_CALL(this->left_front_module_->SetAngle(0.0));
+        OKC_CALL(this->left_back_module_->SetAngle(0.0));
+        OKC_CALL(this->right_front_module_->SetAngle(0.0));
+        OKC_CALL(this->right_back_module_->SetAngle(0.0));
+    
+        OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+        OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+        OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+        OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
+        // once we've tilted enough, then we can move on to climbing slower to avoid rocketing over the thing
+        if (this->interface_->imu_pitch > tilted_threshold_) {
+            balance_state_ = CLIMB;
+        }
+    } else if (balance_state_ == CLIMB) {
+        // drive slower
+        this->interface_->left_front_drive_motor_output = tilted_speed_;
+        this->interface_->left_back_drive_motor_output = tilted_speed_;
+        this->interface_->right_front_drive_motor_output = tilted_speed_;
+        this->interface_->right_back_drive_motor_output = tilted_speed_;
+
+        // keep the wheels straight
+        OKC_CALL(this->left_front_module_->SetAngle(0.0));
+        OKC_CALL(this->left_back_module_->SetAngle(0.0));
+        OKC_CALL(this->right_front_module_->SetAngle(0.0));
+        OKC_CALL(this->right_back_module_->SetAngle(0.0));
+    
+        OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+        OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+        OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+        OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
+
+        // once we've tipped over the station, then we need to drive backwards a little bit
+        if (interface_->imu_pitch < reverse_threshold_) {
+            balance_state_ = DRIVE_BACKWARDS;
+        }
+    } else if (balance_state_ == DRIVE_BACKWARDS) {
+        // drive backwards to balance us out
+        this->interface_->left_front_drive_motor_output = -0.1;
+        this->interface_->left_back_drive_motor_output = -0.1;
+        this->interface_->right_front_drive_motor_output = -0.1;
+        this->interface_->right_back_drive_motor_output = -0.1;
+
+        OKC_CALL(this->left_front_module_->SetAngle(0.0));
+        OKC_CALL(this->left_back_module_->SetAngle(0.0));
+        OKC_CALL(this->right_front_module_->SetAngle(0.0));
+        OKC_CALL(this->right_back_module_->SetAngle(0.0));
+    
+        OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+        OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
+        OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
+        OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+
+
+        // and then if we're balanced, go ahead and stop us
+        if (abs(interface_->imu_pitch) < 1.0) {
+            if (probably_balanced_) {
+                balance_state_ = FINISHED;
+            }
+
+            probably_balanced_ = true;
+        }
+    } else if (balance_state_ == FINISHED) {
+        // maintain position
+        OKC_CALL(this->left_front_module_->SetAngle(90));
         OKC_CALL(this->left_back_module_->SetAngle(90));
         OKC_CALL(this->right_front_module_->SetAngle(-90));
-        OKC_CALL(this->right_back_module_->SetAngle(-45));
+        OKC_CALL(this->right_back_module_->SetAngle(-90));
     
         OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
         OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
@@ -360,57 +424,10 @@ bool SwerveDrive::AutoBalance() {
         this->interface_->left_back_drive_motor_output = 0.0;
         this->interface_->right_front_drive_motor_output = 0.0;
         this->interface_->right_back_drive_motor_output = 0.0;
-
-    
-        return true;
-    }
-
-    if (drive_backwards_) {
-        this->interface_->left_front_drive_motor_output = -0.1;
-        this->interface_->left_back_drive_motor_output = -0.1;
-        this->interface_->right_front_drive_motor_output = -0.1;
-        this->interface_->right_back_drive_motor_output = -0.1;
-    }
-
-    // if (drive_backwards_ && abs(interface_->imu_pitch) < 1.0) {
-    //     balanced_ = true;
-    // }
-
-    // if our current pitch has gone down from what it was
-    if (abs(interface_->imu_pitch) < 10.0 && !balanced_ && tilted_ && !drive_backwards_) {
-        // then we need to drive backwards a little bit
-        drive_backwards_ = true; 
-
-        return true;
-    // otherwise, if we're still climbing up
-    } else if (tilted_) {
-        // drive slowly field-forwards, robot-backwards
-        this->interface_->left_front_drive_motor_output = tilted_speed_;
-        this->interface_->left_back_drive_motor_output = tilted_speed_;
-        this->interface_->right_front_drive_motor_output = tilted_speed_;
-        this->interface_->right_back_drive_motor_output = tilted_speed_;
-    // otherwise we haven't even reached the switch yet, so go a little faster
     } else {
-        this->interface_->left_front_drive_motor_output = run_up_speed_;
-        this->interface_->left_back_drive_motor_output = run_up_speed_;
-        this->interface_->right_front_drive_motor_output = run_up_speed_;
-        this->interface_->right_back_drive_motor_output = run_up_speed_;
+        OKC_CHECK_MSG(false, "unhandled auto balance enum");
     }
 
-    // set the steer motors to drive us straight if we don't need to lock our wheels
-    OKC_CALL(this->left_front_module_->SetAngle(0.0));
-    OKC_CALL(this->left_back_module_->SetAngle(0.0));
-    OKC_CALL(this->right_front_module_->SetAngle(0.0));
-    OKC_CALL(this->right_back_module_->SetAngle(0.0));
-
-    OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
-    OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
-    OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
-    OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
-
-    // and update our previous pitch value
-    last_pitch_ = this->interface_->imu_pitch;
-    
     return true;
 }
 
@@ -501,9 +518,6 @@ bool SwerveDrive::ResetPIDs() {
     OKC_CALL(right_back_module_->Reset());
 
     this->heading_pid_->Reset();
-
-    tilted_ = false;
-    balanced_ = false;
 
     return true;
 }

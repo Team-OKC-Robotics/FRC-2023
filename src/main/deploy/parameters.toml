@@ -57,8 +57,8 @@ right_back_offset = 153.0
 [auto_balance]
 run_up_speed = 0.4
 tilted_speed = 0.2
-tilted_threshold = 10.0
-reverse_threshold = 1.5
+tilted_threshold = 15.0
+reverse_threshold = 9.0
 
 [arm]
 offset = -384
