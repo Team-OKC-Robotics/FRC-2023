@@ -332,9 +332,9 @@ bool RobotContainer::InitCommands() {
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -0.5);
 
     // arm commands
-    arm_pickup_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(pickup_extension_, pickup_rotation_), TeamOKC::ArmState(negative_pickup_rotation_, negative_pickup_extension_));
-    arm_score_mid_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_), TeamOKC::ArmState(negative_score_mid_rotation_, negative_score_mid_extension_));
-    arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_rotation_, negative_score_high_extension_));
+    arm_pickup_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(pickup_extension_, pickup_rotation_), TeamOKC::ArmState(negative_pickup_extension_, negative_pickup_rotation_));
+    arm_score_mid_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_), TeamOKC::ArmState(negative_score_mid_extension_, negative_score_mid_rotation_));
+    arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_));
     arm_carry_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(1, 0), TeamOKC::ArmState(1, 0));
     
     // intake commands
