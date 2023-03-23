@@ -1,5 +1,6 @@
 #include "Utils.h"
 
+
 namespace TeamOKC {
     // TODO: make this a templated function.
     bool Clamp(const double &lower, const double &upper, double *value) {
@@ -26,6 +27,10 @@ namespace TeamOKC {
             *angle = *angle - 360;
         }
         return true;
+    }
+
+    double Radians(double degrees) {
+        return degrees * M_PI / 180.0;
     }
 } // namespace TeamOKC
 

@@ -59,7 +59,7 @@ typedef struct swerve_drive_hardware_interface_t {
 typedef struct swerve_drive_software_interface_t {
     // SW INPUTS
     // IMU yaw angle
-    double imu_yaw;
+    float imu_yaw;
     float imu_pitch;
 
     // Encoders
