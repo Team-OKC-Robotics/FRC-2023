@@ -18,6 +18,7 @@
 // DIO ports (on the RIO)
 #define EXTEND_LIMIT_SWITCH 9
 #define ARM_ABS_ENCODER 1
+#define WRIST_ABS_ENCODER 4
 
 typedef struct sensors_t {
     // navX IMU
@@ -53,4 +54,5 @@ typedef struct sensors_t {
 
     //intake sensord
     std::unique_ptr<rev::SparkMaxRelativeEncoder> intake_encoder;
+    std::unique_ptr<frc::DutyCycleEncoder> wrist_encoder;
 } Sensors;

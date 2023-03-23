@@ -125,6 +125,7 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_extend_motor->SetIdleMode(BRAKE);
 
     actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
+    actuators_interface->wrist_motor = std::make_unique<rev::CANSparkMax>(WRIST_MOTOR, BRUSHLESS);
 
     OKC_CHECK(actuators_interface->intake_motor != nullptr);
 
@@ -195,6 +196,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
     sensor_interface->intake_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.intake_motor->GetEncoder());
+    sensor_interface->wrist_encoder = std::make_unique<frc::DutyCycleEncoder>(WRIST_ABS_ENCODER);
 
     return true;
 }
