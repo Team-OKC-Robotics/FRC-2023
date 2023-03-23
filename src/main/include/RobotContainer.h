@@ -42,8 +42,7 @@
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
-#include "commands/arm/ArmSetStateCommand.h"
-#include "commands/arm/ArmSetStateDpadCommand.h"
+#include "commands/arm/ArmFieldOrientedCommand.h"
 
 
 //intake
@@ -172,13 +171,10 @@ private:
     std::shared_ptr<IncrementArmPresetPositionCommand> raiseArmCommand;
     std::shared_ptr<IncrementArmPresetPositionCommand> lowerArmCommand;
 
-    std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_short_carry_command_;
-
-    std::shared_ptr<ArmSetStateDpadCommand> arm_dpad_set_state_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_carry_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_pickup_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
