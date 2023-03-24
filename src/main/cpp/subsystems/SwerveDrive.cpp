@@ -94,6 +94,8 @@ bool SwerveDrive::Init() {
     tilted_threshold_ = RobotParams::GetParam("auto_balance.tilted_threshold", 13.0);
     reverse_threshold_ = RobotParams::GetParam("auto_balance.reverse_threshold", 1.0);
 
+    timer_ = std::make_shared<frc::Timer>();
+
     // Reset everything
     OKC_CALL(ResetDriveEncoders());
     OKC_CALL(ResetGyro());
@@ -384,10 +386,10 @@ bool SwerveDrive::AutoBalance() {
         }
     } else if (balance_state_ == DRIVE_BACKWARDS) {
         // drive backwards to balance us out
-        this->interface_->left_front_drive_motor_output = -0.1;
-        this->interface_->left_back_drive_motor_output = -0.1;
-        this->interface_->right_front_drive_motor_output = -0.1;
-        this->interface_->right_back_drive_motor_output = -0.1;
+        this->interface_->left_front_drive_motor_output = -0.15;
+        this->interface_->left_back_drive_motor_output = -0.15;
+        this->interface_->right_front_drive_motor_output = -0.15;
+        this->interface_->right_back_drive_motor_output = -0.15;
 
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));
@@ -402,12 +404,17 @@ bool SwerveDrive::AutoBalance() {
 
         // and then if we're balanced, go ahead and stop us
         if (abs(interface_->imu_pitch) < 1.0) {
-            if (probably_balanced_) {
-                balance_state_ = FINISHED;
+            if (!start_timer_) {
+                timer_->Start();
+                start_timer_ = true;
             }
-
-            probably_balanced_ = true;
         }
+
+        // so we don't immediately move on to FINISHED
+        if (timer_->Get().value() > 1.3) {
+            balance_state_ = FINISHED;
+        }
+
     } else if (balance_state_ == FINISHED) {
         // maintain position
         OKC_CALL(this->left_front_module_->SetAngle(90));

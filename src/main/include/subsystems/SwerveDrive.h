@@ -138,6 +138,8 @@ private:
 
     bool in_auto = false;
     bool auto_lock_heading_;
+    bool start_timer_ = false;
+    std::shared_ptr<frc::Timer> timer_;
     TeamOKC::Pose position_;
 
     // pid controllers
