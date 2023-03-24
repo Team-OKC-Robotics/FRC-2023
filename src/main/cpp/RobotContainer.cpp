@@ -65,15 +65,12 @@ bool RobotContainer::ConfigureButtonBindings() {
     // driver_b_button_->WhileActiveContinous(*extendArmCommand);
     
     // second driver controls
+    manip_right_bumper_button_->WhenPressed(*arm_pickup_reverse_command_);
+    manip_left_bumper_button_->WhenPressed(*arm_pickup_command_);
     manip_x_button_->WhenPressed(*arm_carry_command_);
-    manip_a_button_->WhenPressed(*arm_pickup_command_);
+
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
-    manip_left_bumper_button_->WhenPressed(*arm_short_carry_command_);
-
-    manip_right_bumper_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*slow_swerve_teleop_command_);
-
-    manip_start_button_->WhenPressed(*arm_dpad_set_state_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -306,6 +303,16 @@ bool RobotContainer::InitCommands() {
     double score_high_rotation_ = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
     double score_high_extension_ = RobotParams::GetParam("arm.score_high.extend_setpoint", 0.0);
 
+    double negative_pickup_rotation_ = RobotParams::GetParam("arm.negative_pickup.arm_setpoint", 0.0);
+    double negative_pickup_extension_ = RobotParams::GetParam("arm.negative_pickup.extend_setpoint", 1.0);
+
+    double negative_score_mid_rotation_ = RobotParams::GetParam("arm.negative_score_medium.arm_setpoint", 0.0);
+    double negative_score_mid_extension_ = RobotParams::GetParam("arm.negative_score_medium.extend_setpoint", 1.0);
+    
+    double negative_score_high_rotation_ = RobotParams::GetParam("arm.negative_score_high.arm_setpoint", 0.0);
+    double negative_score_high_extension_ = RobotParams::GetParam("arm.negative_score_high.extend_setpoint", 1.0);
+
+
     // autons
     score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
     score_preload_auto_ = std::make_shared<ScorePreloadedNoDriveAuto>(arm_, intake_);
@@ -325,13 +332,12 @@ bool RobotContainer::InitCommands() {
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -0.5);
 
     // arm commands
+    arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0));
     arm_pickup_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(pickup_extension_, pickup_rotation_));
-    arm_score_mid_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_));
-    arm_score_high_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_));
-    arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0)); // hold the arm inside the robot when driving
-    arm_short_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(2, pickup_rotation_)); // just bring teh arm a little in whenever we're moving in the community
+    arm_pickup_reverse_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(negative_pickup_extension_, negative_pickup_rotation_));
 
-    arm_dpad_set_state_command_ = std::make_shared<ArmSetStateDpadCommand>(arm_, gamepad2_);
+    arm_score_mid_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_), TeamOKC::ArmState(negative_score_mid_extension_, negative_score_mid_rotation_));
+    arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_));
     
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
