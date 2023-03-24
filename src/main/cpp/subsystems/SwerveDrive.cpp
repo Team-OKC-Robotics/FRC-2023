@@ -18,10 +18,10 @@ bool SwerveDrive::Init() {
     strafe_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/joystick/strafe");
     turn_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/joystick/turn");
 
-    double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1);
-    double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
-    double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
-    double steer_open_loop = RobotParams::GetParam("swerve.steer_open_loop", 1);
+    double drive_max_output = RobotParams::GetParam("swerve.drive_max_output", 1.0);
+    double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1.0);
+    double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1.0);
+    double steer_open_loop = RobotParams::GetParam("swerve.steer_open_loop", 1.0);
 
     // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
