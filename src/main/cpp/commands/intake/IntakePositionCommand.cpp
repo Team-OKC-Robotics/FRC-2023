@@ -17,6 +17,7 @@ IntakePositionCommand::IntakePositionCommand(std::shared_ptr<Intake> intake, dou
 }
 
 void IntakePositionCommand::Initialize() {
+    VOKC_CHECK(intake_ != nullptr)
     VOKC_CALL(intake_->SetControlMode(Auto));
 }
 

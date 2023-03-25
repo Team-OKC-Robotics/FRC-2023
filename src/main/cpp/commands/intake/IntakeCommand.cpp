@@ -18,6 +18,7 @@ IntakeCommand::IntakeCommand(std::shared_ptr<Intake> intake,
 }
 
 void IntakeCommand::Initialize() {
+    VOKC_CALL(intake_ != nullptr);
     VOKC_CALL(intake_->SetControlMode(Manual));
 }
 
