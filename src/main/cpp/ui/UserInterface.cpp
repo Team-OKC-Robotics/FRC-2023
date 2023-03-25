@@ -66,3 +66,9 @@ namespace ClawUI {
 
     nt::GenericEntry *const nt_claw_encoder = nt_tab.Add("claw encoder", 0.0).GetEntry();
 }
+
+namespace IntakeUI {
+    frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("claw");
+
+    nt::GenericEntry *const nt_tilt = nt_tab.Add("wrist encoder", 0.0).GetEntry();
+}

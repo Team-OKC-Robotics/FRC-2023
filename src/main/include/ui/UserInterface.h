@@ -67,3 +67,9 @@ namespace ClawUI {
 
     extern nt::GenericEntry *const nt_claw_encoder;
 }
+
+namespace IntakeUI {
+    extern frc::ShuffleboardTab &nt_tab;
+
+    extern nt::GenericEntry *const nt_tilt;
+}

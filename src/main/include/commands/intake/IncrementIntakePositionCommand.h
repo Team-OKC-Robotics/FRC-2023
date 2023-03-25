@@ -9,15 +9,15 @@
 /**
  *
  */
-class IntakeCommand
-    : public frc2::CommandHelper<frc2::CommandBase, IntakeCommand> {
+class IncrementIntakePositionCommand
+    : public frc2::CommandHelper<frc2::CommandBase, IncrementIntakePositionCommand> {
 public:
     /**
      * Creates a new IncrementArmExtendCommand.
      *
      * @param arm The subsystem used by this command.
      */
-    explicit IntakeCommand(std::shared_ptr<Intake> intake, double power);
+    explicit IncrementIntakePositionCommand(std::shared_ptr<Intake> intake, double angle);
 
     void Execute() override;
     void Initialize() override;
@@ -25,5 +25,5 @@ public:
 
 private:
     std::shared_ptr<Intake> intake_;
-    double power_;
+    double angle_;
 };

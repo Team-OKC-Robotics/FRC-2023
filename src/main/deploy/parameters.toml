@@ -55,7 +55,7 @@ right_front_offset = 10.0
 right_back_offset = 153.0
 
 [arm]
-offset = -384
+offset = -390
 lift_limit = 110
 extend_limit = 95
 max_output = 1
@@ -107,3 +107,6 @@ cone = 5
 kP = 0.01
 kI = 0
 kD = 0
+
+[intake]
+tilt_offset = 0.0
