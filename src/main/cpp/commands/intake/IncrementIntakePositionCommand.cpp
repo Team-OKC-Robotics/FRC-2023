@@ -17,7 +17,7 @@ IncrementIntakePositionCommand::IncrementIntakePositionCommand(std::shared_ptr<I
 }
 
 void IncrementIntakePositionCommand::Initialize() {
-    intake_->SetControlMode(Auto);
+    VOKC_CALL(intake_->SetControlMode(Auto));
 }
 
 
