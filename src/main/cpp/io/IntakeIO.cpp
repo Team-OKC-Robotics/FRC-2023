@@ -2,7 +2,9 @@
 #include "Parameters.h"
 
 bool IntakeIO::Init() {
-   return true;
+    offset_ = RobotParams::GetParam("intake.tilt_offset", 0.0);
+
+    return true;
 }
 
 void IntakeIO::Periodic() {
@@ -43,7 +45,7 @@ bool IntakeIO::ProcessIO() {
 
     // wrist encoder
     OKC_CHECK(hw_interface_->wrist_encoder != nullptr);
-    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition(); // TODO parameterize and offset and stuff
+    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition() + offset_;
 
     // === outputs ===
     hw_interface_->intake_motor->Set(sw_interface_->intake_power);

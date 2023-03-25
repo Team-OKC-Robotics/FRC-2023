@@ -71,6 +71,9 @@ bool RobotContainer::ConfigureButtonBindings() {
 
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
+
+    manip_left_stick_button_->WhenHeld(*inc_wrist_tilt_command_);
+    manip_right_stick_button_->WhenHeld(*dec_wrist_tilt_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -343,6 +346,9 @@ bool RobotContainer::InitCommands() {
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
+
+    inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
+    dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
    
     return true;
 }

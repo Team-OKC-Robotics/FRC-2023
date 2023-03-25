@@ -8,6 +8,7 @@
 
 #include "Logging.h"
 #include "wpi/DataLog.h"
+#include "ui/UserInterface.h"
 
 class Intake : public frc2::SubsystemBase {
 public:
@@ -18,6 +19,7 @@ public:
 
     bool SetIntakePower(double power);
     bool SetIntakeTilt(double tilt);
+    bool IncrementIntakeTilt(double inc);
 
     bool SetControlMode(const ControlMode &mode);
     bool ManualControl();
