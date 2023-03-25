@@ -93,6 +93,9 @@ bool SwerveDrive::Init() {
     tilted_speed_ = RobotParams::GetParam("auto_balance.tilted_speed", 0.2);
     tilted_threshold_ = RobotParams::GetParam("auto_balance.tilted_threshold", 13.0);
     reverse_threshold_ = RobotParams::GetParam("auto_balance.reverse_threshold", 1.0);
+    pitch_threshold_ = RobotParams::GetParam("auto_balance.pitch_threshold", 1.0);
+    drive_backward_speed_ = RobotParams::GetParam("auto_balance.drive_backward_speed", -0.15);
+    timeout_ = RobotParams::GetParam("auto_balance.timeout", 1.3);
 
     timer_ = std::make_shared<frc::Timer>();
 
@@ -386,10 +389,10 @@ bool SwerveDrive::AutoBalance() {
         }
     } else if (balance_state_ == DRIVE_BACKWARDS) {
         // drive backwards to balance us out
-        this->interface_->left_front_drive_motor_output = -0.15;
-        this->interface_->left_back_drive_motor_output = -0.15;
-        this->interface_->right_front_drive_motor_output = -0.15;
-        this->interface_->right_back_drive_motor_output = -0.15;
+        this->interface_->left_front_drive_motor_output = drive_backward_speed_;
+        this->interface_->left_back_drive_motor_output = drive_backward_speed_;
+        this->interface_->right_front_drive_motor_output = drive_backward_speed_;
+        this->interface_->right_back_drive_motor_output = drive_backward_speed_;
 
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));
@@ -403,7 +406,7 @@ bool SwerveDrive::AutoBalance() {
 
 
         // and then if we're balanced, go ahead and stop us
-        if (abs(interface_->imu_pitch) < 1.0) {
+        if (abs(interface_->imu_pitch) < pitch_threshold_) {
             if (!start_timer_) {
                 timer_->Start();
                 start_timer_ = true;
@@ -411,7 +414,7 @@ bool SwerveDrive::AutoBalance() {
         }
 
         // so we don't immediately move on to FINISHED
-        if (timer_->Get().value() > 1.3) {
+        if (timer_->Get().value() > timeout_) {
             balance_state_ = FINISHED;
         }
 

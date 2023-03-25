@@ -122,6 +122,9 @@ private:
     double tilted_speed_;
     double tilted_threshold_;
     double reverse_threshold_;
+    double pitch_threshold_;
+    double drive_backward_speed_;
+    double timeout_;
 
     // max output
     double max_output_drive_ = 1;
