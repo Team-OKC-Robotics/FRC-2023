@@ -45,6 +45,8 @@
 
 //intake
 #include "commands/intake/IntakeCommand.h"
+#include "commands/intake/IntakePositionCommand.h"
+#include "commands/intake/IncrementIntakePositionCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -184,6 +186,9 @@ private:
     std::shared_ptr<IntakeCommand> intake_command;
     std::shared_ptr<IntakeCommand> other_intake_command;
     std::shared_ptr<IntakeCommand> stop_intake_command;
+
+    std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
+    std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
 };
 
 

@@ -74,6 +74,9 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_right_bumper_button_->WhenPressed(*slow_swerve_teleop_command_).WhenReleased(*slow_swerve_teleop_command_);
 
     manip_start_button_->WhenPressed(*arm_dpad_set_state_command_);
+
+    manip_left_stick_button_->WhenHeld(*inc_wrist_tilt_command_);
+    manip_right_stick_button_->WhenHeld(*dec_wrist_tilt_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -337,6 +340,9 @@ bool RobotContainer::InitCommands() {
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
+
+    inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
+    dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
    
     return true;
 }
