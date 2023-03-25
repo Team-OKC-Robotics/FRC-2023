@@ -89,6 +89,8 @@ void Intake::Periodic() {
         default:
             VOKC_CHECK_MSG(false, "unhandled intake enum");
     }
+
+    VOKC_CALL(IntakeUI::nt_tilt->SetDouble(this->interface_->tilt_encoder));
 }
 
 

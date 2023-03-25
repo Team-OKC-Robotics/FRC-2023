@@ -8,6 +8,7 @@
 
 #include "Logging.h"
 #include "wpi/DataLog.h"
+#include "ui/UserInterface.h"
 
 class Intake : public frc2::SubsystemBase {
 public:
