@@ -24,6 +24,6 @@ ScorePreloadedBalanceAuto::ScorePreloadedBalanceAuto(std::shared_ptr<SwerveDrive
         // IntakeCommand(intake, 0), // stop the intake
         // ArmSetStateCommand(arm, TeamOKC::ArmState(1, 0)), // bring the arm back in the robot
         frc2::WaitCommand(units::second_t(2)), // wait a second so the arm is mostly in
-        AutoBalanceCommand(swerve) // balance on the charge station
+        AutoBalanceCommand(swerve, 1.0) // balance on the charge station
     );
 }

@@ -341,13 +341,13 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     return true;
 }
 
-bool SwerveDrive::AutoBalance() {
+bool SwerveDrive::AutoBalance(double sign) {
     if (balance_state_ == RUN_UP) {
         // drive forwards fast
-        this->interface_->left_front_drive_motor_output = run_up_speed_;
-        this->interface_->left_back_drive_motor_output = run_up_speed_;
-        this->interface_->right_front_drive_motor_output = run_up_speed_;
-        this->interface_->right_back_drive_motor_output = run_up_speed_;
+        this->interface_->left_front_drive_motor_output = run_up_speed_ * sign;
+        this->interface_->left_back_drive_motor_output = run_up_speed_ * sign;
+        this->interface_->right_front_drive_motor_output = run_up_speed_ * sign;
+        this->interface_->right_back_drive_motor_output = run_up_speed_ * sign;
 
         // and keep our wheels straight
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
@@ -361,7 +361,7 @@ bool SwerveDrive::AutoBalance() {
         OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
         // once we've tilted enough, then we can move on to climbing slower to avoid rocketing over the thing
-        if (this->interface_->imu_pitch > tilted_threshold_) {
+        if (this->interface_->imu_pitch > tilted_threshold_*sign) {
             balance_state_ = CLIMB;
         }
     } else if (balance_state_ == CLIMB) {
@@ -384,15 +384,15 @@ bool SwerveDrive::AutoBalance() {
 
 
         // once we've tipped over the station, then we need to drive backwards a little bit
-        if (interface_->imu_pitch < reverse_threshold_) {
+        if (interface_->imu_pitch < reverse_threshold_*sign) {
             balance_state_ = DRIVE_BACKWARDS;
         }
     } else if (balance_state_ == DRIVE_BACKWARDS) {
         // drive backwards to balance us out
-        this->interface_->left_front_drive_motor_output = drive_backward_speed_;
-        this->interface_->left_back_drive_motor_output = drive_backward_speed_;
-        this->interface_->right_front_drive_motor_output = drive_backward_speed_;
-        this->interface_->right_back_drive_motor_output = drive_backward_speed_;
+        this->interface_->left_front_drive_motor_output = drive_backward_speed_ * sign;
+        this->interface_->left_back_drive_motor_output = drive_backward_speed_ * sign;
+        this->interface_->right_front_drive_motor_output = drive_backward_speed_ * sign;
+        this->interface_->right_back_drive_motor_output = drive_backward_speed_ * sign;
 
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));
@@ -406,7 +406,7 @@ bool SwerveDrive::AutoBalance() {
 
 
         // and then if we're balanced, go ahead and stop us
-        if (abs(interface_->imu_pitch) < pitch_threshold_) {
+        if (abs(interface_->imu_pitch) < pitch_threshold_*sign) {
             if (!start_timer_) {
                 timer_->Start();
                 start_timer_ = true;

@@ -69,7 +69,7 @@ public:
     bool DriveAuto(double max_speed);
     bool AtDistSetpoint(bool *at);
 
-    bool AutoBalance();
+    bool AutoBalance(double sign);
     bool AtBalanceSetpoint(bool *at);
 
     bool GetLeftDriveEncoderAverage(double *avg);
