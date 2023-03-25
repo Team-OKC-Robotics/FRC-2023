@@ -18,6 +18,7 @@ public:
 
     bool SetIntakePower(double power);
     bool SetIntakeTilt(double tilt);
+    bool IncrementIntakeTilt(double inc);
 
     bool SetControlMode(const ControlMode &mode);
     bool ManualControl();

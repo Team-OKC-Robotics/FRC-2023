@@ -42,6 +42,14 @@ bool Intake::SetIntakeTilt(double degrees) {
     return true;
 }
 
+bool Intake::IncrementIntakeTilt(double degrees) {
+    OKC_CHECK(this->wrist_pid_ != nullptr);
+
+    this->wrist_pid_->SetSetpoint(this->wrist_pid_->GetSetpoint() + degrees);
+
+    return true;
+}
+
 bool Intake::SetControlMode(const ControlMode &mode){
     mode_= mode;
 
@@ -61,6 +69,7 @@ bool Intake::AutoControl() {
     OKC_CHECK(this->wrist_pid_ != nullptr);
     
     interface_->tilt_power = this->wrist_pid_->Calculate(interface_->tilt_encoder);
+    interface_->intake_power = intake_power_;
  
     return true;
 }
