@@ -366,10 +366,10 @@ bool SwerveDrive::AutoBalance(double sign) {
         }
     } else if (balance_state_ == CLIMB) {
         // drive slower
-        this->interface_->left_front_drive_motor_output = tilted_speed_;
-        this->interface_->left_back_drive_motor_output = tilted_speed_;
-        this->interface_->right_front_drive_motor_output = tilted_speed_;
-        this->interface_->right_back_drive_motor_output = tilted_speed_;
+        this->interface_->left_front_drive_motor_output = tilted_speed_ * sign;
+        this->interface_->left_back_drive_motor_output = tilted_speed_ * sign;
+        this->interface_->right_front_drive_motor_output = tilted_speed_ * sign;
+        this->interface_->right_back_drive_motor_output = tilted_speed_ * sign;
 
         // keep the wheels straight
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
