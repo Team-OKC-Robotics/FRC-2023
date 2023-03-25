@@ -73,4 +73,5 @@ private:
     IntakeSoftwareInterface *const sw_interface_;
 
     double max_output;
+    double offset_;
 };

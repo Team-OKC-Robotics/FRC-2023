@@ -107,3 +107,6 @@ cone = 5
 kP = 0.01
 kI = 0
 kD = 0
+
+[intake]
+tilt_offset = 0.0
