@@ -3,9 +3,7 @@
 #include <memory>
 #include <rev/CANSparkMax.h>
 #include "frc/DigitalInput.h"
-
-
-
+#include "frc/AddressableLED.h"
 
 // Brushless Motor
 #define BRUSHLESS rev::CANSparkMax::MotorType::kBrushless
@@ -31,6 +29,9 @@
 
 #define INTAKE_MOTOR 12
 
+// PWM port
+#define LED_PORT 2
+
 
 typedef struct actuators_t {
     // Left drivetrain motors
@@ -55,4 +56,7 @@ typedef struct actuators_t {
 
     //intake motor
     std::unique_ptr<rev::CANSparkMax> intake_motor;
+
+    // leds
+    std::unique_ptr<frc::AddressableLED> leds_controller_;
 } Actuators;

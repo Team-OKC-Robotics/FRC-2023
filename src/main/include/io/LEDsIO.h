@@ -3,16 +3,18 @@
 #include <memory>
 
 #include <frc2/command/SubsystemBase.h>
+#include "frc/AddressableLED.h"
 
 #include "Utils.h"
 
 
 
 typedef struct leds_hardware_interface_t {
+    frc::AddressableLED *const led;
 } LEDsHardwareInterface;
 
 typedef struct leds_software_interface_t {
-    double pattern;
+    std::shared_ptr<std::array<frc::AddressableLED::LEDData, 20>> buffer;
 } LEDsSoftwareInterface;
 
 class LEDsIO : public frc2::SubsystemBase {

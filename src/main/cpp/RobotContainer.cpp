@@ -15,6 +15,7 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
     VOKC_CALL(this->InitIntake());
+    VOKC_CALL(this->InitLEDs());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -127,6 +128,8 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
 
     OKC_CHECK(actuators_interface->intake_motor != nullptr);
+
+    actuators_interface->leds_controller_ = std::make_unique<frc::AddressableLED>(LED_PORT);
 
     return true;
 }
@@ -255,6 +258,24 @@ bool RobotContainer::InitIntake() {
     return true;
 }
 
+bool RobotContainer::InitLEDs() {
+    OKC_CALL(SetupLEDsInterface(hardware_, leds_hw_));
+
+    OKC_CHECK(hardware_ != nullptr);
+    OKC_CHECK(leds_hw_ != nullptr);
+
+    leds_sw_ = std::make_shared<LEDsSoftwareInterface>();
+
+    OKC_CHECK(leds_sw_ != nullptr);
+
+    leds_io_ = std::make_shared<LEDs>(leds_hw_.get(), leds_sw_.get());
+
+    OKC_CHECK(leds_io_ != nullptr);
+
+    OKC_CALL(leds_->Init());
+
+    return true;
+}
 
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml

@@ -16,8 +16,8 @@
 #include "io/ArmIO.h"
 #include "io/SwerveDriveIO.h"
 #include "io/VisionIO.h"
-#include "io/ArmIO.h"
 #include "io/IntakeIO.h"
+#include "io/LEDsIO.h"
 
 #include "AutoChooser.h"
 
@@ -27,6 +27,7 @@
 #include "subsystems/SwerveDrive.h"
 #include "subsystems/Vision.h"
 #include "subsystems/Intake.h"
+#include "subsystems/LEDs.h"
 
 // Gamepad
 #include "ui/GamepadMap.h"
@@ -101,27 +102,32 @@ private:
     bool InitSwerve();
     bool InitArm();
     bool InitIntake();
+    bool InitLEDs();
 
     // Robot Hardware
     std::unique_ptr<Hardware> hardware_;
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
     std::shared_ptr<IntakeHardwareInterface> intake_hw_;
+    std::shared_ptr<LEDsHardwareInterface> leds_hw_;
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
     std::shared_ptr<ArmIO> arm_io_;
     std::shared_ptr<IntakeIO> intake_io_;
+    std::shared_ptr<LEDsIO> leds_io_;
 
     // Robot software interfaces.
     std::shared_ptr<SwerveDriveSoftwareInterface> swerve_drive_sw_;
     std::shared_ptr<ArmSoftwareInterface> arm_sw_;
     std::shared_ptr<IntakeSoftwareInterface> intake_sw_;
+    std::shared_ptr<LEDsSoftwareInterface> leds_sw_;
 
     // Subsystems
     std::shared_ptr<SwerveDrive> swerve_drive_;
     std::shared_ptr<Arm> arm_;
     std::shared_ptr<Intake> intake_;
+    std::shared_ptr<LEDs> leds_;
 
     /**
      * User interfaces

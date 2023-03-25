@@ -126,3 +126,18 @@ bool SetupIntakeInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<I
 
     return true;
 }
+
+bool SetupLEDsInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<LEDsHardwareInterface> &interface) {
+    std::unique_ptr<Actuators> &actuators = hardware->actuators;
+    std::unique_ptr<Sensors> &sensors = hardware->sensors;
+
+    OKC_CHECK(actuators->leds_controller_ != nullptr);
+
+    LEDsHardwareInterface leds_interface = {
+        actuators->leds_controller_.get()
+    };
+
+    interface = std::make_shared<LEDsHardwareInterface>(leds_interface);
+
+    return true;
+}
