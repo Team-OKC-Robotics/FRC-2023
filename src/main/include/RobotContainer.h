@@ -13,7 +13,9 @@
 #include "hardware/Hardware.h"
 
 // I/O Subsystems
+#include "io/ArmIO.h"
 #include "io/SwerveDriveIO.h"
+#include "io/VisionIO.h"
 #include "io/ArmIO.h"
 #include "io/IntakeIO.h"
 
@@ -21,8 +23,9 @@
 
 
 // Subsystems
-#include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
+#include "subsystems/SwerveDrive.h"
+#include "subsystems/Vision.h"
 #include "subsystems/Intake.h"
 
 // Gamepad
@@ -39,8 +42,8 @@
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
+#include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
-#include "commands/arm/ArmSetStateDpadCommand.h"
 
 
 //intake
@@ -87,8 +90,7 @@ private:
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
     bool InitActuators(Actuators *actuators_interface);
-    bool InitSensors(const Actuators &actuators,
-                     Sensors *sensor_interface);
+    bool InitSensors(const Actuators &actuators, Sensors *sensor_interface);
 
     // Command initialization
     bool InitCommands();
@@ -107,8 +109,6 @@ private:
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
     std::shared_ptr<IntakeHardwareInterface> intake_hw_;
-
-
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
@@ -176,11 +176,9 @@ private:
 
     std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_short_carry_command_;
-
-    std::shared_ptr<ArmSetStateDpadCommand> arm_dpad_set_state_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_pickup_reverse_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
@@ -190,5 +188,3 @@ private:
     std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
     std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
 };
-
-

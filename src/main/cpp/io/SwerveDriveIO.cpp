@@ -39,7 +39,6 @@ bool SwerveDriveIO::ProcessIO() {
         sw_interface_->reset_steer_encoders = false;
     }
 
-
     // ===/flags===
 
     // If the navX should be reset, reset it.
@@ -78,15 +77,23 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
 
     // Apply the configuration
     // Open Loop Ramp Rate
-    hw_interface_->left_front_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
-    hw_interface_->left_back_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
-    hw_interface_->right_front_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
-    hw_interface_->right_back_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
+    hw_interface_->left_front_drive_motor->SetOpenLoopRampRate(
+        open_loop_ramp_drive);
+    hw_interface_->left_back_drive_motor->SetOpenLoopRampRate(
+        open_loop_ramp_drive);
+    hw_interface_->right_front_drive_motor->SetOpenLoopRampRate(
+        open_loop_ramp_drive);
+    hw_interface_->right_back_drive_motor->SetOpenLoopRampRate(
+        open_loop_ramp_drive);
 
-    hw_interface_->left_front_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
-    hw_interface_->left_back_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
-    hw_interface_->right_front_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
-    hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
+    hw_interface_->left_front_steer_motor->SetOpenLoopRampRate(
+        open_loop_ramp_steer);
+    hw_interface_->left_back_steer_motor->SetOpenLoopRampRate(
+        open_loop_ramp_steer);
+    hw_interface_->right_front_steer_motor->SetOpenLoopRampRate(
+        open_loop_ramp_steer);
+    hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(
+        open_loop_ramp_steer);
 
     hw_interface_->left_front_drive_motor->SetIdleMode(config.idle_mode);
     hw_interface_->left_back_drive_motor->SetIdleMode(config.idle_mode);
@@ -147,7 +154,7 @@ bool SwerveDriveIO::ProcessInputs() {
     // navX IMU:
     OKC_CHECK(hw_interface_->ahrs != nullptr);
     #ifdef __FRC_ROBORIO__
-        sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+        sw_interface_->imu_yaw = hw_interface_->ahrs->GetYaw();
         sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
     #endif
     #ifndef __FRC_ROBORIO__
@@ -158,34 +165,54 @@ bool SwerveDriveIO::ProcessInputs() {
     // Encoders
     // position
     // drive
-    sw_interface_->left_front_drive_motor_enc = hw_interface_->left_front_drive_encoder->GetPosition();
-    sw_interface_->left_back_drive_motor_enc = hw_interface_->left_back_drive_encoder->GetPosition();
-    sw_interface_->right_front_drive_motor_enc = hw_interface_->right_front_drive_encoder->GetPosition();
-    sw_interface_->right_back_drive_motor_enc = hw_interface_->right_back_drive_encoder->GetPosition();
+    sw_interface_->left_front_drive_motor_enc =
+        hw_interface_->left_front_drive_encoder->GetPosition();
+    sw_interface_->left_back_drive_motor_enc =
+        hw_interface_->left_back_drive_encoder->GetPosition();
+    sw_interface_->right_front_drive_motor_enc =
+        hw_interface_->right_front_drive_encoder->GetPosition();
+    sw_interface_->right_back_drive_motor_enc =
+        hw_interface_->right_back_drive_encoder->GetPosition();
 
     // steer
-    sw_interface_->left_front_steer_motor_enc = hw_interface_->left_front_steer_encoder->GetAbsolutePosition();
-    sw_interface_->left_back_steer_motor_enc = hw_interface_->left_back_steer_encoder->GetAbsolutePosition();
-    sw_interface_->right_front_steer_motor_enc = hw_interface_->right_front_steer_encoder->GetAbsolutePosition();
-    sw_interface_->right_back_steer_motor_enc = hw_interface_->right_back_steer_encoder->GetAbsolutePosition();
+    sw_interface_->left_front_steer_motor_enc =
+        hw_interface_->left_front_steer_encoder->GetAbsolutePosition();
+    sw_interface_->left_back_steer_motor_enc =
+        hw_interface_->left_back_steer_encoder->GetAbsolutePosition();
+    sw_interface_->right_front_steer_motor_enc =
+        hw_interface_->right_front_steer_encoder->GetAbsolutePosition();
+    sw_interface_->right_back_steer_motor_enc =
+        hw_interface_->right_back_steer_encoder->GetAbsolutePosition();
 
-    // sw_interface_->left_front_steer_motor_enc = hw_interface_->left_front_steer_vel_encoder->GetPosition();
-    // sw_interface_->left_back_steer_motor_enc = hw_interface_->left_back_steer_vel_encoder->GetPosition();
-    // sw_interface_->right_front_steer_motor_enc = hw_interface_->right_front_steer_vel_encoder->GetPosition();
-    // sw_interface_->right_back_steer_motor_enc = hw_interface_->right_back_steer_vel_encoder->GetPosition();
+    // sw_interface_->left_front_steer_motor_enc =
+    // hw_interface_->left_front_steer_vel_encoder->GetPosition();
+    // sw_interface_->left_back_steer_motor_enc =
+    // hw_interface_->left_back_steer_vel_encoder->GetPosition();
+    // sw_interface_->right_front_steer_motor_enc =
+    // hw_interface_->right_front_steer_vel_encoder->GetPosition();
+    // sw_interface_->right_back_steer_motor_enc =
+    // hw_interface_->right_back_steer_vel_encoder->GetPosition();
 
     // velocity
     // drive
-    sw_interface_->left_front_drive_enc_vel = hw_interface_->left_front_drive_encoder->GetVelocity();
-    sw_interface_->left_back_drive_enc_vel = hw_interface_->left_back_drive_encoder->GetVelocity();
-    sw_interface_->right_front_drive_enc_vel = hw_interface_->right_front_drive_encoder->GetVelocity();
-    sw_interface_->right_back_drive_enc_vel = hw_interface_->right_back_drive_encoder->GetVelocity();
+    sw_interface_->left_front_drive_enc_vel =
+        hw_interface_->left_front_drive_encoder->GetVelocity();
+    sw_interface_->left_back_drive_enc_vel =
+        hw_interface_->left_back_drive_encoder->GetVelocity();
+    sw_interface_->right_front_drive_enc_vel =
+        hw_interface_->right_front_drive_encoder->GetVelocity();
+    sw_interface_->right_back_drive_enc_vel =
+        hw_interface_->right_back_drive_encoder->GetVelocity();
 
     // steer
-    sw_interface_->left_front_steer_enc_vel = hw_interface_->left_front_steer_vel_encoder->GetVelocity();
-    sw_interface_->left_back_steer_enc_vel = hw_interface_->left_back_steer_vel_encoder->GetVelocity();
-    sw_interface_->right_front_steer_enc_vel = hw_interface_->right_front_steer_vel_encoder->GetVelocity();
-    sw_interface_->right_back_steer_enc_vel = hw_interface_->right_back_steer_vel_encoder->GetVelocity();
+    sw_interface_->left_front_steer_enc_vel =
+        hw_interface_->left_front_steer_vel_encoder->GetVelocity();
+    sw_interface_->left_back_steer_enc_vel =
+        hw_interface_->left_back_steer_vel_encoder->GetVelocity();
+    sw_interface_->right_front_steer_enc_vel =
+        hw_interface_->right_front_steer_vel_encoder->GetVelocity();
+    sw_interface_->right_back_steer_enc_vel =
+        hw_interface_->right_back_steer_vel_encoder->GetVelocity();
 
     return true;
 }
@@ -205,26 +232,48 @@ bool SwerveDriveIO::SetOutputs() {
     OKC_CHECK(hw_interface_->right_back_steer_motor != nullptr);
 
     // Set the drive outputs.
-    // hw_interface_->left_front_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->left_front_drive_motor_output));
-    // hw_interface_->left_back_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->left_back_drive_motor_output));
-    // hw_interface_->right_front_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->right_front_drive_motor_output));
-    // hw_interface_->right_back_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive, this->sw_interface_->drive_config.max_output_drive, &this->sw_interface_->right_back_drive_motor_output));
-    hw_interface_->left_front_drive_motor->Set(this->sw_interface_->left_front_drive_motor_output);
-    hw_interface_->left_back_drive_motor->Set(this->sw_interface_->left_back_drive_motor_output);
-    hw_interface_->right_front_drive_motor->Set(this->sw_interface_->right_front_drive_motor_output);
-    hw_interface_->right_back_drive_motor->Set(this->sw_interface_->right_back_drive_motor_output);
-
+    // hw_interface_->left_front_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive,
+    // this->sw_interface_->drive_config.max_output_drive,
+    // &this->sw_interface_->left_front_drive_motor_output));
+    // hw_interface_->left_back_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive,
+    // this->sw_interface_->drive_config.max_output_drive,
+    // &this->sw_interface_->left_back_drive_motor_output));
+    // hw_interface_->right_front_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive,
+    // this->sw_interface_->drive_config.max_output_drive,
+    // &this->sw_interface_->right_front_drive_motor_output));
+    // hw_interface_->right_back_drive_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_drive,
+    // this->sw_interface_->drive_config.max_output_drive,
+    // &this->sw_interface_->right_back_drive_motor_output));
+    hw_interface_->left_front_drive_motor->Set(
+        this->sw_interface_->left_front_drive_motor_output);
+    hw_interface_->left_back_drive_motor->Set(
+        this->sw_interface_->left_back_drive_motor_output);
+    hw_interface_->right_front_drive_motor->Set(
+        this->sw_interface_->right_front_drive_motor_output);
+    hw_interface_->right_back_drive_motor->Set(
+        this->sw_interface_->right_back_drive_motor_output);
 
     // set the steer outputs.
-    // hw_interface_->left_front_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer, this->sw_interface_->drive_config.max_output_steer, &this->sw_interface_->left_front_steer_motor_output));
-    // hw_interface_->left_back_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer, this->sw_interface_->drive_config.max_output_steer, &this->sw_interface_->left_back_steer_motor_output));
-    // hw_interface_->right_front_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer, this->sw_interface_->drive_config.max_output_steer, &this->sw_interface_->right_front_steer_motor_output));
-    // hw_interface_->right_back_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer, this->sw_interface_->drive_config.max_output_steer, &this->sw_interface_->right_back_steer_motor_output));
-    hw_interface_->left_front_steer_motor->Set(this->sw_interface_->left_front_steer_motor_output);
-    hw_interface_->left_back_steer_motor->Set(this->sw_interface_->left_back_steer_motor_output);
-    hw_interface_->right_front_steer_motor->Set(this->sw_interface_->right_front_steer_motor_output);
-    hw_interface_->right_back_steer_motor->Set(this->sw_interface_->right_back_steer_motor_output);
-
+    // hw_interface_->left_front_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer,
+    // this->sw_interface_->drive_config.max_output_steer,
+    // &this->sw_interface_->left_front_steer_motor_output));
+    // hw_interface_->left_back_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer,
+    // this->sw_interface_->drive_config.max_output_steer,
+    // &this->sw_interface_->left_back_steer_motor_output));
+    // hw_interface_->right_front_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer,
+    // this->sw_interface_->drive_config.max_output_steer,
+    // &this->sw_interface_->right_front_steer_motor_output));
+    // hw_interface_->right_back_steer_motor->Set(TeamOKC::Clamp(-this->sw_interface_->drive_config.max_output_steer,
+    // this->sw_interface_->drive_config.max_output_steer,
+    // &this->sw_interface_->right_back_steer_motor_output));
+    hw_interface_->left_front_steer_motor->Set(
+        this->sw_interface_->left_front_steer_motor_output);
+    hw_interface_->left_back_steer_motor->Set(
+        this->sw_interface_->left_back_steer_motor_output);
+    hw_interface_->right_front_steer_motor->Set(
+        this->sw_interface_->right_front_steer_motor_output);
+    hw_interface_->right_back_steer_motor->Set(
+        this->sw_interface_->right_back_steer_motor_output);
 
     return true;
 }
