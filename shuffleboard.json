@@ -494,6 +494,22 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "0,4": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/intake/wrist encoder",
+              "_title": "Shuffleboard/intake/wrist encoder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -360.0,
+              "Range/Max": 360.0,
+              "Visuals/Show value": true
+            }
           }
         }
       }
@@ -547,8 +563,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": 240,
-              "imageHeight": 120
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }
