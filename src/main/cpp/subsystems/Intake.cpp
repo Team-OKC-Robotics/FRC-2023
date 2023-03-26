@@ -96,6 +96,7 @@ void Intake::Periodic() {
     }
 
     VOKC_CALL(IntakeUI::nt_tilt->SetDouble(this->interface_->tilt_encoder));
+    VOKC_CALL(IntakeUI::nt_tilt_setpoint->SetDouble(this->wrist_pid_->GetSetpoint()));
 
     setpoint_log_.Append(this->wrist_pid_->GetSetpoint());
     output_log_.Append(this->interface_->tilt_power);

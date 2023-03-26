@@ -72,4 +72,5 @@ namespace IntakeUI {
     extern frc::ShuffleboardTab &nt_tab;
 
     extern nt::GenericEntry *const nt_tilt;
+    extern nt::GenericEntry *const nt_tilt_setpoint;
 }
