@@ -45,7 +45,8 @@ bool IntakeIO::ProcessIO() {
 
     // wrist encoder
     OKC_CHECK(hw_interface_->wrist_encoder != nullptr);
-    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition() + offset_;
+    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition() * 360.0 + offset_;
+    TeamOKC::WrapAngle(&sw_interface_->tilt_encoder);
 
     // === outputs ===
     hw_interface_->intake_motor->Set(sw_interface_->intake_power);
