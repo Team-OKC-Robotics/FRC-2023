@@ -2,6 +2,9 @@
 #pragma once
 
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 
 #define OKC_CALL(res)                                                          \
     if (!(res)) {                                                              \
@@ -58,9 +61,11 @@ namespace TeamOKC {
     } Pose;
 
     bool WrapAngle(double *angle);
+    double Radians(double degrees);
 
     typedef struct arm_state_t {
         double extension;
         double rotation;
+
     } ArmState;
 }

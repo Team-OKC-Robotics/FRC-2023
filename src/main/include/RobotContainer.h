@@ -13,7 +13,9 @@
 #include "hardware/Hardware.h"
 
 // I/O Subsystems
+#include "io/ArmIO.h"
 #include "io/SwerveDriveIO.h"
+#include "io/VisionIO.h"
 #include "io/ArmIO.h"
 #include "io/IntakeIO.h"
 
@@ -21,8 +23,9 @@
 
 
 // Subsystems
-#include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
+#include "subsystems/SwerveDrive.h"
+#include "subsystems/Vision.h"
 #include "subsystems/Intake.h"
 
 // Gamepad
@@ -85,8 +88,7 @@ private:
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
     bool InitActuators(Actuators *actuators_interface);
-    bool InitSensors(const Actuators &actuators,
-                     Sensors *sensor_interface);
+    bool InitSensors(const Actuators &actuators, Sensors *sensor_interface);
 
     // Command initialization
     bool InitCommands();
@@ -105,8 +107,6 @@ private:
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
     std::shared_ptr<IntakeHardwareInterface> intake_hw_;
-
-
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
@@ -185,5 +185,3 @@ private:
     std::shared_ptr<IntakeCommand> other_intake_command;
     std::shared_ptr<IntakeCommand> stop_intake_command;
 };
-
-

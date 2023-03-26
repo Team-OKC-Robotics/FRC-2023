@@ -310,7 +310,7 @@ bool RobotContainer::InitCommands() {
     score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
     
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.9, 0.6, false); // speed mod, open loop
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1, 0.4, false); // speed mod, open loop
     slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
     fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
     OKC_CHECK(swerve_teleop_command_ != nullptr);
