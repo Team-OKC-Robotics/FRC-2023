@@ -154,8 +154,8 @@ bool SwerveDriveIO::ProcessInputs() {
     // navX IMU:
     OKC_CHECK(hw_interface_->ahrs != nullptr);
     #ifdef __FRC_ROBORIO__
-        sw_interface_->imu_yaw = hw_interface_->ahrs->GetYaw();
-        sw_interface_->imu_pitch = hw_interface_->ahrs->GetPitch();
+        sw_interface_->imu_yaw = hw_interface_->ahrs->GetAngle();
+        sw_interface_->imu_pitch = hw_interface_->ahrs->GetRoll();
     #endif
     #ifndef __FRC_ROBORIO__
         sw_interface_->imu_yaw = 0.0;

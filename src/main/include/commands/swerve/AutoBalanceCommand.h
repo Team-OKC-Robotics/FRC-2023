@@ -13,7 +13,7 @@
 class AutoBalanceCommand
     : public frc2::CommandHelper<frc2::CommandBase, AutoBalanceCommand> {
 public:
-    explicit AutoBalanceCommand(std::shared_ptr<SwerveDrive> swerve);
+    explicit AutoBalanceCommand(std::shared_ptr<SwerveDrive> swerve, double sign);
 
     void Initialize() override;
     void Execute() override;
@@ -22,4 +22,5 @@ public:
 
 private:
     std::shared_ptr<SwerveDrive> swerve_;
+    double sign_;
 };
