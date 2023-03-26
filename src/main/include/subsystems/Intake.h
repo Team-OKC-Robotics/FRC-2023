@@ -9,6 +9,8 @@
 #include "Logging.h"
 #include "wpi/DataLog.h"
 #include "ui/UserInterface.h"
+#include "wpi/DataLog.h"
+
 
 class Intake : public frc2::SubsystemBase {
 public:
@@ -37,5 +39,9 @@ private:
    
     double intake_power_;
    
-    ControlMode mode_;    
+    ControlMode mode_;
+
+    wpi::log::DoubleLogEntry setpoint_log_;
+    wpi::log::DoubleLogEntry output_log_;
+    wpi::log::DoubleLogEntry encoder_log_;
 };
