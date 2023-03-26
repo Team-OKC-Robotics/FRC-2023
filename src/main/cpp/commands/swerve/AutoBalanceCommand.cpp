@@ -1,8 +1,9 @@
 
 #include "commands/swerve/AutoBalanceCommand.h"
 
-AutoBalanceCommand::AutoBalanceCommand(std::shared_ptr<SwerveDrive> swerve) {
+AutoBalanceCommand::AutoBalanceCommand(std::shared_ptr<SwerveDrive> swerve, double sign) {
     swerve_ = swerve;
+    sign_ = sign;
 
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());
@@ -17,7 +18,7 @@ void AutoBalanceCommand::Initialize() {
 }
 
 void AutoBalanceCommand::Execute() {
-    VOKC_CALL(swerve_->AutoBalance());
+    VOKC_CALL(swerve_->AutoBalance(sign_));
 }
 
 void AutoBalanceCommand::End(bool interrupted) {

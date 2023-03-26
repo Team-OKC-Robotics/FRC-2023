@@ -28,7 +28,12 @@
 #define COAST rev::CANSparkMax::IdleMode::kCoast
 #define BRAKE rev::CANSparkMax::IdleMode::kBrake
 
-
+enum BalanceState {
+    RUN_UP,
+    CLIMB,
+    DRIVE_BACKWARDS,
+    FINISHED
+};
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:
@@ -64,7 +69,7 @@ public:
     bool DriveAuto(double max_speed);
     bool AtDistSetpoint(bool *at);
 
-    bool AutoBalance();
+    bool AutoBalance(double sign);
     bool AtBalanceSetpoint(bool *at);
 
     bool GetLeftDriveEncoderAverage(double *avg);
@@ -107,9 +112,19 @@ private:
 
     double control_decay = 0.1;
 
-    bool balanced_ = false;
-    bool tilted_ = false;
-    double last_yaw_ = 0.0;
+    // auton
+    bool probably_balanced_ = false;
+    float last_pitch_ = 0.0;
+
+    BalanceState balance_state_ = RUN_UP;
+
+    double run_up_speed_;
+    double tilted_speed_;
+    double tilted_threshold_;
+    double reverse_threshold_;
+    double pitch_threshold_;
+    double drive_backward_speed_;
+    double timeout_;
 
     // max output
     double max_output_drive_ = 1;
@@ -126,6 +141,8 @@ private:
 
     bool in_auto = false;
     bool auto_lock_heading_;
+    bool start_timer_ = false;
+    std::shared_ptr<frc::Timer> timer_;
     TeamOKC::Pose position_;
 
     // pid controllers
@@ -141,4 +158,6 @@ private:
     wpi::log::DoubleLogEntry drive_log_;
     wpi::log::DoubleLogEntry strafe_log_;
     wpi::log::DoubleLogEntry turn_log_;
+
+    wpi::log::DoubleLogEntry imu_pitch_log_;
 };
