@@ -54,6 +54,7 @@ private:
 
     // PID controllers
     std::shared_ptr<frc::PIDController> arm_pid_;
+    double arm_kF;
     std::shared_ptr<frc::PIDController> inches_pid_;
 
     // controls stuff (I'd call it a state machine but it isn't really a state machine)

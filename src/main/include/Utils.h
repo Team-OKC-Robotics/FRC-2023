@@ -62,6 +62,11 @@ namespace TeamOKC {
 
     bool WrapAngle(double *angle);
     double Radians(double degrees);
+    
+    class PIDController {
+        public:
+        private:
+    };
 
     typedef struct arm_state_t {
         double extension;

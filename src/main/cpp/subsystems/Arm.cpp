@@ -10,6 +10,7 @@ bool Arm::Init() {
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
+    arm_kF = RobotParams::GetParam("arm.lift_pid.kF", 0.0);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
     arm_pid_->SetTolerance(2, 2);
 

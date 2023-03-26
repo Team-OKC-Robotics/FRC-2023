@@ -98,6 +98,7 @@ intake_setpoint = 40.0
 kP = 0.05
 kI = 0
 kD = 0
+kF = 0.05
 
 [arm.extend_pid]
 kP = 0.06
