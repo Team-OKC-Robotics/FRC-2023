@@ -360,8 +360,8 @@ bool RobotContainer::InitCommands() {
     arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_));
     
     // intake commands
-    intake_command = std::make_shared<IntakeCommand>(intake_, 0.3);
-    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.3);
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.5);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.5);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
 
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
