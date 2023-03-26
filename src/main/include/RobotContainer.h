@@ -45,11 +45,11 @@
 #include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
 
-
 //intake
 #include "commands/intake/IntakeCommand.h"
 #include "commands/intake/IntakePositionCommand.h"
 #include "commands/intake/IncrementIntakePositionCommand.h"
+#include "commands/intake/FieldOrientedIntakeCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -187,4 +187,11 @@ private:
 
     std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
     std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
+
+    std::shared_ptr<IntakePositionCommand> tilt_pickup_reverse_command_;
+    std::shared_ptr<IntakePositionCommand> tilt_pickup_command_;
+    std::shared_ptr<IntakePositionCommand> tilt_carry_command_;
+
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
 };

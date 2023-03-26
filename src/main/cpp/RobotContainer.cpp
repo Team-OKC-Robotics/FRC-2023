@@ -63,6 +63,9 @@ bool RobotContainer::ConfigureButtonBindings() {
     
     // driver_x_button_->WhileActiveContinous(*retractArmCommand);
     // driver_b_button_->WhileActiveContinous(*extendArmCommand);
+
+    // manip_left_stick_button_->WhileHeld(*inc_wrist_tilt_command_);
+    // manip_right_stick_button_->WhileHeld(*dec_wrist_tilt_command_);
     
     // second driver controls
     manip_right_bumper_button_->WhenPressed(*arm_pickup_reverse_command_);
@@ -72,8 +75,12 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
 
-    manip_left_stick_button_->WhenHeld(*inc_wrist_tilt_command_);
-    manip_right_stick_button_->WhenHeld(*dec_wrist_tilt_command_);
+    manip_right_bumper_button_->WhenPressed(*tilt_pickup_reverse_command_);
+    manip_left_bumper_button_->WhenPressed(*tilt_pickup_command_);
+    manip_x_button_->WhenPressed(*tilt_carry_command_);
+    
+    manip_b_button_->WhenPressed(*tilt_mid_command_);
+    manip_y_button_->WhenPressed(*tilt_high_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -247,6 +254,7 @@ bool RobotContainer::InitIntake() {
     intake_io_ = std::make_shared<IntakeIO>(intake_hw_.get(), intake_sw_.get());
 
     OKC_CHECK(intake_io_ != nullptr);
+    OKC_CALL(intake_io_->Init());
 
     intake_ = std::make_shared<Intake>(intake_sw_.get());
 
@@ -315,6 +323,15 @@ bool RobotContainer::InitCommands() {
     double negative_score_high_rotation_ = RobotParams::GetParam("arm.negative_score_high.arm_setpoint", 0.0);
     double negative_score_high_extension_ = RobotParams::GetParam("arm.negative_score_high.extend_setpoint", 1.0);
 
+    double tilt_pickup_reverse_ = RobotParams::GetParam("arm.pickup.intake_setpoint", 0.0);
+    double tilt_pickup_ = RobotParams::GetParam("arm.negative_pickup.intake_setpoint", 0.0);
+
+    double tilt_score_mid_ = RobotParams::GetParam("arm.score_medium.intake_setpoint", 0.0);
+    double tilt_score_mid_reverse_ = RobotParams::GetParam("arm.negative_score_medium.intake_setpoint", 0.0);
+
+    double tilt_score_high_ = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
+    double tilt_score_high_reverse_ = RobotParams::GetParam("arm.negative_score_high.intake_setpoint", 0.0);
+
 
     // autons
     score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
@@ -349,6 +366,13 @@ bool RobotContainer::InitCommands() {
 
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
     dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
+
+    tilt_pickup_reverse_command_ = std::make_shared<IntakePositionCommand>(intake_, tilt_pickup_reverse_);
+    tilt_pickup_command_ = std::make_shared<IntakePositionCommand>(intake_, tilt_pickup_);
+    tilt_carry_command_ = std::make_shared<IntakePositionCommand>(intake_, 0.0);
+
+    tilt_mid_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_mid_, tilt_score_mid_reverse_);
+    tilt_high_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_high_, tilt_score_high_reverse_);
    
     return true;
 }
