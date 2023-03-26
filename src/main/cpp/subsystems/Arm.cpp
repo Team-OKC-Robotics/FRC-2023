@@ -250,7 +250,15 @@ bool Arm::AutoControl() {
         this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
 
         // and keep rotation where it is
-        this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+
+        // if the arm is trying to go to 0, and we're close to 0
+        if (abs(this->desired_state_.rotation) < 2.0 && abs(this->state_.rotation) < 10.0) {
+            // to prevent it from oscillating just set it to 0
+            this->interface_->arm_lift_power = 0.0;
+        } else {
+            // otherwise
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+        }
     } else {
         OKC_CHECK_MSG(false, "arm state machine unknown state");
     }
