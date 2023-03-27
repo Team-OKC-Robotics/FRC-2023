@@ -11,15 +11,13 @@ bool Intake::Init() {
     double wrist_kI = RobotParams::GetParam("intake.wrist_pid.kI", 0.0);
     double wrist_kD = RobotParams::GetParam("intake.wrist_pid.kD", 0.0);
     wrist_pid_ = std::make_shared<frc::PIDController>(wrist_kP, wrist_kI, wrist_kD);
+    wrist_pid_->SetTolerance(2, 2);
     
-    // wrist_pid_->SetTolerance(1, 1);
-
     setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/setpoint");
     output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/output");
     encoder_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/encoder");
 
-    //TODO verify that this is a good idea
-    this->wrist_pid_->SetSetpoint(0.0);
+    wrist_pid_->SetSetpoint(0.0);
 
     return true;
 }
@@ -76,6 +74,14 @@ bool Intake::AutoControl() {
     // TeamOKC::Clamp(-0.5, 0.5, &interface_->tilt_power);
     interface_->intake_power = intake_power_;
  
+    return true;
+}
+
+bool Intake::AtSetpoint(bool *at) {
+    OKC_CHECK(interface_ != nullptr);
+
+    *at = wrist_pid_->AtSetpoint();
+
     return true;
 }
 

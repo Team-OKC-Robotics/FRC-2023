@@ -44,12 +44,14 @@
 #include "commands/arm/IncrementArmExtendCommand.h"
 #include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
+#include "commands/arm/TiltThenMoveArmCommand.h"
 
 //intake
 #include "commands/intake/IntakeCommand.h"
 #include "commands/intake/IntakePositionCommand.h"
 #include "commands/intake/IncrementIntakePositionCommand.h"
 #include "commands/intake/FieldOrientedIntakeCommand.h"
+#include "commands/intake/IntakeBlockingPositionCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -176,6 +178,7 @@ private:
 
     std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
+
     std::shared_ptr<ArmSetStateCommand> arm_pickup_reverse_command_;
     std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
     std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
@@ -188,10 +191,14 @@ private:
     std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
     std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
 
-    std::shared_ptr<IntakePositionCommand> tilt_pickup_reverse_command_;
-    std::shared_ptr<IntakePositionCommand> tilt_pickup_command_;
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_reverse_command_;
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_command_;
     std::shared_ptr<IntakePositionCommand> tilt_carry_command_;
 
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
+
+    // pickup commands
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_command_;
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_reverse_command_;
 };

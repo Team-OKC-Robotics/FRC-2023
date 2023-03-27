@@ -68,15 +68,13 @@ bool RobotContainer::ConfigureButtonBindings() {
     // manip_right_stick_button_->WhileHeld(*dec_wrist_tilt_command_);
     
     // second driver controls
-    manip_right_bumper_button_->WhenPressed(*arm_pickup_reverse_command_);
-    manip_left_bumper_button_->WhenPressed(*arm_pickup_command_);
+    manip_right_bumper_button_->WhenPressed(*pickup_command_);
+    manip_left_bumper_button_->WhenPressed(*pickup_reverse_command_);
     manip_x_button_->WhenPressed(*arm_carry_command_);
 
     manip_b_button_->WhenPressed(*arm_score_mid_command_);
     manip_y_button_->WhenPressed(*arm_score_high_command_);
 
-    manip_right_bumper_button_->WhenPressed(*tilt_pickup_reverse_command_);
-    manip_left_bumper_button_->WhenPressed(*tilt_pickup_command_);
     manip_x_button_->WhenPressed(*tilt_carry_command_);
     
     manip_b_button_->WhenPressed(*tilt_mid_command_);
@@ -367,13 +365,17 @@ bool RobotContainer::InitCommands() {
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
     dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
 
-    tilt_pickup_reverse_command_ = std::make_shared<IntakePositionCommand>(intake_, tilt_pickup_reverse_);
-    tilt_pickup_command_ = std::make_shared<IntakePositionCommand>(intake_, tilt_pickup_);
+    tilt_pickup_reverse_command_ = std::make_shared<IntakeBlockingPositionCommand>(intake_, tilt_pickup_reverse_);
+    tilt_pickup_command_ = std::make_shared<IntakeBlockingPositionCommand>(intake_, tilt_pickup_);
     tilt_carry_command_ = std::make_shared<IntakePositionCommand>(intake_, 0.0);
 
     tilt_mid_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_mid_, tilt_score_mid_reverse_);
     tilt_high_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_high_, tilt_score_high_reverse_);
-   
+
+    // pickup commands
+    pickup_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_command_, arm_pickup_command_);
+    pickup_reverse_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_reverse_command_, arm_pickup_reverse_command_);
+
     return true;
 }
 
