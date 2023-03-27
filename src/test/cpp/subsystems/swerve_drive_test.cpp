@@ -143,10 +143,66 @@ TEST_F(SwerveDriveTest, DriveEncodersTest) {
 }
 
 TEST_F(SwerveDriveTest, SteerEncodersTest) {
-    //TODO not sure what to test. this might be more of a SwerveModule than a SwerveDrive thing
+    //check to see if steerencoders can be reset
+    ASSERT_TRUE(swerve_->ResetSteerEncoders());
+    EXPECT_EQ(sw_interface_.reset_steer_encoders, true);
+    
+    sw_interface_.left_front_drive_motor_enc = left_front;
+    sw_interface.left_back_drive_motor_enc = left_back;
+    sw_interface_.right_front_drive_motor_enc = right_front;
+    sw_interface_.right_back_drive_motor_enc = right_back;
+
+    double avg = 0.0;
+    ASSERT_TRUE(swerve_->GetLeftSteerEncoderAverge(&avg));
+    EXPECT_EQ(avg, (left_front+left_back) / 2 );
+
+    ASSERT_TRUE(swerve_->GetRightSteerEncoderAverage(&avg));
+    EXPECT_EQ(avg, (right_front+right_back) / 2);
+
 }
 
 TEST_F(SwerveDriveTest, PeriodicTest) {
     swerve_->Periodic();
     //TODO change some things and verify they get updated by Periodic?
+}
+
+TEST_F(SwerveDriveTest, DistanceTest) {
+    ASSERT_TRUE(swerve_->GetMotorOutput);
+    EXPECT_NE(sw_interface_.left_front_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.left_back_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.right_front_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.right_back_drive_motor_output = 0);
+}
+
+TEST_F(SwerveDriveTest, DriveAutoTest) {
+    ASSERT_TRUE(swerve_->DriveAuto);
+    EXPECT_NE(sw_interface_.left_front_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.left_back_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.right_front_drive_motor_output = 0);
+    EXPECT_NE(sw_interface_.right_back_drive_motor_output = 0);
+    EXPECT_EQ(max_speed, 0.5);
+}
+
+TEST_F(SwerveDriveTest, AutoBalanceTest) {
+    ASSERT_TRUE(swerve_->AutoBalance);
+    EXPECT_EQ(sw_interface_.left_front_drive_motor_output = 0.4);
+    EXPECT_EQ(sw_interface_.left_back_drive_motor_output = 0.4);
+    EXPECT_EQ(sw_interface_.right_front_drive_motor_output = 0.4);
+    EXPECT_EQ(sw_interface_.right_back_drive_motor_output = 0.4);
+
+    ASSERT_TRUE(swerve_->tilted);
+    EXPECT_EQ(sw_interface_.left_front_drive_motor_output = 0.1);
+    EXPECT_EQ(sw_interface_.left_back_drive_motor_output = 0.1);
+    EXPECT_EQ(sw_interface_.right_front_drive_motor_output = 0.1);
+    EXPECT_EQ(sw_interface_.right_back_drive_motor_output = 0.1);
+
+    ASSERT_TRUE(swerve_->balanced);
+    EXPECT_EQ(sw_interface_.left_front_drive_motor_output = 0);
+    EXPECT_EQ(sw_interface_.left_back_drive_motor_output = 0);
+    EXPECT_EQ(sw_interface_.right_front_drive_motor_output = 0);
+    EXPECT_EQ(sw_interface_.right_back_drive_motor_output = 0.);
+
+
+
+
 }
