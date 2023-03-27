@@ -323,8 +323,8 @@ bool RobotContainer::InitCommands() {
     double negative_score_high_rotation_ = RobotParams::GetParam("arm.negative_score_high.arm_setpoint", 0.0);
     double negative_score_high_extension_ = RobotParams::GetParam("arm.negative_score_high.extend_setpoint", 1.0);
 
-    double tilt_pickup_reverse_ = RobotParams::GetParam("arm.pickup.intake_setpoint", 0.0);
-    double tilt_pickup_ = RobotParams::GetParam("arm.negative_pickup.intake_setpoint", 0.0);
+    double tilt_pickup_reverse_ = RobotParams::GetParam("arm.negative_pickup.intake_setpoint", 0.0);
+    double tilt_pickup_ = RobotParams::GetParam("arm.pickup.intake_setpoint", 0.0);
 
     double tilt_score_mid_ = RobotParams::GetParam("arm.score_medium.intake_setpoint", 0.0);
     double tilt_score_mid_reverse_ = RobotParams::GetParam("arm.negative_score_medium.intake_setpoint", 0.0);
@@ -360,8 +360,8 @@ bool RobotContainer::InitCommands() {
     arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_));
     
     // intake commands
-    intake_command = std::make_shared<IntakeCommand>(intake_, 0.5);
-    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.5);
+    intake_command = std::make_shared<IntakeCommand>(intake_, 1.0);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -1.0);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.01);
 
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
