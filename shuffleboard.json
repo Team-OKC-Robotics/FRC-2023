@@ -482,7 +482,7 @@
               "_showGlyph": false
             }
           },
-          "3,4": {
+          "4,5": {
             "size": [
               1,
               1
@@ -509,6 +509,25 @@
               "Range/Min": -360.0,
               "Range/Max": 360.0,
               "Visuals/Show value": true
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/intake/wrist setpoint",
+              "_title": "Shuffleboard/intake/wrist setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -100.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
             }
           }
         }
