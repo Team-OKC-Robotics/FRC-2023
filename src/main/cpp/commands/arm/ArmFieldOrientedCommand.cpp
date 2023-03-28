@@ -50,6 +50,9 @@ void ArmFieldOrientedCommand::Execute() {
 }
 
 bool ArmFieldOrientedCommand::IsFinished() {
-    // always end this command immediately
-    return true;
+    bool at = false;
+
+    OKC_CALL(arm_->AtLiftSetpoint(&at));
+
+    return at;
 }

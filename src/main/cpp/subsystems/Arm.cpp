@@ -29,8 +29,8 @@ bool Arm::Init() {
     arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint");
 
     // pull limits from the parameters file
-    lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100);
-    extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100);
+    lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100.0);
+    extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100.0);
   
     // initialize with default state
     state_ = TeamOKC::ArmState(0, 0);

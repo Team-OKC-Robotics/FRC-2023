@@ -47,6 +47,7 @@ public:
     bool AllowCalibration();
     
 
+    bool arm_first_ = false;
 
 private:
     // software interface
