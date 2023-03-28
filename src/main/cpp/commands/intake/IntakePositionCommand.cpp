@@ -30,7 +30,7 @@ void IntakePositionCommand::Execute() {
         // then we have to do some special stuff because we can't have the wrist be at 0 inside the robot with a game piece, so we want to slide it either to 80 or -80
 
         double tilt = 0.0;
-        VOKC_CALL(intake_->GetTilt(&tilt));
+        VOKC_CALL(intake_->GetIntakeTilt(&tilt));
 
         // if we're already more than 0, send it to positive 80
         if (tilt > 0) {
