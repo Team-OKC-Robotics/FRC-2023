@@ -22,6 +22,9 @@ joystickDriveLog = [[], []]
 joystickStrafeLog = [[], []]
 joystickTurnLog = [[], []]
 
+tiltEncLog = [[], []]
+tiltOutputLog = [[], []]
+tiltSetpointLog = [[], []]
 pitchLog = [[], []]
 
 root = tkinter.Tk()
@@ -89,6 +92,16 @@ for index, line in enumerate(log):
         pitchLog[0].append(float(timestamp))
         pitchLog[1].append(float(data))
 
+    if (id == '"/tilt/output"'):
+        tiltOutputLog[0].append(float(timestamp))
+        tiltOutputLog[1].append(float(data)) # so we can actually see it on the graph
+    elif id == '"/tilt/encoder"':
+        tiltEncLog[0].append(float(timestamp))
+        tiltEncLog[1].append(float(data))
+    elif id == '"/tilt/setpoint"':
+        tiltSetpointLog[0].append(float(timestamp))
+        tiltSetpointLog[1].append(float(data))
+
 plt.figure()
 plt.plot(liftEncLog[0], liftEncLog[1])
 plt.plot(liftOutputLog[0], liftOutputLog[1])
@@ -104,6 +117,14 @@ plt.plot(extendSetpointLog[0], extendSetpointLog[1])
 plt.xlabel("Time (sec)")
 plt.ylabel("data")
 plt.legend(("extend enc", "output", "setpoint"))
+
+plt.figure()
+plt.plot(tiltEncLog[0], tiltEncLog[1])
+plt.plot(tiltOutputLog[0], tiltOutputLog[1])
+plt.plot(tiltSetpointLog[0], tiltSetpointLog[1])
+plt.xlabel("Time (sec)")
+plt.ylabel("data")
+plt.legend(("tilt enc", "tilt output", "tilt setpoint"))
 
 plt.figure()
 plt.plot(joystickDriveLog[0], joystickDriveLog[1])

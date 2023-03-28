@@ -20,6 +20,7 @@ public:
     explicit IntakeCommand(std::shared_ptr<Intake> intake, double power);
 
     void Execute() override;
+    void Initialize() override;
     bool IsFinished() override;
 
 private:

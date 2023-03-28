@@ -29,8 +29,8 @@ bool Arm::Init() {
     arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint");
 
     // pull limits from the parameters file
-    lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100);
-    extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100);
+    lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100.0);
+    extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100.0);
   
     // initialize with default state
     state_ = TeamOKC::ArmState(0, 0);
@@ -214,10 +214,10 @@ bool Arm::AutoControl() {
     // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
     } else if (control_state_ == ROTATING) {
         // bring the extension in whenever we rotate the arm, to reduce bounce
-        this->inches_pid_->SetSetpoint(1);
+        this->inches_pid_->SetSetpoint(0.5);
 
         // if we have brought the extension in
-        if (abs(1.0 - state_.extension) < 2.0) {
+        if (abs(1.0 - state_.extension) < 1.0) {
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -250,7 +250,15 @@ bool Arm::AutoControl() {
         this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
 
         // and keep rotation where it is
-        this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+
+        // if the arm is trying to go to 0, and we're close to 0
+        if (abs(this->desired_state_.rotation) < 2.0 && abs(this->state_.rotation) < 7.0) {
+            // to prevent it from oscillating just set it to 0
+            this->interface_->arm_lift_power = 0.0;
+        } else {
+            // otherwise
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+        }
     } else {
         OKC_CHECK_MSG(false, "arm state machine unknown state");
     }

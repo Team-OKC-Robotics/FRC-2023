@@ -42,12 +42,17 @@
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
+#include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
-#include "commands/arm/ArmSetStateDpadCommand.h"
-
+#include "commands/arm/TiltThenMoveArmCommand.h"
+#include "commands/arm/MoveArmThenTiltCommand.h"
 
 //intake
 #include "commands/intake/IntakeCommand.h"
+#include "commands/intake/IntakePositionCommand.h"
+#include "commands/intake/IncrementIntakePositionCommand.h"
+#include "commands/intake/FieldOrientedIntakeCommand.h"
+#include "commands/intake/IntakeBlockingPositionCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -174,14 +179,31 @@ private:
 
     std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_short_carry_command_;
 
-    std::shared_ptr<ArmSetStateDpadCommand> arm_dpad_set_state_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_pickup_reverse_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
     std::shared_ptr<IntakeCommand> other_intake_command;
     std::shared_ptr<IntakeCommand> stop_intake_command;
+
+    std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
+    std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
+
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_reverse_command_;
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_command_;
+    std::shared_ptr<IntakePositionCommand> tilt_carry_command_;
+
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
+
+    // sequential commands
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_command_;
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_reverse_command_;
+
+    std::shared_ptr<MoveArmThenTiltCommand> score_mid_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> score_high_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> carry_command_;
 };

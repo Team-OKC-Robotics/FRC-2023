@@ -13,20 +13,19 @@ IntakeCommand::IntakeCommand(std::shared_ptr<Intake> intake,
     power_ = power;
 
     if (intake_ != nullptr) {
-        this->AddRequirements(intake_.get());
-    
-        intake_->SetControlMode(Manual);
+        this->AddRequirements(intake_.get());   
     }
 }
 
-
+void IntakeCommand::Initialize() {
+    VOKC_CALL(intake_ != nullptr);
+    VOKC_CALL(intake_->SetControlMode(Auto));
+}
 
 
 void IntakeCommand::Execute() {
     VOKC_CHECK(intake_ != nullptr);
     VOKC_CALL(intake_->SetIntakePower(power_))
-
-
 }
 
 bool IntakeCommand::IsFinished() {
