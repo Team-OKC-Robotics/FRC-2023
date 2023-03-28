@@ -30,6 +30,14 @@ bool Intake::Reset() {
     return true;
 }
 
+bool Intake::GetIntakeTilt(double *tilt) {
+    OKC_CHECK(interface_ != nullptr);
+
+    *tilt = interface_->tilt_encoder;
+
+    return true;
+}
+
 bool Intake::SetIntakePower(double power) {
     intake_power_ = power;
 
