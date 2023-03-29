@@ -67,20 +67,20 @@ timeout = 1.3
 offset = -327
 lift_limit = 110
 extend_limit = 95
-max_output = 0.5
+max_output = 0.7
 arm_open_loop = 10
 extend_open_loop = 10
 
 # right in front of the robot to pick stuff up0
 [arm.pickup]
-extend_setpoint = 50.0
+extend_setpoint = 51.0
 arm_setpoint = 33.0
 intake_setpoint = 45.0
 
 [arm.score_high]
 extend_setpoint = 60.0
-arm_setpoint = 110.0
-intake_setpoint = 88.0
+arm_setpoint = 100.0
+intake_setpoint = -70.0
 
 [arm.score_medium]
 extend_setpoint = 20.0
@@ -88,19 +88,29 @@ arm_setpoint = 94.0
 intake_setpoint = -40.0
 
 [arm.negative_pickup]
-extend_setpoint = 50.0
-arm_setpoint = -25.0
+extend_setpoint = 47.0
+arm_setpoint = -23.0
 intake_setpoint = -70.0
 
 [arm.negative_score_high]
-extend_setpoint = 50.0
-arm_setpoint = -110.0
-intake_setpoint = -68.0
+extend_setpoint = 40.0
+arm_setpoint = -100.0
+intake_setpoint = 68.0
 
 [arm.negative_score_medium]
-extend_setpoint = 15.0
-arm_setpoint = -100.0
+extend_setpoint = 20.0
+arm_setpoint = -90.0
 intake_setpoint = 52.0
+
+[arm.negative_human_player]
+extend_setpoint = 5.0
+arm_setpoint = -45.0
+intake_setpoint = -80.0
+
+[arm.human_player]
+extend_setpoint = 5.0
+arm_setpoint = 45.0
+intake_setpoint = 80.0
 
 
 [arm.lift_pid]
@@ -128,5 +138,5 @@ tilt_offset = -55.0
 
 [intake.wrist_pid]
 kP = 0.02
-kI = 0.0001
+kI = 0.0
 kD = 0.0003

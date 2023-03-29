@@ -34,10 +34,10 @@ void IntakePositionCommand::Execute() {
 
         // if we're already more than 0, send it to positive 80
         if (tilt > 0) {
-            intake_->SetIntakeTilt(80);
+            intake_->SetIntakeTilt(70);
         } else {
             // otherwise slide it to -80
-            intake_->SetIntakeTilt(-80);
+            intake_->SetIntakeTilt(-70);
         }
     } else {
         VOKC_CALL(intake_->SetIntakeTilt(angle_));

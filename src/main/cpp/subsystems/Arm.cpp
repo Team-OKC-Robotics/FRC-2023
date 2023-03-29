@@ -11,13 +11,13 @@ bool Arm::Init() {
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
-    arm_pid_->SetTolerance(2, 2);
+    arm_pid_->SetTolerance(2.5, 3.0);
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
     double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
     inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
-    inches_pid_->SetTolerance(0.2, 0.2);
+    inches_pid_->SetTolerance(0.7, 2.0);
 
     // logs
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
@@ -87,7 +87,7 @@ bool Arm::AtExtendSetpoint(bool *at) {
 bool Arm::AtLiftSetpoint(bool *at) {
     // if the error is less than the threshold, then we're there
     // *at = abs(this->desired_state_.rotation - this->state_.rotation) < rotation_threshold_;
-    *at = abs(this->desired_state_.rotation - this->state_.rotation) < 2;
+    *at = arm_pid_->AtSetpoint() && inches_pid_->AtSetpoint();
 
     return true;
 }
