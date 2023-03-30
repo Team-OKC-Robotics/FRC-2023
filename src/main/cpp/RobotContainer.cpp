@@ -367,8 +367,8 @@ bool RobotContainer::InitCommands() {
     arm_human_player_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(human_player_extension_, human_player_rotation_), TeamOKC::ArmState(negative_human_player_extension_, negative_human_player_rotation_));
 
     // intake commands
-    intake_command = std::make_shared<IntakeCommand>(intake_, 0.5);
-    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.5);
+    intake_command = std::make_shared<IntakeCommand>(intake_, 0.7);
+    other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.7);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.05);
 
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
