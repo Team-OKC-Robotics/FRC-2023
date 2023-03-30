@@ -15,7 +15,7 @@ work = true
 # assumes our modules are located in a square, everything should be the same distance from the center
 # units are in meters
 x_disp = 0.216
-y_disp = 0.216
+y_disp = 0.416
 # stuff for swerve modules and odometry and stuff
 l2_gear_ratio = 6.75
 wheel_diameter = 4.0
@@ -40,7 +40,7 @@ kD = 0.0
 [swerve.steer_pid]
 kP = 0.005
 kI = 0.0
-kD = 0.0
+kD = 0.000005
 
 [swerve.heading_pid]
 kP = 0.04
@@ -71,7 +71,7 @@ max_output = 0.7
 arm_open_loop = 10
 extend_open_loop = 10
 
-# right in front of the robot to pick stuff up0
+# right in front of the robot to pick stuff up
 [arm.pickup]
 extend_setpoint = 51.0
 arm_setpoint = 33.0
@@ -79,8 +79,8 @@ intake_setpoint = 45.0
 
 [arm.score_high]
 extend_setpoint = 65.0
-arm_setpoint = 103.0
-intake_setpoint = -50.0
+arm_setpoint = 105.0
+intake_setpoint = -40.0
 
 [arm.score_medium]
 extend_setpoint = 20.0
@@ -93,9 +93,9 @@ arm_setpoint = -23.0
 intake_setpoint = -70.0
 
 [arm.negative_score_high]
-extend_setpoint = 50.0
-arm_setpoint = -103.0
-intake_setpoint = 50.0
+extend_setpoint = 65.0
+arm_setpoint = -105.0
+intake_setpoint = 40.0
 
 [arm.negative_score_medium]
 extend_setpoint = 20.0
@@ -104,14 +104,13 @@ intake_setpoint = 52.0
 
 [arm.negative_human_player]
 extend_setpoint = 5.0
-arm_setpoint = -45.0
-intake_setpoint = -80.0
+arm_setpoint = -40.0
+intake_setpoint = -87.0
 
 [arm.human_player]
 extend_setpoint = 5.0
-arm_setpoint = 45.0
-intake_setpoint = 80.0
-
+arm_setpoint = 40.0
+intake_setpoint = 87.0
 
 [arm.lift_pid]
 kP = 0.05
@@ -139,5 +138,5 @@ tilt_offset = -55.0
 
 [intake.wrist_pid]
 kP = 0.02
-kI = 0.0001
-kD = 0.0003
+kI = 0.0
+kD = 0.0002
