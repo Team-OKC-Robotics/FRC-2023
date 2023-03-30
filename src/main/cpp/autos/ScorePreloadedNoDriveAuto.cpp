@@ -3,6 +3,7 @@
 #include "frc2/command/WaitCommand.h"
 #include "commands/intake/IntakeCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
+#include "commands/intake/IntakePositionCommand.h"
 #include "Parameters.h"
 
 ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, std::shared_ptr<Intake> intake) {
@@ -14,7 +15,10 @@ ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, s
     double pickup_degrees = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
     double pickup_extend = RobotParams::GetParam("arm.pickup.extend_setpoint", 1.0);
 
+    double score_position = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
+
     AddCommands(
+        IntakePositionCommand(intake, score_position),
         IntakeCommand(intake, -0.1), // hold the cube/cone in
         ArmSetStateCommand(arm, TeamOKC::ArmState(extend, degrees)),
         frc2::WaitCommand(units::second_t(4.5)), // wait for the command to finish

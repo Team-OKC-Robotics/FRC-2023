@@ -19,9 +19,9 @@ ScorePreloadedBalanceAuto::ScorePreloadedBalanceAuto(std::shared_ptr<SwerveDrive
     double score_position = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
 
     AddCommands(
+        IntakePositionCommand(intake, score_position),
         IntakeCommand(intake, 0.0), // hold the cube/cone in
         ArmSetStateCommand(arm, TeamOKC::ArmState(extend, degrees)), // move the arm to score high
-        IntakePositionCommand(intake, score_position),
         frc2::WaitCommand(units::second_t(3.5)), // wait for the command to finish
         IntakeCommand(intake, 1.0), // drop the cube
         frc2::WaitCommand(units::second_t(1)), // wait for cube to be dropped
