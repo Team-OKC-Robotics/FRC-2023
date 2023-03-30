@@ -29,7 +29,7 @@ void TeleOpSwerveCommand::Execute() {
     VOKC_CHECK(swerve_ != nullptr);
     VOKC_CHECK(gamepad_ != nullptr);
 
-    double drive_power_ = this->gamepad_->GetRawAxis(1);
+    double drive_power_ = -this->gamepad_->GetRawAxis(1);
     double strafe_power_ = this->gamepad_->GetRawAxis(0);
     double turn_power_ = this->gamepad_->GetRawAxis(4);
 
