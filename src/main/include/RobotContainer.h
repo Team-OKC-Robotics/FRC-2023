@@ -38,6 +38,7 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoDriveCommand.h"
+#include "commands/swerve/ResetGyroCommand.h"
 
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
@@ -170,6 +171,7 @@ private:
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> slow_swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> fast_swerve_teleop_command_;
+    std::shared_ptr<ResetGyroCommand> reset_gyro_command_;
 
     //arm
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;

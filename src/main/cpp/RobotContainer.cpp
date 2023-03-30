@@ -75,6 +75,8 @@ bool RobotContainer::ConfigureButtonBindings() {
 
     manip_b_button_->WhenPressed(*score_mid_command_);
     manip_y_button_->WhenPressed(*score_high_command_);
+
+    manip_start_button_->WhenPressed(*reset_gyro_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -344,6 +346,8 @@ bool RobotContainer::InitCommands() {
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1, 0.4, false); // speed mod, open loop
     slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
     fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
+
+    reset_gyro_command_ = std::make_shared<ResetGyroCommand>(swerve_drive_);
     OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // test arm commands
