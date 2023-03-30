@@ -78,9 +78,9 @@ arm_setpoint = 33.0
 intake_setpoint = 45.0
 
 [arm.score_high]
-extend_setpoint = 60.0
-arm_setpoint = 100.0
-intake_setpoint = -70.0
+extend_setpoint = 65.0
+arm_setpoint = 103.0
+intake_setpoint = -50.0
 
 [arm.score_medium]
 extend_setpoint = 20.0
@@ -93,9 +93,9 @@ arm_setpoint = -23.0
 intake_setpoint = -70.0
 
 [arm.negative_score_high]
-extend_setpoint = 40.0
-arm_setpoint = -100.0
-intake_setpoint = 68.0
+extend_setpoint = 50.0
+arm_setpoint = -103.0
+intake_setpoint = 50.0
 
 [arm.negative_score_medium]
 extend_setpoint = 20.0
@@ -117,6 +117,7 @@ intake_setpoint = 80.0
 kP = 0.05
 kI = 0
 kD = 0
+kF = 0.001
 
 [arm.extend_pid]
 kP = 0.06
