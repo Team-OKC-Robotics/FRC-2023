@@ -45,6 +45,7 @@
 #include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
 #include "commands/arm/TiltThenMoveArmCommand.h"
+#include "commands/arm/MoveArmThenTiltCommand.h"
 
 //intake
 #include "commands/intake/IntakeCommand.h"
@@ -198,7 +199,11 @@ private:
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
 
-    // pickup commands
+    // sequential commands
     std::shared_ptr<TiltThenMoveArmCommand> pickup_command_;
     std::shared_ptr<TiltThenMoveArmCommand> pickup_reverse_command_;
+
+    std::shared_ptr<MoveArmThenTiltCommand> score_mid_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> score_high_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> carry_command_;
 };

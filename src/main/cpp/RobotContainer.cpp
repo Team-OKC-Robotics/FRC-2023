@@ -70,15 +70,11 @@ bool RobotContainer::ConfigureButtonBindings() {
     // second driver controls
     manip_right_bumper_button_->WhenPressed(*pickup_command_);
     manip_left_bumper_button_->WhenPressed(*pickup_reverse_command_);
-    manip_x_button_->WhenPressed(*arm_carry_command_);
 
-    manip_b_button_->WhenPressed(*arm_score_mid_command_);
-    manip_y_button_->WhenPressed(*arm_score_high_command_);
+    manip_x_button_->WhenPressed(*carry_command_);
 
-    manip_x_button_->WhenPressed(*tilt_carry_command_);
-    
-    manip_b_button_->WhenPressed(*tilt_mid_command_);
-    manip_y_button_->WhenPressed(*tilt_high_command_);
+    manip_b_button_->WhenPressed(*score_mid_command_);
+    manip_y_button_->WhenPressed(*score_high_command_);
   
     WPI_UNIGNORE_DEPRECATED
   
@@ -375,6 +371,10 @@ bool RobotContainer::InitCommands() {
     // pickup commands
     pickup_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_command_, arm_pickup_command_);
     pickup_reverse_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_reverse_command_, arm_pickup_reverse_command_);
+
+    score_mid_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_mid_command_, arm_score_mid_command_);
+    score_high_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_high_command_, arm_score_high_command_);
+    carry_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_carry_command_, arm_carry_command_);
 
     return true;
 }

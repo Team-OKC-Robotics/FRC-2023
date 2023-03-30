@@ -30,6 +30,14 @@ bool Intake::Reset() {
     return true;
 }
 
+bool Intake::GetIntakeTilt(double *tilt) {
+    OKC_CHECK(interface_ != nullptr);
+
+    *tilt = interface_->tilt_encoder;
+
+    return true;
+}
+
 bool Intake::SetIntakePower(double power) {
     intake_power_ = power;
 
@@ -71,7 +79,7 @@ bool Intake::AutoControl() {
     OKC_CHECK(this->wrist_pid_ != nullptr);
     
     interface_->tilt_power = -this->wrist_pid_->Calculate(interface_->tilt_encoder);
-    // TeamOKC::Clamp(-0.5, 0.5, &interface_->tilt_power);
+    TeamOKC::Clamp(-0.6, 0.6, &interface_->tilt_power);
     interface_->intake_power = intake_power_;
  
     return true;
