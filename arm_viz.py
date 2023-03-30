@@ -17,6 +17,7 @@ pygame.init()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
+LIGHT_BLUE = (100, 100, 255)
 
 # create our hardware surface object
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -46,6 +47,8 @@ for idx, setpoint in enumerate(process_wpilib_logs.liftSetpointLog[1]):
 
 # main loop
 while True:
+    screen.fill(WHITE)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -53,15 +56,21 @@ while True:
 
     #TODO
 
+    arm_length_ = BASE_ARM_LENGTH + process_wpilib_logs.extendEncLog[1][index]
+
+    # draw the setpoint
+    setpoint_x = sin(radians(process_wpilib_logs.liftSetpointLog[1][index])) * arm_length_  +  WIDTH//2
+    setpoint_y = cos(radians(process_wpilib_logs.liftSetpointLog[1][index])) * arm_length_  +  HEIGHT//2
+    pygame.draw.line(screen, LIGHT_BLUE, (WIDTH//2, HEIGHT//2), (setpoint_x, setpoint_y), 20)
+
     # draw the current arm tilt from the middle of the window with a length of BASE_ARM_LENGTH, and a width of 10
-    x = sin(radians(process_wpilib_logs.liftEncLog[1][index])) * BASE_ARM_LENGTH  +  WIDTH//2
-    y = cos(radians(process_wpilib_logs.liftEncLog[1][index])) * BASE_ARM_LENGTH  +  HEIGHT//2
-    screen.fill(WHITE)
-    pygame.draw.line(screen, BLUE, (WIDTH//2, HEIGHT//2), (x, y), 10)
+    x = sin(radians(process_wpilib_logs.liftEncLog[1][index])) * arm_length_  +  WIDTH//2
+    y = cos(radians(process_wpilib_logs.liftEncLog[1][index])) * arm_length_  +  HEIGHT//2
+    pygame.draw.line(screen, BLUE, (WIDTH//2, HEIGHT//2), (x, y), 15)
     
     # advance the time once every 2 frames
     frame += 1
-    if frame % 2 == 0:
+    if frame % 1 == 0:
         index += 1
     pygame.display.flip()
     clock.tick(60)
