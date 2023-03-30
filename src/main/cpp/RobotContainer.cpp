@@ -343,7 +343,7 @@ bool RobotContainer::InitCommands() {
     score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
     
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1, 0.4, false); // speed mod, open loop
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.8, 0.5, false); // speed mod, open loop
     slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
     fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
 
@@ -369,7 +369,7 @@ bool RobotContainer::InitCommands() {
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.7);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.7);
-    stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.05);
+    stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.03);
 
     inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
     dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
