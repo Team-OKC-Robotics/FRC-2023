@@ -16,7 +16,7 @@ ScorePreloadedBalanceAuto::ScorePreloadedBalanceAuto(std::shared_ptr<SwerveDrive
     double pickup_degrees = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
     double pickup_extend = RobotParams::GetParam("arm.pickup.extend_setpoint", 1.0);
 
-    double score_position = RobotParams::GetParam("arm.negative_score_high.intake_setpoint", 0.0);
+    double score_position = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
 
     AddCommands(
         IntakeCommand(intake, 0.0), // hold the cube/cone in
