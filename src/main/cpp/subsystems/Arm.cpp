@@ -1,6 +1,8 @@
 #include "subsystems/Arm.h"
 #include "Parameters.h"
 #include "ui/UserInterface.h"
+#include "Utils.h"
+
 
 bool Arm::Init() {
     // initializing the arm
@@ -10,8 +12,10 @@ bool Arm::Init() {
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
+    double arm_kF = RobotParams::GetParam("arm.lift_pid.kF", 0.05);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
     arm_pid_->SetTolerance(2.5, 3.0);
+    arm_kF_ = arm_kF;
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
@@ -41,6 +45,7 @@ bool Arm::Init() {
 
     return true;
 }
+
 
 bool Arm::SetControlMode(const ControlMode &mode){
     mode_= mode;
@@ -147,7 +152,8 @@ bool Arm::TestControl() {
     this->inches_pid_->SetSetpoint(this->desired_state_.extension);
 
     // set output
-    this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation);
+    double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
+    this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
     this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
 
     return true;

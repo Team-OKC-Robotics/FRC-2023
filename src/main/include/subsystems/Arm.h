@@ -4,6 +4,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <io/ArmIO.h>
 #include <memory>
+#include "Utils.h"
 
 #include "Logging.h"
 #include "wpi/DataLog.h"
@@ -56,6 +57,7 @@ private:
     // PID controllers
     std::shared_ptr<frc::PIDController> arm_pid_;
     std::shared_ptr<frc::PIDController> inches_pid_;
+    double arm_kF_;
 
     // controls stuff (I'd call it a state machine but it isn't really a state machine)
     ControlMode mode_;

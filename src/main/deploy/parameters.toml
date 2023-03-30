@@ -138,5 +138,5 @@ tilt_offset = -55.0
 
 [intake.wrist_pid]
 kP = 0.02
-kI = 0.0
+kI = 0.0001
 kD = 0.0003
