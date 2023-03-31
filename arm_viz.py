@@ -56,11 +56,12 @@ while True:
 
     #TODO
 
+    length_setpoint_ = BASE_ARM_LENGTH + process_wpilib_logs.extendSetpointLog[1][index]
     arm_length_ = BASE_ARM_LENGTH + process_wpilib_logs.extendEncLog[1][index]
 
     # draw the setpoint
-    setpoint_x = sin(radians(process_wpilib_logs.liftSetpointLog[1][index])) * arm_length_  +  WIDTH//2
-    setpoint_y = cos(radians(process_wpilib_logs.liftSetpointLog[1][index])) * arm_length_  +  HEIGHT//2
+    setpoint_x = sin(radians(process_wpilib_logs.liftSetpointLog[1][index])) * length_setpoint_  +  WIDTH//2
+    setpoint_y = cos(radians(process_wpilib_logs.liftSetpointLog[1][index])) * length_setpoint_  +  HEIGHT//2
     pygame.draw.line(screen, LIGHT_BLUE, (WIDTH//2, HEIGHT//2), (setpoint_x, setpoint_y), 20)
 
     # draw the current arm tilt from the middle of the window with a length of BASE_ARM_LENGTH, and a width of 10
