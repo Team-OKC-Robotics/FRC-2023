@@ -5,9 +5,6 @@
 
 
 bool Arm::Init() {
-    // initializing the arm
-    control_state_ = INIT;
-    
     //pulls PID values from the parameters.toml file and initializes the PID controllers
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
@@ -98,67 +95,6 @@ bool Arm::AtLiftSetpoint(bool *at) {
 }
 
 
-// test mode for creating setpoints
-// NOTE: this does not prevent you from extending into the robot. BE CAREFUL
-bool Arm::TestControl() {
-    OKC_CHECK(interface_ != nullptr);
-
-    // if we haven't actually started
-    if (!calibration_allowed_) {
-        // don't let the arm do anything
-        return true;
-    }
-
-
-    // zero the extension encoder on startup
-    if (!has_calibrated_) {
-        // if we should be calibrating
-        if (control_state_ == CALIBRATING) {
-            // check the limit switch
-            if (this->interface_->extend_limit_switch) {
-                // we're hitting the limit switch, so we're done calibrating
-                control_state_ = ROTATING;
-
-                has_calibrated_ = true;
-
-                // initialize the desired state to the state when we are calibrated                
-                this->desired_state_.rotation = this->interface_->arm_duty_cycle_encoder;
-                this->desired_state_.extension = 1; // slightly not 0 just because
-            } else {
-                // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-                this->interface_->arm_extend_power = -0.1;
-            }
-        }
-
-        return true;
-    }
-
-    // limit rotation
-    if (this->desired_state_.rotation > lift_limit_) {
-        this->desired_state_.rotation = lift_limit_;
-    } else if (this->desired_state_.rotation < -lift_limit_) {
-        this->desired_state_.rotation = -lift_limit_;
-    }
-
-    // limit extension
-    if (this->desired_state_.extension > extend_limit_) {
-        this->desired_state_.extension = extend_limit_;
-    } else if (this->desired_state_.extension < 0) {
-        this->desired_state_.extension = 0;
-    }
-
-    // set setpoints
-    this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
-    this->inches_pid_->SetSetpoint(this->desired_state_.extension);
-
-    // set output
-    double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
-    this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
-    this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
-
-    return true;
-}
-
 bool Arm::AllowCalibration() {
     OKC_CHECK(interface_ != nullptr);
 
@@ -209,16 +145,7 @@ bool Arm::AutoControl() {
     }
 
     // alright, we've made it thus far, so we need to get down to business and start moving
-    
-    // if we're not actively trying to go anywhere
-    if (control_state_ == STANDBY) {
-        // keep the arm where it is
-        this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
-        this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
-
-        return true;
-    // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
-    } else if (control_state_ == ROTATING) {
+    if (control_state_ == ROTATING) {
         // bring the extension in whenever we rotate the arm, to reduce bounce
         this->inches_pid_->SetSetpoint(0.5);
 
@@ -278,9 +205,6 @@ void Arm::Periodic() {
         case Auto:
             VOKC_CALL(this->AutoControl());
             break;
-        case Test:
-            VOKC_CALL(this->TestControl());
-            break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
     }
@@ -301,12 +225,6 @@ void Arm::Periodic() {
     VOKC_CALL(ArmUI::nt_limit_switch->SetBoolean(interface_->extend_limit_switch));
 
     switch(control_state_) {
-        case INIT:
-            VOKC_CALL(ArmUI::arm_control_state->SetString("INIT"));
-            break;
-        case STANDBY:
-            VOKC_CALL(ArmUI::arm_control_state->SetString("STANDBY"));
-            break;
         case CALIBRATING:
             VOKC_CALL(ArmUI::arm_control_state->SetString("CALIBRATING"));
             break;
