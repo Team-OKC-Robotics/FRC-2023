@@ -64,6 +64,7 @@
 #include "autos/ScorePreloadedBalanceAuto.h"
 #include "autos/ScorePreloadedNoDriveAuto.h"
 #include "autos/ScoreTwoAuto.h"
+#include "autos/DriveForwardAuto.h"
 
 #include "Logging.h"
 
@@ -166,6 +167,7 @@ private:
     std::shared_ptr<ScorePreloadedAuto> score_preload_backup_auto_;
     std::shared_ptr<ScorePreloadedNoDriveAuto> score_preload_auto_;
     std::shared_ptr<ScorePreloadedBalanceAuto> score_preload_balance_auto_;
+    std::shared_ptr<DriveForwardAuto> drive_forward_auto_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
