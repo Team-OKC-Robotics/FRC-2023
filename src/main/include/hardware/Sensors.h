@@ -16,7 +16,7 @@
 #define RIGHT_BACK_STEER_ENCODER 3
 
 // DIO ports (on the RIO)
-#define EXTEND_LIMIT_SWITCH 9
+#define EXTEND_LIMIT_SWITCH 7
 #define ARM_ABS_ENCODER 1
 #define WRIST_ABS_ENCODER 3
 
