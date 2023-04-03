@@ -132,7 +132,7 @@ bool Arm::AutoControl() {
             std::cout << "CALIBRATION COMPLETE" << std::endl;
         } else {
             // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-            this->interface_->arm_extend_power = -0.1;
+            this->interface_->arm_extend_power = -0.2;
         }
     
         return true;
