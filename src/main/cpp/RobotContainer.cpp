@@ -31,6 +31,7 @@ RobotContainer::RobotContainer() {
     m_chooser_->AddAutos(score_preload_backup_auto_);
     m_chooser_->AddAutos(score_preload_balance_auto_);
     m_chooser_->AddAutos(score_preload_auto_);
+    m_chooser_->AddAutos(drive_forward_auto_);
 }
 
 bool RobotContainer::ConfigureButtonBindings() {
@@ -195,6 +196,7 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     sensor_interface->arm_duty_cycle_encoder = std::make_unique<frc::DutyCycleEncoder>(ARM_ABS_ENCODER);
     sensor_interface->arm_extend_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.arm_extend_motor->GetEncoder());
     sensor_interface->extend_limit_switch = std::make_unique<frc::DigitalInput>(EXTEND_LIMIT_SWITCH);
+    // sensor_interface->extend_limit_switch = std::make_unique<frc::PW>(EXTEND_LIMIT_SWITCH);
 
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
@@ -344,9 +346,9 @@ bool RobotContainer::InitCommands() {
     drive_forward_auto_ = std::make_shared<DriveForwardAuto>(swerve_drive_, arm_, intake_);
     
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.8, 0.5, false); // speed mod, open loop
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.8, 0.8, false); // speed mod, open loop
     slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
-    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
+    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.3, false); // BOOOOOOOOOST
 
     reset_gyro_command_ = std::make_shared<ResetGyroCommand>(swerve_drive_);
     OKC_CHECK(swerve_teleop_command_ != nullptr);
