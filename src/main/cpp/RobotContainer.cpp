@@ -71,6 +71,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_a_button_->WhenPressed(*human_player_command_);
     manip_right_bumper_button_->WhenPressed(*pickup_command_);
     manip_left_bumper_button_->WhenPressed(*pickup_reverse_command_);
+
     manip_x_button_->WhenPressed(*carry_command_);
 
     manip_b_button_->WhenPressed(*score_mid_command_);
