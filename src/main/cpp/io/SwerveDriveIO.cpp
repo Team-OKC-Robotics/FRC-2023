@@ -74,26 +74,19 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     double open_loop_ramp_steer = config.open_loop_ramp_rate_steer;
     double max_output_drive = config.max_output_drive;
     double max_output_steer = config.max_output_steer;
+    double current_limit = config.current_limit;
 
     // Apply the configuration
     // Open Loop Ramp Rate
-    hw_interface_->left_front_drive_motor->SetOpenLoopRampRate(
-        open_loop_ramp_drive);
-    hw_interface_->left_back_drive_motor->SetOpenLoopRampRate(
-        open_loop_ramp_drive);
-    hw_interface_->right_front_drive_motor->SetOpenLoopRampRate(
-        open_loop_ramp_drive);
-    hw_interface_->right_back_drive_motor->SetOpenLoopRampRate(
-        open_loop_ramp_drive);
+    hw_interface_->left_front_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
+    hw_interface_->left_back_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
+    hw_interface_->right_front_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
+    hw_interface_->right_back_drive_motor->SetOpenLoopRampRate(open_loop_ramp_drive);
 
-    hw_interface_->left_front_steer_motor->SetOpenLoopRampRate(
-        open_loop_ramp_steer);
-    hw_interface_->left_back_steer_motor->SetOpenLoopRampRate(
-        open_loop_ramp_steer);
-    hw_interface_->right_front_steer_motor->SetOpenLoopRampRate(
-        open_loop_ramp_steer);
-    hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(
-        open_loop_ramp_steer);
+    hw_interface_->left_front_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
+    hw_interface_->left_back_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
+    hw_interface_->right_front_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
+    hw_interface_->right_back_steer_motor->SetOpenLoopRampRate(open_loop_ramp_steer);
 
     hw_interface_->left_front_drive_motor->SetIdleMode(config.idle_mode);
     hw_interface_->left_back_drive_motor->SetIdleMode(config.idle_mode);
@@ -104,6 +97,16 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     hw_interface_->left_back_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     hw_interface_->right_front_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     hw_interface_->right_back_steer_motor->SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    hw_interface_->left_back_drive_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->left_front_steer_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->right_back_drive_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->right_front_drive_motor->SetSmartCurrentLimit(current_limit);
+
+    hw_interface_->left_front_drive_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->left_back_steer_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->right_front_steer_motor->SetSmartCurrentLimit(current_limit);
+    hw_interface_->right_back_steer_motor->SetSmartCurrentLimit(current_limit);
 
     return true;
 }

@@ -18,6 +18,8 @@ typedef struct swerve_drive_config_t {
     double open_loop_ramp_rate_steer;
 
     rev::CANSparkMax::IdleMode idle_mode;
+    
+    double max_current;
 } SwerveDriveConfig;
 
 typedef struct swerve_drive_hardware_interface_t {

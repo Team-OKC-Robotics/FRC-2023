@@ -25,6 +25,7 @@ drive_open_loop = 1
 steer_max_output = 1
 steer_open_loop = 0.0
 slew_limit = 2
+current_limit = 80
 
 [swerve.dist_pid]
 kP = 0.5

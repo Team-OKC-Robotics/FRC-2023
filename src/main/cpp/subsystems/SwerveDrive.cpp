@@ -24,6 +24,7 @@ bool SwerveDrive::Init() {
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
     double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
     double steer_open_loop = RobotParams::GetParam("swerve.steer_open_loop", 1);
+    double current_limit = RobotParams::GetParam("swerve.current_limit", 80);
 
     // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
@@ -31,7 +32,8 @@ bool SwerveDrive::Init() {
         drive_open_loop,
         steer_max_output,
         steer_open_loop,
-        COAST // don't start in brake mode
+        COAST, // don't start in brake mode
+        current_limit
     };
     interface_->update_config = true;
 
