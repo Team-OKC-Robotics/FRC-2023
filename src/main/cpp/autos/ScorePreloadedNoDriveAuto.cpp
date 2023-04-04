@@ -3,7 +3,6 @@
 #include "frc2/command/WaitCommand.h"
 #include "commands/intake/IntakeCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
-#include "commands/intake/IntakePositionCommand.h"
 #include "Parameters.h"
 
 ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, std::shared_ptr<Intake> intake) {

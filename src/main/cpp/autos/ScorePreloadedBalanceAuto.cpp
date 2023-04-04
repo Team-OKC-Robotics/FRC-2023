@@ -4,7 +4,6 @@
 #include "commands/intake/IntakeCommand.h"
 #include "commands/swerve/AutoBalanceCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
-#include "commands/intake/IntakePositionCommand.h"
 #include "Parameters.h"
 
 ScorePreloadedBalanceAuto::ScorePreloadedBalanceAuto(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<Arm> arm, std::shared_ptr<Intake> intake) {

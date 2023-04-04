@@ -90,8 +90,6 @@ bool SwerveDrive::Init() {
 
     // auton parameters
     run_up_speed_ = RobotParams::GetParam("auto_balance.run_up_speed", 0.4);
-    tilted_speed_ = RobotParams::GetParam("auto_balance.tilted_speed", 0.2);
-    tilted_threshold_ = RobotParams::GetParam("auto_balance.tilted_threshold", 13.0);
     reverse_threshold_ = RobotParams::GetParam("auto_balance.reverse_threshold", 1.0);
     pitch_threshold_ = RobotParams::GetParam("auto_balance.pitch_threshold", 1.0);
     drive_backward_speed_ = RobotParams::GetParam("auto_balance.drive_backward_speed", -0.15);
@@ -375,17 +373,9 @@ bool SwerveDrive::AutoBalance(double sign) {
         OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
         OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
-        // once we've tilted enough, then we can move on to climbing slower to avoid rocketing over the thing
-        if (this->interface_->imu_pitch > tilted_threshold_*sign) {
-            balance_state_ = CLIMB;
-        }
+      
     } else if (balance_state_ == CLIMB) {
-        // drive slower
-        this->interface_->left_front_drive_motor_output = tilted_speed_ * sign;
-        this->interface_->left_back_drive_motor_output = tilted_speed_ * sign;
-        this->interface_->right_front_drive_motor_output = tilted_speed_ * sign;
-        this->interface_->right_back_drive_motor_output = tilted_speed_ * sign;
-
+       
         // keep the wheels straight
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));

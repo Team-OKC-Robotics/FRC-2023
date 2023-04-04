@@ -2,8 +2,7 @@
 #include "Parameters.h"
 
 bool IntakeIO::Init() {
-    offset_ = RobotParams::GetParam("intake.tilt_offset", 0.0);
-
+    
     hw_interface_->intake_motor->SetSmartCurrentLimit(30);
 
     return true;
@@ -45,15 +44,10 @@ bool IntakeIO::ProcessIO() {
     OKC_CHECK(hw_interface_->intake_motor != nullptr);
     sw_interface_->intake_encoder = hw_interface_->intake_encoder->GetPosition();
 
-    // wrist encoder
-    OKC_CHECK(hw_interface_->wrist_encoder != nullptr);
-    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition() * 360.0 + offset_;
-    TeamOKC::WrapAngle(&sw_interface_->tilt_encoder);
+   
 
     // === outputs ===
     hw_interface_->intake_motor->Set(sw_interface_->intake_power);
-    hw_interface_->wrist_motor->Set(sw_interface_->tilt_power);
-  
 
     return true;
 }
