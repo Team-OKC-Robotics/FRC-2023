@@ -276,10 +276,22 @@ bool Arm::AutoControl() {
 }
 
 void Arm::Periodic() {
+
+    if (ArmUI::nt_manual_arm_mode->GetBoolean(false)){
+        mode_ = Manual;
+    }
+
+    else {
+        mode_ = Auto;
+
+    }
     // control the arm either using the raw axis values or PID controllers
     switch (mode_) {
         case Auto:
             VOKC_CALL(this->AutoControl());
+            break;
+        case Manual:
+            VOKC_CALL(this->ManualControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
