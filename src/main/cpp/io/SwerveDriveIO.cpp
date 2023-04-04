@@ -74,7 +74,7 @@ bool SwerveDriveIO::UpdateDriveConfig(SwerveDriveConfig &config) {
     double open_loop_ramp_steer = config.open_loop_ramp_rate_steer;
     double max_output_drive = config.max_output_drive;
     double max_output_steer = config.max_output_steer;
-    double current_limit = config.current_limit;
+    double current_limit = config.max_current;
 
     // Apply the configuration
     // Open Loop Ramp Rate
