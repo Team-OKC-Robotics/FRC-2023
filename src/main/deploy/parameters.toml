@@ -75,6 +75,8 @@ extend_limit = 95
 max_output = 0.7
 arm_open_loop = 10
 extend_open_loop = 10
+arm_pos_tolerance =  2.5
+arm_vel_tolerance =  3.0
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
