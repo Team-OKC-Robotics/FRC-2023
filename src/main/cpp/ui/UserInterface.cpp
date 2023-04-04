@@ -59,6 +59,8 @@ namespace ArmUI {
     nt::GenericEntry *const nt_limit_switch = nt_tab.Add("extend limit switch", false).GetEntry();
 
     nt::GenericEntry *const arm_control_state = nt_tab.Add("arm control state", "init").GetEntry();
+    nt::GenericEntry *const nt_test_mode = nt_tab.Add("test mode", false ).GetEntry();
+    
 }
 
 namespace ClawUI {
