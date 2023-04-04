@@ -151,8 +151,11 @@ bool Arm::TestControl() {
     this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
     this->inches_pid_->SetSetpoint(this->desired_state_.extension);
 
-    // set output
+    // calculate feedforward
+    // take the sign of the desired state, multiply it by the feedforward gain times the desired rotation squared. this looks like output = signum(setpoint) * kF * setpoint^2
     double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
+    
+    // set output
     this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
     this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
 

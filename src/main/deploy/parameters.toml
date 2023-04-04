@@ -89,7 +89,6 @@ intake_setpoint = -40.0
 
 [arm.negative_pickup]
 extend_setpoint = 20.0
-extend_setpoint = 50.0
 arm_setpoint = -25.0
 intake_setpoint = -70.0
 
