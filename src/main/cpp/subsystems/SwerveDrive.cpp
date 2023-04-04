@@ -8,6 +8,12 @@ bool SwerveDrive::Init() {
     // Initialize Shuffleboard from parameters.
     OKC_CALL(InitShuffleboard());
 
+    turn_deadband_ = RobotParams::GetParam("swerve.turn_deadband", 0.3);
+    strafe_deadband_ = RobotParams::GetParam("swerve.strafe_deadband", 0.15);
+    drive_deadband_ = RobotParams::GetParam("swerve.drive_deadband", 0.1);
+    invert_threshold_ = RobotParams::GetParam("swerve.invert_threshold", 100);
+    center_deadband_ = RobotParams::GetParam("swerve.center_deadband", 0.05);
+
     left_front_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/setpoint");
     left_front_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/output");
     left_front_steer_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/swerve/steer_enc");
@@ -160,17 +166,17 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     double turn_ = turn;
 
     // if turn is very small
-    if (abs(turn) < 0.3) {
+    if (abs(turn) < turn_deadband_) {
         turn_ = 0.0; // then zero it
     // } else if (final_turn)
     }
 
     // if strafe is very small
-    if (abs(strafe) < 0.15) {
+    if (abs(strafe) < strafe_deadband_) {
         strafe_ = 0.0; // then zero it
     }
 
-    if (abs(drive) < 0.1) {
+    if (abs(drive) < drive_deadband_) {
         drive_ = 0.0;
     }
 
@@ -227,22 +233,22 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
      * but it would be better to simply invert the direction that the drive motor/wheel is spinning, like normal
      * differential drivetrains do. So you should never need to steer more than 90 degrees.
     */
-    if (abs(left_front_angle - left_front_turn) > 100) {
+    if (abs(left_front_angle - left_front_turn) > invert_threshold_) {
         left_front_turn -= 180;
         left_front_speed *= -1;
     }
 
-    if (abs(left_back_angle - left_back_turn) > 100) {
+    if (abs(left_back_angle - left_back_turn) > invert_threshold_) {
         left_back_turn -= 180;
         left_back_speed *= -1;
     }
 
-    if (abs(right_front_angle - right_front_turn) > 100) {
+    if (abs(right_front_angle - right_front_turn) > invert_threshold_) {
         right_front_turn -= 180;
         right_front_speed *= -1;
     }
 
-    if (abs(right_back_angle - right_back_turn) > 100) {
+    if (abs(right_back_angle - right_back_turn) > invert_threshold_) {
         right_back_turn -= 180;
         right_back_speed *= -1;
     }
@@ -266,14 +272,14 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     // really nice convoluted deadband
     // this is to stop the swerve modules from immediately trying to center themselves instead of
     // coasting until receiving another instruction so we don't tip
-    if (abs(drive_) > 0.05 || abs(strafe_) > 0.05 || abs(turn_) > 0.3) {
+    if (abs(drive_) > center_deadband_ || abs(strafe_) > center_deadband_ || abs(turn_) > center_deadband_) {
         OKC_CALL(this->left_front_module_->SetAngle(left_front_turn));
         OKC_CALL(this->left_back_module_->SetAngle(left_back_turn));
         OKC_CALL(this->right_front_module_->SetAngle(right_front_turn));
         OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
     }
 
-    if (abs(drive_) < 0.05 && abs(strafe_) < 0.05 && abs(turn_) < 0.3) {
+    if (abs(drive_) < center_deadband_ && abs(strafe_) < center_deadband_ && abs(turn_) < center_deadband_) {
         this->interface_->left_front_drive_motor_output = 0.0;
         this->interface_->left_back_drive_motor_output = 0.0;
         this->interface_->right_front_drive_motor_output = 0.0;
