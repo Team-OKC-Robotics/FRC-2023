@@ -28,9 +28,11 @@ void IntakeBlockingPositionCommand::Execute() {
 }
 
 bool IntakeBlockingPositionCommand::IsFinished() {
-    bool at = false;
+    // bool at = false;
 
-    OKC_CALL(intake_->AtSetpoint(&at));
+    // OKC_CALL(intake_->AtSetpoint(&at));
     
-    return at;
+    // return at;
+
+    return true;
 }

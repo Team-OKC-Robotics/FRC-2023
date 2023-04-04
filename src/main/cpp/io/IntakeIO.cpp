@@ -4,7 +4,7 @@
 bool IntakeIO::Init() {
     offset_ = RobotParams::GetParam("intake.tilt_offset", 0.0);
 
-    hw_interface_->intake_motor->SetSmartCurrentLimit(10);
+    hw_interface_->intake_motor->SetSmartCurrentLimit(30);
 
     return true;
 }

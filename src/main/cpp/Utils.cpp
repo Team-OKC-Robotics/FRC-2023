@@ -33,15 +33,12 @@ namespace TeamOKC {
         return degrees * M_PI / 180.0;
     }
     double sign(double value) {
-        if (value>0) {
+        if (value > 0) {
             return 1;
-        }
-        if (value<0) {
+        } else if (value < 0) {
             return -1;
         }
-        if (value==0) {
-            return 0;
-        }
+        return 0;
     }
 } // namespace TeamOKC
 

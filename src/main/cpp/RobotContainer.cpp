@@ -71,6 +71,7 @@ bool RobotContainer::ConfigureButtonBindings() {
     manip_a_button_->WhenPressed(*human_player_command_);
     manip_right_bumper_button_->WhenPressed(*pickup_command_);
     manip_left_bumper_button_->WhenPressed(*pickup_reverse_command_);
+
     manip_x_button_->WhenPressed(*carry_command_);
 
     manip_b_button_->WhenPressed(*score_mid_command_);
@@ -364,7 +365,7 @@ bool RobotContainer::InitCommands() {
 
     arm_score_mid_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_mid_extension_, score_mid_rotation_), TeamOKC::ArmState(negative_score_mid_extension_, negative_score_mid_rotation_));
     arm_score_high_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(score_high_extension_, score_high_rotation_), TeamOKC::ArmState(negative_score_high_extension_, negative_score_high_rotation_));
-    arm_human_player_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(human_player_extension_, human_player_rotation_), TeamOKC::ArmState(negative_human_player_extension_, negative_human_player_rotation_));
+    arm_human_player_command_ = std::make_shared<ArmFieldOrientedCommand>(arm_, swerve_drive_, TeamOKC::ArmState(negative_human_player_extension_, negative_human_player_rotation_), TeamOKC::ArmState(human_player_extension_, human_player_rotation_));
 
     // intake commands
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.7);
@@ -380,7 +381,7 @@ bool RobotContainer::InitCommands() {
 
     tilt_mid_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_mid_, tilt_score_mid_reverse_);
     tilt_high_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_high_, tilt_score_high_reverse_);
-    tilt_human_player_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_human_player, tilt_human_player_reverse_);
+    tilt_human_player_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_human_player_reverse_, tilt_human_player);
 
     // pickup commands
     pickup_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_command_, arm_pickup_command_);

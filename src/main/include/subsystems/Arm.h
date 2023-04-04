@@ -16,12 +16,9 @@ enum ControlMode {
 };
 
 enum ArmControlState {
-    INIT,
-    STANDBY,
     CALIBRATING,
     EXTENDING,
-    ROTATING,
-    DONE
+    ROTATING
 };
 
 class Arm : public frc2::SubsystemBase {
