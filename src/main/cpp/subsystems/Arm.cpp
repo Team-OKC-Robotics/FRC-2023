@@ -95,6 +95,69 @@ bool Arm::AtLiftSetpoint(bool *at) {
 }
 
 
+// test mode for creating setpoints
+// NOTE: this does not prevent you from extending into the robot. BE CAREFUL
+bool Arm::TestControl() {
+    OKC_CHECK(interface_ != nullptr);
+
+    // if we haven't actually started
+    if (!calibration_allowed_) {
+        // don't let the arm do anything
+        return true;
+    }
+
+
+    // zero the extension encoder on startup
+    if (!has_calibrated_) {
+        // if we should be calibrating
+        if (control_state_ == CALIBRATING) {
+            // check the limit switch
+            if (this->interface_->extend_limit_switch) {
+                // we're hitting the limit switch, so we're done calibrating
+                control_state_ = ROTATING;
+
+                has_calibrated_ = true;
+
+                // initialize the desired state to the state when we are calibrated                
+                this->desired_state_.rotation = this->interface_->arm_duty_cycle_encoder;
+                this->desired_state_.extension = 1; // slightly not 0 just because
+            } else {
+                // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
+                this->interface_->arm_extend_power = -0.1;
+            }
+        }
+
+        return true;
+    }
+
+    // limit rotation
+    if (this->desired_state_.rotation > lift_limit_) {
+        this->desired_state_.rotation = lift_limit_;
+    } else if (this->desired_state_.rotation < -lift_limit_) {
+        this->desired_state_.rotation = -lift_limit_;
+    }
+
+    // limit extension
+    if (this->desired_state_.extension > extend_limit_) {
+        this->desired_state_.extension = extend_limit_;
+    } else if (this->desired_state_.extension < 0) {
+        this->desired_state_.extension = 0;
+    }
+
+    // set setpoints
+    this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
+    this->inches_pid_->SetSetpoint(this->desired_state_.extension);
+
+    // calculate feedforward
+    // take the sign of the desired state, multiply it by the feedforward gain times the desired rotation squared. this looks like output = signum(setpoint) * kF * setpoint^2
+    double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
+    
+    this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
+    this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
+
+    return true;
+}
+
 bool Arm::AllowCalibration() {
     OKC_CHECK(interface_ != nullptr);
 
