@@ -142,6 +142,8 @@ kD = 0
 
 [intake]
 tilt_offset = -55.0
+intake_power = 0.7
+idle_power = -0.03
 
 [intake.wrist_pid]
 kP = 0.005
