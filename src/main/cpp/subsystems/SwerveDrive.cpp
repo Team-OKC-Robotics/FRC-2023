@@ -329,10 +329,15 @@ bool SwerveDrive::DriveAuto(double max_speed) {
 
     double drive_power = this->dist_pid_->Calculate(dist);
 
-    this->interface_->left_front_drive_motor_output = drive_power;
-    this->interface_->left_back_drive_motor_output = drive_power;
-    this->interface_->right_front_drive_motor_output = drive_power;
-    this->interface_->right_back_drive_motor_output = drive_power;
+    double gyro_reading = 0.0;
+    OKC_CALL(this->GetHeading(&gyro_reading));
+
+    double turn_power = this->heading_pid_->Calculate(gyro_reading);
+
+    this->interface_->left_front_drive_motor_output = drive_power - turn_power;
+    this->interface_->left_back_drive_motor_output = drive_power - turn_power;
+    this->interface_->right_front_drive_motor_output = drive_power + turn_power;
+    this->interface_->right_back_drive_motor_output = drive_power + turn_power;
 
     // clamp the speed
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->left_front_drive_motor_output);
@@ -340,8 +345,14 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_front_drive_motor_output);
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_back_drive_motor_output);
 
+    OKC_CALL(SetSteerOutput(heading));
+  
+   return true;
+}
 
-    // just drive straight
+bool SwerveDrive::SetSteerOutput(double angle) {
+    OKC_CHECK(interface_ != nullptr); 
+
     OKC_CALL(this->left_front_module_->SetAngle(0));
     OKC_CALL(this->left_back_module_->SetAngle(0));
     OKC_CALL(this->right_front_module_->SetAngle(0));
@@ -351,9 +362,6 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
     OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
-
-
-    return true;
 }
 
 bool SwerveDrive::AutoBalance(double sign) {
@@ -387,6 +395,8 @@ bool SwerveDrive::AutoBalance(double sign) {
         this->interface_->right_back_drive_motor_output = tilted_speed_ * sign;
 
         // keep the wheels straight
+        OKC_CALL(SetSteerOutput(0.0));
+
         OKC_CALL(this->left_front_module_->SetAngle(0.0));
         OKC_CALL(this->left_back_module_->SetAngle(0.0));
         OKC_CALL(this->right_front_module_->SetAngle(0.0));
