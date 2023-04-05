@@ -344,19 +344,29 @@ bool RobotContainer::InitCommands() {
     score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
     
     // swerve commands
-    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.8, 0.5, false); // speed mod, open loop
-    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.5, 1, true); // brake mode
-    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 1.5, 0.1, false); // BOOOOOOOOOST
+    double speed_mod = RobotParams::GetParam("swerve.speed_mod", 0.8);
+    double open_loop = RobotParams::GetParam("swerve.swerve_open_loop", 0.5);
+    double braking_speed_mod = RobotParams::GetParam("swerve.braking_speed_mod", 0.5);
+    double braking_open_loop = RobotParams::GetParam("swerve.swerve_braking_open_loop", 1);
+    double fast_speed_mod = RobotParams::GetParam("swerve.fast_speed_mod", 1.5);
+    double fast_open_loop = RobotParams::GetParam("swerve.swerve_fast_open_loop", 0.1);
+
+    swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, speed_mod, open_loop, false); // speed mod, open loop
+    slow_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, braking_speed_mod, braking_open_loop, true); // brake mode
+    fast_swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, fast_speed_mod, fast_open_loop, false); // BOOOOOOOOOST
 
     reset_gyro_command_ = std::make_shared<ResetGyroCommand>(swerve_drive_);
     OKC_CHECK(swerve_teleop_command_ != nullptr);
 
     // test arm commands
-    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 0.5); 
-    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -0.5);
+    double extend = RobotParams::GetParam("arm.extend", 0.5);
+    double position_increment = RobotParams::GetParam("arm.position_increment", 0.5);
 
-    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 0.5);
-    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -0.5);
+    extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, extend); 
+    retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -extend);
+
+    raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, position_increment);
+    lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -position_increment);
 
     // arm commands
     arm_carry_command_ = std::make_shared<ArmSetStateCommand>(arm_, TeamOKC::ArmState(1, 0));
