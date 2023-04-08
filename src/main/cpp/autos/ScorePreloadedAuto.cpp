@@ -30,6 +30,6 @@ ScorePreloadedAuto::ScorePreloadedAuto(std::shared_ptr<SwerveDrive> swerve, std:
         IntakeCommand(intake, 0), // stop the intake
         ArmSetStateCommand(arm, TeamOKC::ArmState(1, 0)), // bring the arm back in the robot
         frc2::WaitCommand(units::second_t(2)), // wait a second
-        AutoDriveCommand(swerve, 4.7, 1) // back slowly away
+        AutoDriveCommand(swerve, 4.7, 1, 0.0) // back slowly away
     );
 }
