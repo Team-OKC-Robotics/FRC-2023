@@ -87,6 +87,7 @@ arm_pos_tolerance =  2.5
 arm_vel_tolerance =  3.0
 extend = 0.5
 position_increment
+extend_power = 69
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
