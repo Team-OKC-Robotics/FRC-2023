@@ -28,6 +28,9 @@ void IncrementArmExtendCommand::Execute() {
 }
 
 bool IncrementArmExtendCommand::IsFinished() {
-    // Always end this command.
-    return true;
+    bool at = false;
+
+    OKC_CALL(arm_->AtExtendSetpoint(&at));
+
+    return at;
 }
