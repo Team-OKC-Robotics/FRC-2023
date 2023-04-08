@@ -3,6 +3,7 @@
 #include "frc2/command/WaitCommand.h"
 #include "commands/intake/IntakeCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
+#include "commands/intake/IntakePositionCommand.h"
 #include "Parameters.h"
 
 ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, std::shared_ptr<Intake> intake) {
@@ -25,6 +26,6 @@ ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, s
         frc2::WaitCommand(units::second_t(1)), // wait for cube to be dropped
         IntakeCommand(intake, 0), // stop the intake
         ArmSetStateCommand(arm, TeamOKC::ArmState(0.5, 0)), // bring the arm back in the robot
-        frc2::WaitCommand(units::second_t(4)) // wait a second so the arm is mostly in0
+        frc2::WaitCommand(units::second_t(4)) // wait a second so the arm is mostly in
     );
 }

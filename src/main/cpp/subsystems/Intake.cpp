@@ -7,7 +7,7 @@ bool Intake::Init() {
     return true;
 }
 
-bool Intake::SetControlMode(const ControlMode &mode){
+bool Intake::SetControlMode(const ControlMode &mode) {
     mode_= mode;
 
     return true;

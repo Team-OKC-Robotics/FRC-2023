@@ -5,6 +5,8 @@ bool IntakeIO::Init() {
     
     hw_interface_->intake_motor->SetSmartCurrentLimit(30);
 
+    hw_interface_->intake_motor->SetSmartCurrentLimit(30);
+
     return true;
 }
 
