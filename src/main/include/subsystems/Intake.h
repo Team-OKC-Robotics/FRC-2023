@@ -20,10 +20,7 @@ public:
     bool Init();
 
     bool SetIntakePower(double power);
-    bool SetIntakeTilt(double tilt);
-    bool GetIntakeTilt(double *tilt);
-    bool IncrementIntakeTilt(double inc);
-
+  
     bool SetControlMode(const ControlMode &mode);
     bool ManualControl();
     bool AutoControl();
@@ -37,7 +34,6 @@ public:
 private:
     IntakeSoftwareInterface *const interface_;
 
-    std::shared_ptr<frc::PIDController> wrist_pid_;
    
     double intake_power_;
    

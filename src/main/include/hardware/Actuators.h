@@ -30,7 +30,6 @@
 #define CLAW_MOTOR 12
 
 #define INTAKE_MOTOR 12
-#define WRIST_MOTOR 13
 
 
 typedef struct actuators_t {
@@ -56,5 +55,4 @@ typedef struct actuators_t {
 
     //intake motors
     std::unique_ptr<rev::CANSparkMax> intake_motor;
-    std::unique_ptr<rev::CANSparkMax> wrist_motor;
 } Actuators;

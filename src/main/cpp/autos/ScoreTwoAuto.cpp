@@ -11,9 +11,6 @@ ScoreTwoAuto::ScoreTwoAuto(std::shared_ptr<SwerveDrive> swerve, std::shared_ptr<
     double degrees = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
     double extend = RobotParams::GetParam("arm.score_high.extend_setpoint", 1.0);
 
-    double pickup_degrees = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
-    double pickup_extend = RobotParams::GetParam("arm.pickup.extend_setpoint", 1.0);
-
     double negative_pickup_degrees = RobotParams::GetParam("arm.negative_pickup.arm_setpoint", 0.0);
     double negative_pickup_extend = RobotParams::GetParam("arm.negative_pickup.extend_setpoint", 1.0);
 

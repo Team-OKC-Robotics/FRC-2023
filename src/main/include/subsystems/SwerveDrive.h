@@ -125,8 +125,6 @@ private:
     BalanceState balance_state_ = RUN_UP;
 
     double run_up_speed_;
-    double tilted_speed_;
-    double tilted_threshold_;
     double reverse_threshold_;
     double pitch_threshold_;
     double drive_backward_speed_;
