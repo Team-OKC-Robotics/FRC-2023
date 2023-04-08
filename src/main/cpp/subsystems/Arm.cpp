@@ -27,7 +27,10 @@ bool Arm::Init() {
 
     arm_extend_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_output");
     arm_extend_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_enc");
-    arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint");
+    arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint"); 
+
+
+   
 
     // pull limits from the parameters file
     lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100.0);
@@ -41,14 +44,24 @@ bool Arm::Init() {
     control_state_ = CALIBRATING;
 
     return true;
+
 }
 
+bool Arm::SetControlMode(const ControlMode & mode) {
+        mode_ = mode;
 
-bool Arm::SetControlMode(const ControlMode &mode){
-    mode_= mode;
+        return true; 
+    }
+
+bool Arm::ManualControl() {
+    OKC_CHECK(interface_ != nullptr);
+
+    interface_->arm_lift_power = lift_power_;
+    interface_->arm_extend_power = extend_power_;
 
     return true;
 }
+
 
 bool Arm::SetDesiredState(TeamOKC::ArmState state) {
     this->desired_state_ = state;
@@ -263,10 +276,22 @@ bool Arm::AutoControl() {
 }
 
 void Arm::Periodic() {
+
+    if (ArmUI::nt_manual_arm_mode->GetBoolean(false)){
+        mode_ = Manual;
+    }
+
+    else {
+        mode_ = Auto;
+
+    }
     // control the arm either using the raw axis values or PID controllers
     switch (mode_) {
         case Auto:
             VOKC_CALL(this->AutoControl());
+            break;
+        case Manual:
+            VOKC_CALL(this->ManualControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
