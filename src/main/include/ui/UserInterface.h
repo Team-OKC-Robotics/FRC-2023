@@ -57,6 +57,7 @@ namespace ArmUI {
     extern nt::GenericEntry *const nt_extend_setpoint;
     extern nt::GenericEntry *const nt_extend_power;
     extern nt::GenericEntry *const nt_limit_switch;
+    extern nt::GenericEntry *const nt_manual_arm_mode;
 
     // arm state
     extern nt::GenericEntry *const arm_control_state;
@@ -66,4 +67,11 @@ namespace ClawUI {
     extern frc::ShuffleboardTab &nt_tab;
 
     extern nt::GenericEntry *const nt_claw_encoder;
+}
+
+namespace IntakeUI {
+    extern frc::ShuffleboardTab &nt_tab;
+
+    extern nt::GenericEntry *const nt_tilt;
+    extern nt::GenericEntry *const nt_tilt_setpoint;
 }

@@ -482,7 +482,7 @@
               "_showGlyph": false
             }
           },
-          "3,4": {
+          "4,5": {
             "size": [
               1,
               1
@@ -493,6 +493,97 @@
               "_title": "Shuffleboard/SwerveDrive/Heading",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "0,4": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///Shuffleboard/intake/wrist encoder",
+              "_title": "Shuffleboard/intake/wrist encoder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -360.0,
+              "Range/Max": 360.0,
+              "Visuals/Show value": true
+            }
+          },
+          "3,4": {
+            "size": [
+              1,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Shuffleboard/intake/wrist setpoint",
+              "_title": "Shuffleboard/intake/wrist setpoint",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -100.0,
+              "Range/Max": 100.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "VERTICAL"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "camera",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              6,
+              5
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://HD_USB_Camera-output",
+              "_title": "HD_USB_Camera-output",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": false,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 240,
+              "imageHeight": 120
+            }
+          },
+          "6,0": {
+            "size": [
+              7,
+              5
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": false,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }

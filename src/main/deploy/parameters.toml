@@ -40,7 +40,7 @@ kD = 0.0
 [swerve.steer_pid]
 kP = 0.005
 kI = 0.0
-kD = 0.0
+kD = 0.000005
 
 [swerve.heading_pid]
 kP = 0.04
@@ -54,44 +54,69 @@ left_back_offset = 79.0
 right_front_offset = 10.0
 right_back_offset = 153.0
 
+[auto_balance]
+run_up_speed = 0.4
+tilted_speed = 0.2
+tilted_threshold = 15.0
+reverse_threshold = 9.0
+pitch_threshold = 1.0
+drive_backward_speed = -0.2
+timeout = 1.4
+
 [arm]
-offset = -330
+offset = -327
 lift_limit = 110
 extend_limit = 95
-max_output = 1
-arm_open_loop = 1
-extend_open_loop = 0.5
+max_output = 0.7
+arm_open_loop = 10
+extend_open_loop = 10
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
-extend_setpoint = 79.5
-arm_setpoint = 31.0
+extend_setpoint = 30.0
+arm_setpoint = 43.0
+intake_setpoint = -45.0
 
 [arm.score_high]
-extend_setpoint = 90.5
-arm_setpoint = 94.0
+extend_setpoint = 65.0
+arm_setpoint = 105.0
+intake_setpoint = -40.0
 
 [arm.score_medium]
-extend_setpoint = 61.5
-arm_setpoint = 72.0
+extend_setpoint = 20.0
+arm_setpoint = 94.0
+intake_setpoint = -40.0
 
 [arm.negative_pickup]
-extend_setpoint = 88.5
-arm_setpoint = -45.0
+extend_setpoint = 30.0
+arm_setpoint = -42.0
+intake_setpoint = 20.0
 
 [arm.negative_score_high]
-extend_setpoint = 90.5
-arm_setpoint = -103.0
+extend_setpoint = 65.0
+arm_setpoint = -105.0
+intake_setpoint = 40.0
 
 [arm.negative_score_medium]
-extend_setpoint = 61.5
-arm_setpoint = -80.0
+extend_setpoint = 20.0
+arm_setpoint = -90.0
+intake_setpoint = 52.0
 
+[arm.negative_human_player]
+extend_setpoint = 5.0
+arm_setpoint = -40.0
+intake_setpoint = -87.0
+
+[arm.human_player]
+extend_setpoint = 5.0
+arm_setpoint = 40.0
+intake_setpoint = 87.0
 
 [arm.lift_pid]
 kP = 0.05
 kI = 0
 kD = 0
+kF = 0.001
 
 [arm.extend_pid]
 kP = 0.06
@@ -107,3 +132,11 @@ cone = 5
 kP = 0.01
 kI = 0
 kD = 0
+
+[intake]
+tilt_offset = -55.0
+
+[intake.wrist_pid]
+kP = 0.005
+kI = 0.0
+kD = 0.0

@@ -4,6 +4,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <io/ArmIO.h>
 #include <memory>
+#include "Utils.h"
 
 #include "Logging.h"
 #include "wpi/DataLog.h"
@@ -15,12 +16,9 @@ enum ControlMode {
 };
 
 enum ArmControlState {
-    INIT,
-    STANDBY,
     CALIBRATING,
     EXTENDING,
-    ROTATING,
-    DONE
+    ROTATING
 };
 
 class Arm : public frc2::SubsystemBase {
@@ -44,9 +42,11 @@ public:
     bool SetControlMode(const ControlMode &mode);
     bool AutoControl();
     bool TestControl();
+    bool ManualControl();
     bool AllowCalibration();
     
 
+    bool arm_first_ = false;
 
 private:
     // software interface
@@ -55,6 +55,7 @@ private:
     // PID controllers
     std::shared_ptr<frc::PIDController> arm_pid_;
     std::shared_ptr<frc::PIDController> inches_pid_;
+    double arm_kF_;
 
     // controls stuff (I'd call it a state machine but it isn't really a state machine)
     ControlMode mode_;
@@ -70,6 +71,9 @@ private:
     // limits
     double lift_limit_;
     double extend_limit_;
+
+    double lift_power_;
+    double extend_power_;
 
     // logs
     wpi::log::DoubleLogEntry arm_lift_output_log_;

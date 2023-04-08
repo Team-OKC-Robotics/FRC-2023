@@ -13,7 +13,9 @@
 #include "hardware/Hardware.h"
 
 // I/O Subsystems
+#include "io/ArmIO.h"
 #include "io/SwerveDriveIO.h"
+#include "io/VisionIO.h"
 #include "io/ArmIO.h"
 #include "io/IntakeIO.h"
 
@@ -21,8 +23,9 @@
 
 
 // Subsystems
-#include "subsystems/SwerveDrive.h"
 #include "subsystems/Arm.h"
+#include "subsystems/SwerveDrive.h"
+#include "subsystems/Vision.h"
 #include "subsystems/Intake.h"
 
 // Gamepad
@@ -35,16 +38,22 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoDriveCommand.h"
+#include "commands/swerve/ResetGyroCommand.h"
 
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
 #include "commands/arm/IncrementArmExtendCommand.h"
+#include "commands/arm/ArmFieldOrientedCommand.h"
 #include "commands/arm/ArmSetStateCommand.h"
-#include "commands/arm/ArmSetStateDpadCommand.h"
-
+#include "commands/arm/TiltThenMoveArmCommand.h"
+#include "commands/arm/MoveArmThenTiltCommand.h"
 
 //intake
 #include "commands/intake/IntakeCommand.h"
+#include "commands/intake/IntakePositionCommand.h"
+#include "commands/intake/IncrementIntakePositionCommand.h"
+#include "commands/intake/FieldOrientedIntakeCommand.h"
+#include "commands/intake/IntakeBlockingPositionCommand.h"
 
 // misc
 #include <frc2/command/Command.h>
@@ -85,8 +94,7 @@ private:
     // Hardware Initialization
     bool InitHardware(std::unique_ptr<Hardware> &hardware);
     bool InitActuators(Actuators *actuators_interface);
-    bool InitSensors(const Actuators &actuators,
-                     Sensors *sensor_interface);
+    bool InitSensors(const Actuators &actuators, Sensors *sensor_interface);
 
     // Command initialization
     bool InitCommands();
@@ -105,8 +113,6 @@ private:
     std::shared_ptr<SwerveDriveHardwareInterface> swerve_drive_hw_;
     std::shared_ptr<ArmHardwareInterface> arm_hw_;
     std::shared_ptr<IntakeHardwareInterface> intake_hw_;
-
-
 
     // Hardware I/O interfaces
     std::shared_ptr<SwerveDriveIO> swerve_drive_io_;
@@ -165,6 +171,7 @@ private:
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> slow_swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> fast_swerve_teleop_command_;
+    std::shared_ptr<ResetGyroCommand> reset_gyro_command_;
 
     //arm
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
@@ -174,16 +181,37 @@ private:
 
     std::shared_ptr<ArmSetStateCommand> arm_carry_command_;
     std::shared_ptr<ArmSetStateCommand> arm_pickup_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_mid_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_score_high_command_;
-    std::shared_ptr<ArmSetStateCommand> arm_short_carry_command_;
 
-    std::shared_ptr<ArmSetStateDpadCommand> arm_dpad_set_state_command_;
+    std::shared_ptr<ArmSetStateCommand> arm_pickup_reverse_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
+    std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
+    
+    std::shared_ptr<ArmFieldOrientedCommand> arm_human_player_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
     std::shared_ptr<IntakeCommand> other_intake_command;
     std::shared_ptr<IntakeCommand> stop_intake_command;
+
+    std::shared_ptr<IncrementIntakePositionCommand> inc_wrist_tilt_command_;
+    std::shared_ptr<IncrementIntakePositionCommand> dec_wrist_tilt_command_;
+
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_reverse_command_;
+    std::shared_ptr<IntakeBlockingPositionCommand> tilt_pickup_command_;
+    std::shared_ptr<IntakePositionCommand> tilt_carry_command_;
+
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
+
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_human_player_command_;
+
+    // sequential commands
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_command_;
+    std::shared_ptr<TiltThenMoveArmCommand> pickup_reverse_command_;
+
+    std::shared_ptr<MoveArmThenTiltCommand> score_mid_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> score_high_command_;
+    std::shared_ptr<MoveArmThenTiltCommand> carry_command_;
+
+    std::shared_ptr<MoveArmThenTiltCommand> human_player_command_;
 };
-
-

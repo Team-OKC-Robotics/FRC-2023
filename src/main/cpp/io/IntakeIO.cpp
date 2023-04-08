@@ -2,7 +2,11 @@
 #include "Parameters.h"
 
 bool IntakeIO::Init() {
-   return true;
+    offset_ = RobotParams::GetParam("intake.tilt_offset", 0.0);
+
+    hw_interface_->intake_motor->SetSmartCurrentLimit(30);
+
+    return true;
 }
 
 void IntakeIO::Periodic() {
@@ -36,22 +40,31 @@ bool IntakeIO::ProcessIO() {
         sw_interface_->reset_encoders = false;
     }
 
-    // intake position encoder
+    // === inputs ===
+    // intake encoder
     OKC_CHECK(hw_interface_->intake_motor != nullptr);
-    
-   
     sw_interface_->intake_encoder = hw_interface_->intake_encoder->GetPosition();
 
+    // wrist encoder
+    OKC_CHECK(hw_interface_->wrist_encoder != nullptr);
+    sw_interface_->tilt_encoder = hw_interface_->wrist_encoder->GetAbsolutePosition() * 360.0 + offset_;
+    TeamOKC::WrapAngle(&sw_interface_->tilt_encoder);
+
+    // === outputs ===
     hw_interface_->intake_motor->Set(sw_interface_->intake_power);
+    hw_interface_->wrist_motor->Set(sw_interface_->tilt_power);
   
 
-return true;
-}
-bool IntakeIO::UpdateIntakeConfig(IntakeConfig &config) {
-    OKC_CHECK(hw_interface_ != nullptr);
     return true;
 }
-    // Get the configuration
+
+bool IntakeIO::UpdateIntakeConfig(IntakeConfig &config) {
+    OKC_CHECK(hw_interface_ != nullptr);
+    
+    // TODO
+
+    return true;
+}
     
 //HACK: this is a hack
 bool IntakeIO::ResetEncoders() {
@@ -59,7 +72,6 @@ bool IntakeIO::ResetEncoders() {
 
     hw_interface_->intake_motor->GetEncoder().SetPosition(0.0);
  
-
     return true;
 }
 
