@@ -14,8 +14,8 @@ work = true
 [swerve]
 # assumes our modules are located in a square, everything should be the same distance from the center
 # units are in meters
-x_disp = 0.216
-y_disp = 0.416
+x_disp = 0.635
+y_disp = 0.7874
 # stuff for swerve modules and odometry and stuff
 l2_gear_ratio = 6.75
 wheel_diameter = 4.0

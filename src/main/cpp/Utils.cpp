@@ -32,6 +32,7 @@ namespace TeamOKC {
     double Radians(double degrees) {
         return degrees * M_PI / 180.0;
     }
+    
     double sign(double value) {
         if (value > 0) {
             return 1;
