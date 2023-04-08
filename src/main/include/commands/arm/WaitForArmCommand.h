@@ -21,5 +21,5 @@ public:
     bool IsFinished() override;
 
 private:
-    std::shared_ptr<Arm> arm_;
+    std::shared_ptr<Arm> arm_; 
 };
