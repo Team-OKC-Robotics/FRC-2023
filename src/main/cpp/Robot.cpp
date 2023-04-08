@@ -9,7 +9,8 @@
 #include <cameraserver/CameraServer.h>
 
 void Robot::RobotInit() {
-    frc::CameraServer::StartAutomaticCapture().SetResolution(480, 240);
+    double res = RobotParams::GetParam("camera.res", 240);
+    frc::CameraServer::StartAutomaticCapture().SetResolution(2* res, res);
 
     m_container.GetArm()->SetControlMode(Auto);
 }

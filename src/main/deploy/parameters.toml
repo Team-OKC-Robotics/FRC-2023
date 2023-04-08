@@ -25,6 +25,17 @@ drive_open_loop = 1
 steer_max_output = 1
 steer_open_loop = 0.0
 slew_limit = 2
+turn_deadband_ = 0.3
+strafe_deadband_ = 0.15
+drive_deadband_ = 0.1
+invert_threshold_ = 100.0
+center_deadband_ = 0.05
+speed_mod = 0.8
+swerve_open_loop = 0.5
+braking_speed_mod = 0.5
+braking_open_loop = 1
+fast_speed_mod = 1.5
+fast_swerve_open_loop = 0.1
 
 [swerve.dist_pid]
 kP = 0.5
@@ -41,6 +52,8 @@ kD = 0.0
 kP = 0.005
 kI = 0.0
 kD = 0.000005
+degrees = 180
+tolerance = 2
 
 [swerve.heading_pid]
 kP = 0.04
@@ -70,6 +83,11 @@ extend_limit = 95
 max_output = 0.7
 arm_open_loop = 10
 extend_open_loop = 10
+arm_pos_tolerance =  2.5
+arm_vel_tolerance =  3.0
+extend = 0.5
+position_increment
+extend_power = 69
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
@@ -135,8 +153,13 @@ kD = 0
 
 [intake]
 tilt_offset = -55.0
+intake_power = 0.7
+idle_power = -0.03
 
 [intake.wrist_pid]
 kP = 0.005
 kI = 0.0
 kD = 0.0
+
+[camera]
+res = 240

@@ -11,7 +11,10 @@ bool Arm::Init() {
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
     double arm_kF = RobotParams::GetParam("arm.lift_pid.kF", 0.05);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
-    arm_pid_->SetTolerance(2.5, 3.0);
+
+    double arm_pos_tol = RobotParams::GetParam("arm.arm_pos_tolerance", 2.5);
+    double arm_vel_tol = RobotParams::GetParam("arm.arm_vel_tolerance", 3.0);
+    arm_pid_->SetTolerance(arm_pos_tol, arm_vel_tol);
     arm_kF_ = arm_kF;
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
@@ -35,6 +38,7 @@ bool Arm::Init() {
     // pull limits from the parameters file
     lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100.0);
     extend_limit_ = RobotParams::GetParam("arm.extend_limit", 100.0);
+    double calibration_power_ = RobotParams::GetParam("arm.extend_power", 69);
   
     // initialize with default state
     state_ = TeamOKC::ArmState(0, 0);
@@ -208,7 +212,7 @@ bool Arm::AutoControl() {
             std::cout << "CALIBRATION COMPLETE" << std::endl;
         } else {
             // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-            this->interface_->arm_extend_power = -0.1;
+            this->interface_->arm_extend_power = calibration_power_;
         }
     
         return true;
@@ -226,7 +230,7 @@ bool Arm::AutoControl() {
         this->inches_pid_->SetSetpoint(0.5);
 
         // if we have brought the extension in
-        if (abs(1.0 - state_.extension) < 1.0) {
+        if (inches_pid_->AtSetpoint()) {
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -237,7 +241,7 @@ bool Arm::AutoControl() {
             this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
             
             // if we've reached our desired rotation
-            if (abs(desired_state_.rotation - state_.rotation) < 2) {
+            if (arm_pid_->AtSetpoint()) {
                 // move to the next stage
                 this->control_state_ = EXTENDING;
             }
@@ -289,9 +293,6 @@ void Arm::Periodic() {
     switch (mode_) {
         case Auto:
             VOKC_CALL(this->AutoControl());
-            break;
-        case Manual:
-            VOKC_CALL(this->ManualControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");

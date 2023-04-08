@@ -74,6 +74,7 @@ private:
 
     double lift_power_;
     double extend_power_;
+    double calibration_power_;
 
     // logs
     wpi::log::DoubleLogEntry arm_lift_output_log_;

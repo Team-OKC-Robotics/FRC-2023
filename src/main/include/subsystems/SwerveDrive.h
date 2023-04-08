@@ -112,6 +112,12 @@ private:
 
     double control_decay = 0.1;
 
+    double turn_deadband_;
+    double strafe_deadband_;
+    double drive_deadband_;
+    double invert_threshold_;
+    double center_deadband_;
+
     // auton
     bool probably_balanced_ = false;
     float last_pitch_ = 0.0;

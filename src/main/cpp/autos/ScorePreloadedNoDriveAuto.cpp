@@ -22,6 +22,6 @@ ScorePreloadedNoDriveAuto::ScorePreloadedNoDriveAuto(std::shared_ptr<Arm> arm, s
         frc2::WaitCommand(units::second_t(1)), // wait for cube to be dropped
         IntakeCommand(intake, 0), // stop the intake
         ArmSetStateCommand(arm, TeamOKC::ArmState(0.5, 0)), // bring the arm back in the robot
-        frc2::WaitCommand(units::second_t(4)) // wait a second so the arm is mostly in
+        frc2::WaitCommand(units::second_t(4)) // wait a second so the arm is mostly in0
     );
 }

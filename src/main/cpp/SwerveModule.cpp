@@ -19,8 +19,10 @@ bool SwerveModule::Init(Location loc) {
     steer_pid_ = std::make_shared<frc::PIDController>(steer_kP, steer_kI, steer_kD);
 
     OKC_CHECK(this->steer_pid_ != nullptr);
-    steer_pid_->EnableContinuousInput(-180, 180);
-    steer_pid_->SetTolerance(2, 2); // tolerate 2 degrees of deviation, which shouldn't be a lot I don't think
+    double steer_pid_degrees = RobotParams::GetParam("swerve.steer_pid.degrees", 180);
+    double steer_pid_degrees_tolerance = RobotParams::GetParam("swerve.steer_pid.tolerance", 2);
+    steer_pid_->EnableContinuousInput(-steer_pid_degrees, steer_pid_degrees);
+    steer_pid_->SetTolerance(steer_pid_degrees_tolerance, steer_pid_degrees_tolerance); // tolerate 2 degrees of deviation, which shouldn't be a lot I don't think
 
     // units and conversions and numbers and stuff
     L2_GEAR_RATIO_ = RobotParams::GetParam("swerve.l2_gear_ratio", 6.75);
