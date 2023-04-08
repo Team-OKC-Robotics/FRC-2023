@@ -23,7 +23,7 @@ ArmFieldOrientedCommand::ArmFieldOrientedCommand(std::shared_ptr<Arm> arm, std::
 void ArmFieldOrientedCommand::Initialize() {
     VOKC_CHECK(arm_ != nullptr);
 
-    VOKC_CALL(arm_->SetControlMode(Auto));
+    
 }
 
 void ArmFieldOrientedCommand::Execute() {

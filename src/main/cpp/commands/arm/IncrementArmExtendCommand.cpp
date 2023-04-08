@@ -18,7 +18,7 @@ IncrementArmExtendCommand::IncrementArmExtendCommand(std::shared_ptr<Arm> arm,
 }
 
 void IncrementArmExtendCommand::Initialize() {
-    arm_->SetControlMode(Test);
+    
 }
 
 

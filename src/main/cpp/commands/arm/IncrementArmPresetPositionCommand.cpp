@@ -19,7 +19,7 @@ IncrementArmPresetPositionCommand::IncrementArmPresetPositionCommand(std::shared
 }
 
 void IncrementArmPresetPositionCommand::Initialize() {
-    arm_->SetControlMode(Test);
+    
 }
 
 void IncrementArmPresetPositionCommand::Execute() {
@@ -27,9 +27,7 @@ void IncrementArmPresetPositionCommand::Execute() {
     VOKC_CALL(arm_->IncrementRotation(increment_));
 }
 
-
-    
-    bool IncrementArmPresetPositionCommand::IsFinished() {
+bool IncrementArmPresetPositionCommand::IsFinished() {
     bool at = false;
 
     OKC_CALL(arm_->AtExtendSetpoint(&at));

@@ -74,7 +74,7 @@ bool Arm::SetDesiredState(TeamOKC::ArmState state) {
 }
 
 bool Arm::IncrementRotation(double increment) {
-    this->desired_state_.rotation += increment;
+    this->test_state_.rotation += increment;
 
     has_been_commanded_ = true;
     control_state_ = ROTATING;
@@ -83,7 +83,7 @@ bool Arm::IncrementRotation(double increment) {
 }
 
 bool Arm::IncrementExtend(double increment) {
-    this->desired_state_.extension += increment;
+    this->test_state_.extension += increment;
 
     has_been_commanded_ = true;
     control_state_ = ROTATING;
@@ -132,8 +132,8 @@ bool Arm::TestControl() {
                 has_calibrated_ = true;
 
                 // initialize the desired state to the state when we are calibrated                
-                this->desired_state_.rotation = this->interface_->arm_duty_cycle_encoder;
-                this->desired_state_.extension = 1; // slightly not 0 just because
+                this->test_state_.rotation = this->interface_->arm_duty_cycle_encoder;
+                this->test_state_.extension = 1; // slightly not 0 just because
             } else {
                 // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
                 this->interface_->arm_extend_power = -0.1;
@@ -151,19 +151,19 @@ bool Arm::TestControl() {
     }
 
     // limit extension
-    if (this->desired_state_.extension > extend_limit_) {
-        this->desired_state_.extension = extend_limit_;
-    } else if (this->desired_state_.extension < 0) {
-        this->desired_state_.extension = 0;
+    if (this->test_state_.extension > extend_limit_) {
+        this->test_state_.extension = extend_limit_;
+    } else if (this->test_state_.extension < 1) {
+        this->test_state_.extension = 1;
     }
 
     // set setpoints
-    this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
-    this->inches_pid_->SetSetpoint(this->desired_state_.extension);
+    this->arm_pid_->SetSetpoint(this->test_state_.rotation);
+    this->inches_pid_->SetSetpoint(this->test_state_.extension);
 
     // calculate feedforward
     // take the sign of the desired state, multiply it by the feedforward gain times the desired rotation squared. this looks like output = signum(setpoint) * kF * setpoint^2
-    double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
+    double ff = TeamOKC::sign(this->test_state_.rotation) * arm_kF_ * this->test_state_.rotation * this->test_state_.rotation;
     
     this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
     this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
@@ -223,10 +223,10 @@ bool Arm::AutoControl() {
     // alright, we've made it thus far, so we need to get down to business and start moving
     if (control_state_ == ROTATING) {
         // bring the extension in whenever we rotate the arm, to reduce bounce
-        this->inches_pid_->SetSetpoint(0.5);
+        this->inches_pid_->SetSetpoint(1);
 
         // if we have brought the extension in
-        if (abs(1.0 - state_.extension) < 1.0) {
+        if (abs(state_.extension) < 2.0) {
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
@@ -261,7 +261,7 @@ bool Arm::AutoControl() {
         // and keep rotation where it is
 
         // if the arm is trying to go to 0, and we're close to 0
-        if (abs(this->desired_state_.rotation) < 2.0 && abs(this->state_.rotation) < 7.0) {
+        if (abs(this->desired_state_.rotation) < 2.0 && abs(this->state_.rotation) < 20) {
             // to prevent it from oscillating just set it to 0
             this->interface_->arm_lift_power = 0.0;
         } else {
@@ -276,6 +276,7 @@ bool Arm::AutoControl() {
 }
 
 void Arm::Periodic() {
+    // std::cout << mode_ << std::endl;
 
     if (ArmUI::nt_test_mode->GetBoolean(false)) {
         mode_ = Test;
@@ -292,6 +293,9 @@ void Arm::Periodic() {
             break;
         case Manual:
             VOKC_CALL(this->ManualControl());
+            break;
+        case Test:
+            VOKC_CALL(this->TestControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
