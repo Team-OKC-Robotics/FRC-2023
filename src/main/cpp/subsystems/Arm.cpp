@@ -276,8 +276,7 @@ bool Arm::AutoControl() {
 }
 
 void Arm::Periodic() {
-
-    if (ArmUI::nt_test_mode->GetBoolean(false)) {
+     if (ArmUI::nt_test_mode->GetBoolean(false)) {
         mode_ = Test;
     } else  if (ArmUI::nt_manual_arm_mode->GetBoolean(false)) {
         mode_ = Manual;
@@ -292,6 +291,9 @@ void Arm::Periodic() {
             break;
         case Manual:
             VOKC_CALL(this->ManualControl());
+            break;
+        case Test:
+            VOKC_CALL(this->TestControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
