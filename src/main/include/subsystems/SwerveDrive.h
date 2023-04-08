@@ -69,6 +69,7 @@ public:
     bool DriveAuto(double max_speed);
     bool AtDistSetpoint(bool *at);
     bool SetSteerOutput(double angle);
+    
 
     bool AutoBalance(double sign);
     bool AtBalanceSetpoint(bool *at);
