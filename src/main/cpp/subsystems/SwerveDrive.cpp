@@ -296,11 +296,6 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         this->interface_->left_back_drive_motor_output = 0.0;
         this->interface_->right_front_drive_motor_output = 0.0;
         this->interface_->right_back_drive_motor_output = 0.0;
-        this->interface_->left_front_drive_motor_output = std::make_shared<SlewRateLimiter>(limit);
-        this->interface_->left_back_drive_motor_output = std::make_shared<SlewRateLimiter>(limit);
-        this->interface_->right_front_drive_motor_output = std::make_shared<SlewRateLimiter>(limit);
-        this->interface_->right_back_drive_motor_output = std::make_shared<SlewRateLimiter>(limit);
-        
     } else {
         double left_front_steer_error = 0.0;
         double left_back_steer_error = 0.0;
