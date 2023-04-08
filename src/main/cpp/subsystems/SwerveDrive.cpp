@@ -330,6 +330,7 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     double drive_power = this->dist_pid_->Calculate(dist);
 
     double gyro_reading = 0.0;
+
     OKC_CALL(this->GetHeading(&gyro_reading));
 
     double turn_power = this->heading_pid_->Calculate(gyro_reading);
@@ -345,6 +346,7 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_front_drive_motor_output);
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->right_back_drive_motor_output);
 
+    double heading;
     OKC_CALL(SetSteerOutput(heading));
   
    return true;
