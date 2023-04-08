@@ -275,6 +275,67 @@ bool Arm::AutoControl() {
     return true;
 }
 
+bool Arm::DefenseControl() {
+    OKC_CHECK(interface_ != nullptr);
+    OKC_CHECK(this->arm_pid_ != nullptr);
+    OKC_CHECK(this->inches_pid_ != nullptr);
+
+   
+    // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
+     if (control_state_ == ROTATING) {
+        // bring the extension in whenever we rotate the arm, to reduce bounce
+        this->inches_pid_->SetSetpoint(0.5);
+
+        // if we have brought the extension in
+        if (abs(1.0 - state_.extension) < 1.0) {
+            // then move the arm
+            this->arm_pid_->SetSetpoint(0);
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(0);
+
+            //TODO limit us from rotating too far
+
+            // keep the extension where it needs to be
+            this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
+            
+            // if we've reached our desired rotation
+            if (abs(desired_state_.rotation - state_.rotation) < 2) {
+                // move to the next stage
+                this->control_state_ = EXTENDING;
+            }
+        } else { // otherwise we haven't brought the extension in
+            // so keep the arm where it is
+            this->arm_pid_->SetSetpoint(this->state_.rotation);
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+
+            // and keep bringing the extension in
+            this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
+        }
+    // we've rotated the arm to the desired setpoint, so now extend it
+    } else if (control_state_ == EXTENDING) {
+        //TODO limit extension?
+        //TODO slew rate limiter on the arm power and stuff
+
+        // extend the arm
+        this->inches_pid_->SetSetpoint(this->desired_state_.extension);
+        this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
+
+        // and keep rotation where it is
+
+        // if the arm is trying to go to 0, and we're close to 0
+        if (abs(this->desired_state_.rotation) < 2.0 && abs(this->state_.rotation) < 7.0) {
+            // to prevent it from oscillating just set it to 0
+            this->interface_->arm_lift_power = 0.0;
+        } else {
+            // otherwise
+            this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
+        }
+    } else {
+        OKC_CHECK_MSG(false, "arm state machine unknown state");
+    }
+
+    
+}
+
 void Arm::Periodic() {
     // control the arm either using the raw axis values or PID controllers
     switch (mode_) {
@@ -284,6 +345,8 @@ void Arm::Periodic() {
         case Test:
             VOKC_CALL(this->TestControl());
             break;
+        case Defense:
+            VOKC_CALL(this->DefenseControl());
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
     }

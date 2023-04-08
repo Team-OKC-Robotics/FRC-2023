@@ -12,6 +12,7 @@
 enum ControlMode {
     Manual,
     Auto,
+    Defense,
     Test
 };
 
@@ -45,6 +46,7 @@ public:
     bool SetControlMode(const ControlMode &mode);
     bool AutoControl();
     bool TestControl();
+    bool DefenseControl();
     bool AllowCalibration();
     
 

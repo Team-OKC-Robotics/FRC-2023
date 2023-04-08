@@ -21,6 +21,7 @@ public:
 
     void Initialize() override;
     void Execute() override;
+    void Defense() override;
     bool IsFinished() override;
 
 private:
