@@ -4,64 +4,19 @@
 
 //pulls PID values from the parameters.toml file
 bool Intake::Init() {
-    OKC_CHECK(this->interface_ != nullptr);
-
-    // the PID controller for the wrist
-    double wrist_kP = RobotParams::GetParam("intake.wrist_pid.kP", 0.005);
-    double wrist_kI = RobotParams::GetParam("intake.wrist_pid.kI", 0.0);
-    double wrist_kD = RobotParams::GetParam("intake.wrist_pid.kD", 0.0);
-    wrist_pid_ = std::make_shared<frc::PIDController>(wrist_kP, wrist_kI, wrist_kD);
-    wrist_pid_->SetTolerance(7, 10);
-    
-    setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/setpoint");
-    output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/output");
-    encoder_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/tilt/encoder");
-
-    wrist_pid_->SetSetpoint(0.0);
-
-    return true;
-}
-
-bool Intake::Reset() {
-    OKC_CHECK(this->interface_ != nullptr);
-
-    this->wrist_pid_->Reset();
-
-    return true;
-}
-
-bool Intake::GetIntakeTilt(double *tilt) {
-    OKC_CHECK(interface_ != nullptr);
-
-    *tilt = interface_->tilt_encoder;
-
-    return true;
-}
-
-bool Intake::SetIntakePower(double power) {
-    intake_power_ = power;
-
-    return true;
-}
-
-bool Intake::SetIntakeTilt(double degrees) {
-    OKC_CHECK(this->wrist_pid_ != nullptr);
-
-    this->wrist_pid_->SetSetpoint(degrees);
-    
-    return true;
-}
-
-bool Intake::IncrementIntakeTilt(double degrees) {
-    OKC_CHECK(this->wrist_pid_ != nullptr);
-
-    this->wrist_pid_->SetSetpoint(this->wrist_pid_->GetSetpoint() + degrees);
-
     return true;
 }
 
 bool Intake::SetControlMode(const ControlMode &mode) {
     mode_= mode;
+
+    return true;
+
+}
+
+
+bool Intake::SetIntakePower(double power) {
+    intake_power_ = power;
 
     return true;
 }
@@ -71,26 +26,15 @@ bool Intake::ManualControl() {
 
     interface_->intake_power = intake_power_;
    
+
     return true;
 }
+
 
 bool Intake::AutoControl() {
     OKC_CHECK(interface_ != nullptr);
-    OKC_CHECK(this->wrist_pid_ != nullptr);
     
-    interface_->tilt_power = -this->wrist_pid_->Calculate(interface_->tilt_encoder);
-    TeamOKC::Clamp(-0.6, 0.6, &interface_->tilt_power);
-    interface_->intake_power = intake_power_;
- 
-    return true;
-}
-
-bool Intake::AtSetpoint(bool *at) {
-    OKC_CHECK(interface_ != nullptr);
-
-    *at = wrist_pid_->AtSetpoint();
-
-    return true;
+   return true;
 }
 
 void Intake::SimulationPeriodic() {
@@ -98,6 +42,7 @@ void Intake::SimulationPeriodic() {
 }
 
 void Intake::Periodic() {
+        
     switch (mode_) {
         case Manual:
             VOKC_CALL(this->ManualControl());
@@ -106,15 +51,8 @@ void Intake::Periodic() {
             VOKC_CALL(this->AutoControl());
             break;
         default:
-            VOKC_CHECK_MSG(false, "unhandled intake enum");
+            VOKC_CHECK_MSG(false, "Unhandled enum");
     }
-
-    VOKC_CALL(IntakeUI::nt_tilt->SetDouble(this->interface_->tilt_encoder));
-    VOKC_CALL(IntakeUI::nt_tilt_setpoint->SetDouble(this->wrist_pid_->GetSetpoint()));
-
-    setpoint_log_.Append(this->wrist_pid_->GetSetpoint());
-    output_log_.Append(this->interface_->tilt_power);
-    encoder_log_.Append(this->interface_->tilt_encoder);
 }
 
 

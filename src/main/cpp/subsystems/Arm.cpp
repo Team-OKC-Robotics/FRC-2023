@@ -277,14 +277,14 @@ bool Arm::AutoControl() {
 
 void Arm::Periodic() {
 
-    if (ArmUI::nt_manual_arm_mode->GetBoolean(false)){
+    if (ArmUI::nt_test_mode->GetBoolean(false)) {
+        mode_ = Test;
+    } else  if (ArmUI::nt_manual_arm_mode->GetBoolean(false)) {
         mode_ = Manual;
-    }
-
-    else {
+    } else {
         mode_ = Auto;
-
     }
+    
     // control the arm either using the raw axis values or PID controllers
     switch (mode_) {
         case Auto:

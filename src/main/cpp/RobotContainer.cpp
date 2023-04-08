@@ -64,18 +64,16 @@ bool RobotContainer::ConfigureButtonBindings() {
     // driver_x_button_->WhileActiveContinous(*retractArmCommand);
     // driver_b_button_->WhileActiveContinous(*extendArmCommand);
 
-    // manip_left_stick_button_->WhileHeld(*inc_wrist_tilt_command_);
-    // manip_right_stick_button_->WhileHeld(*dec_wrist_tilt_command_);
-    
+
     // second driver controls
-    manip_a_button_->WhenPressed(*human_player_command_);
-    manip_right_bumper_button_->WhenPressed(*pickup_command_);
-    manip_left_bumper_button_->WhenPressed(*pickup_reverse_command_);
+    manip_a_button_->WhenPressed(*arm_human_player_command_);
+    manip_right_bumper_button_->WhenPressed(*arm_pickup_command_);
+    manip_left_bumper_button_->WhenPressed(*arm_pickup_reverse_command_);
 
-    manip_x_button_->WhenPressed(*carry_command_);
+    manip_x_button_->WhenPressed(*arm_carry_command_);
 
-    manip_b_button_->WhenPressed(*score_mid_command_);
-    manip_y_button_->WhenPressed(*score_high_command_);
+    manip_b_button_->WhenPressed(*arm_score_mid_command_);
+    manip_y_button_->WhenPressed(*arm_score_high_command_);
 
     manip_start_button_->WhenPressed(*reset_gyro_command_);
   
@@ -129,7 +127,6 @@ bool RobotContainer::InitActuators(Actuators *actuators_interface) {
     actuators_interface->arm_extend_motor->SetIdleMode(BRAKE);
 
     actuators_interface->intake_motor = std::make_unique<rev::CANSparkMax>(INTAKE_MOTOR, BRUSHLESS);
-    actuators_interface->wrist_motor = std::make_unique<rev::CANSparkMax>(WRIST_MOTOR, BRUSHLESS);
 
     OKC_CHECK(actuators_interface->intake_motor != nullptr);
 
@@ -200,8 +197,6 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
     sensor_interface->intake_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.intake_motor->GetEncoder());
-    sensor_interface->wrist_encoder = std::make_unique<frc::DutyCycleEncoder>(WRIST_ABS_ENCODER);
-
     return true;
 }
 
@@ -320,23 +315,11 @@ bool RobotContainer::InitCommands() {
     double negative_score_high_rotation_ = RobotParams::GetParam("arm.negative_score_high.arm_setpoint", 0.0);
     double negative_score_high_extension_ = RobotParams::GetParam("arm.negative_score_high.extend_setpoint", 1.0);
 
-    double tilt_pickup_reverse_ = RobotParams::GetParam("arm.negative_pickup.intake_setpoint", 0.0);
-    double tilt_pickup_ = RobotParams::GetParam("arm.pickup.intake_setpoint", 0.0);
-
-    double tilt_score_mid_ = RobotParams::GetParam("arm.score_medium.intake_setpoint", 0.0);
-    double tilt_score_mid_reverse_ = RobotParams::GetParam("arm.negative_score_medium.intake_setpoint", 0.0);
-
-    double tilt_score_high_ = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
-    double tilt_score_high_reverse_ = RobotParams::GetParam("arm.negative_score_high.intake_setpoint", 0.0);
-
     double human_player_extension_ = RobotParams::GetParam("arm.human_player.extend_setpoint", 1.0);
     double human_player_rotation_ = RobotParams::GetParam("arm.human_player.arm_setpoint", 0.0);
-    double tilt_human_player = RobotParams::GetParam("arm.human_player.intake_setpoint", 0.0);
-
+  
     double negative_human_player_extension_ = RobotParams::GetParam("arm.negative_human_player.extend_setpoint", 1.0);
     double negative_human_player_rotation_ = RobotParams::GetParam("arm.negative_human_player.arm_setpoint", 0.0);
-    double tilt_human_player_reverse_ = RobotParams::GetParam("arm.negative_human_player.intake_setpoint", 0.0);
-
 
     // autons
     score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
@@ -371,28 +354,6 @@ bool RobotContainer::InitCommands() {
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.7);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.7);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.03);
-
-    inc_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, 1);
-    dec_wrist_tilt_command_ = std::make_shared<IncrementIntakePositionCommand>(intake_, -1);
-
-    tilt_pickup_reverse_command_ = std::make_shared<IntakeBlockingPositionCommand>(intake_, tilt_pickup_reverse_);
-    tilt_pickup_command_ = std::make_shared<IntakeBlockingPositionCommand>(intake_, tilt_pickup_);
-    tilt_carry_command_ = std::make_shared<IntakePositionCommand>(intake_, 0.0);
-
-    tilt_mid_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_mid_, tilt_score_mid_reverse_);
-    tilt_high_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_score_high_, tilt_score_high_reverse_);
-    tilt_human_player_command_ = std::make_shared<FieldOrientedIntakeCommand>(intake_, swerve_drive_, tilt_human_player_reverse_, tilt_human_player);
-
-    // pickup commands
-    pickup_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_command_, arm_pickup_command_);
-    pickup_reverse_command_ = std::make_shared<TiltThenMoveArmCommand>(tilt_pickup_reverse_command_, arm_pickup_reverse_command_);
-
-    score_mid_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_mid_command_, arm_score_mid_command_);
-    score_high_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_high_command_, arm_score_high_command_);
-    carry_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_carry_command_, arm_carry_command_);
-
-    // human player
-    human_player_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_human_player_command_, arm_human_player_command_);
 
     return true;
 }

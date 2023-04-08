@@ -60,6 +60,8 @@ namespace ArmUI {
 
     nt::GenericEntry *const nt_manual_arm_mode = nt_tab.Add("manual arm mode", false).GetEntry();
     nt::GenericEntry *const arm_control_state = nt_tab.Add("arm control state", "init").GetEntry();
+    nt::GenericEntry *const nt_test_mode = nt_tab.Add("test mode", false ).GetEntry();
+    
 }
 
 namespace ClawUI {
@@ -71,6 +73,5 @@ namespace ClawUI {
 namespace IntakeUI {
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("intake");
 
-    nt::GenericEntry *const nt_tilt = nt_tab.Add("wrist encoder", 0.0).GetEntry();
-    nt::GenericEntry *const nt_tilt_setpoint = nt_tab.Add("wrist setpoint", 0.0).GetEntry();
+   
 }
