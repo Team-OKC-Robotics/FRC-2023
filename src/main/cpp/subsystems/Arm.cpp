@@ -5,23 +5,20 @@
 
 
 bool Arm::Init() {
-    // initializing the arm
-    control_state_ = INIT;
-    
     //pulls PID values from the parameters.toml file and initializes the PID controllers
     double arm_kP = RobotParams::GetParam("arm.lift_pid.kP", 0.005);
     double arm_kI = RobotParams::GetParam("arm.lift_pid.kI", 0.0);
     double arm_kD = RobotParams::GetParam("arm.lift_pid.kD", 0.0);
     double arm_kF = RobotParams::GetParam("arm.lift_pid.kF", 0.05);
     arm_pid_ = std::make_shared<frc::PIDController>(arm_kP, arm_kI, arm_kD);
-    arm_pid_->SetTolerance(2, 2);
+    arm_pid_->SetTolerance(2.5, 3.0);
     arm_kF_ = arm_kF;
 
     double extend_kP = RobotParams::GetParam("arm.extend_pid.kP", 0.005);
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
     double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
     inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
-    inches_pid_->SetTolerance(0.2, 0.2);
+    inches_pid_->SetTolerance(0.7, 2.0);
 
     // logs
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
@@ -30,7 +27,10 @@ bool Arm::Init() {
 
     arm_extend_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_output");
     arm_extend_enc_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_enc");
-    arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint");
+    arm_extend_setpoint_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/extend_setpoint"); 
+
+
+   
 
     // pull limits from the parameters file
     lift_limit_ = RobotParams::GetParam("arm.lift_limit", 100.0);
@@ -44,14 +44,24 @@ bool Arm::Init() {
     control_state_ = CALIBRATING;
 
     return true;
+
 }
 
+bool Arm::SetControlMode(const ControlMode & mode) {
+        mode_ = mode;
 
-bool Arm::SetControlMode(const ControlMode &mode){
-    mode_= mode;
+        return true; 
+    }
+
+bool Arm::ManualControl() {
+    OKC_CHECK(interface_ != nullptr);
+
+    interface_->arm_lift_power = lift_power_;
+    interface_->arm_extend_power = extend_power_;
 
     return true;
 }
+
 
 bool Arm::SetDesiredState(TeamOKC::ArmState state) {
     this->desired_state_ = state;
@@ -92,7 +102,7 @@ bool Arm::AtExtendSetpoint(bool *at) {
 bool Arm::AtLiftSetpoint(bool *at) {
     // if the error is less than the threshold, then we're there
     // *at = abs(this->desired_state_.rotation - this->state_.rotation) < rotation_threshold_;
-    *at = abs(this->desired_state_.rotation - this->state_.rotation) < 2;
+    *at = arm_pid_->AtSetpoint() && inches_pid_->AtSetpoint();
 
     return true;
 }
@@ -155,7 +165,6 @@ bool Arm::TestControl() {
     // take the sign of the desired state, multiply it by the feedforward gain times the desired rotation squared. this looks like output = signum(setpoint) * kF * setpoint^2
     double ff = TeamOKC::sign(this->desired_state_.rotation) * arm_kF_ * this->desired_state_.rotation * this->desired_state_.rotation;
     
-    // set output
     this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->state_.rotation) + ff;
     this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->state_.extension);
 
@@ -212,16 +221,7 @@ bool Arm::AutoControl() {
     }
 
     // alright, we've made it thus far, so we need to get down to business and start moving
-    
-    // if we're not actively trying to go anywhere
-    if (control_state_ == STANDBY) {
-        // keep the arm where it is
-        this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
-        this->interface_->arm_extend_power = this->inches_pid_->Calculate(this->interface_->arm_extend_encoder);
-
-        return true;
-    // rotation takes priority, and if necessary the arm will be extended/retracted to reach a certain angle
-    } else if (control_state_ == ROTATING) {
+    if (control_state_ == ROTATING) {
         // bring the extension in whenever we rotate the arm, to reduce bounce
         this->inches_pid_->SetSetpoint(0.5);
 
@@ -276,13 +276,22 @@ bool Arm::AutoControl() {
 }
 
 void Arm::Periodic() {
+
+    if (ArmUI::nt_manual_arm_mode->GetBoolean(false)){
+        mode_ = Manual;
+    }
+
+    else {
+        mode_ = Auto;
+
+    }
     // control the arm either using the raw axis values or PID controllers
     switch (mode_) {
         case Auto:
             VOKC_CALL(this->AutoControl());
             break;
-        case Test:
-            VOKC_CALL(this->TestControl());
+        case Manual:
+            VOKC_CALL(this->ManualControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
@@ -304,12 +313,6 @@ void Arm::Periodic() {
     VOKC_CALL(ArmUI::nt_limit_switch->SetBoolean(interface_->extend_limit_switch));
 
     switch(control_state_) {
-        case INIT:
-            VOKC_CALL(ArmUI::arm_control_state->SetString("INIT"));
-            break;
-        case STANDBY:
-            VOKC_CALL(ArmUI::arm_control_state->SetString("STANDBY"));
-            break;
         case CALIBRATING:
             VOKC_CALL(ArmUI::arm_control_state->SetString("CALIBRATING"));
             break;

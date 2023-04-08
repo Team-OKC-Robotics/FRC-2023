@@ -41,7 +41,7 @@ private:
    
     double intake_power_;
    
-    ControlMode mode_;
+    ControlMode mode_ = Auto;
 
     wpi::log::DoubleLogEntry setpoint_log_;
     wpi::log::DoubleLogEntry output_log_;

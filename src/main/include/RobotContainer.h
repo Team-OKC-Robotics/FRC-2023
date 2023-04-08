@@ -38,6 +38,7 @@
 // swerve
 #include "commands/swerve/TeleOpSwerveCommand.h"
 #include "commands/swerve/AutoDriveCommand.h"
+#include "commands/swerve/ResetGyroCommand.h"
 
 // arm
 #include "commands/arm/IncrementArmPresetPositionCommand.h"
@@ -170,6 +171,7 @@ private:
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> slow_swerve_teleop_command_;
     std::shared_ptr<TeleOpSwerveCommand> fast_swerve_teleop_command_;
+    std::shared_ptr<ResetGyroCommand> reset_gyro_command_;
 
     //arm
     std::shared_ptr<IncrementArmExtendCommand> extendArmCommand;
@@ -183,6 +185,8 @@ private:
     std::shared_ptr<ArmSetStateCommand> arm_pickup_reverse_command_;
     std::shared_ptr<ArmFieldOrientedCommand> arm_score_mid_command_;
     std::shared_ptr<ArmFieldOrientedCommand> arm_score_high_command_;
+    
+    std::shared_ptr<ArmFieldOrientedCommand> arm_human_player_command_;
 
     //intake
     std::shared_ptr<IntakeCommand> intake_command;
@@ -199,6 +203,8 @@ private:
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_mid_command_;
     std::shared_ptr<FieldOrientedIntakeCommand> tilt_high_command_;
 
+    std::shared_ptr<FieldOrientedIntakeCommand> tilt_human_player_command_;
+
     // sequential commands
     std::shared_ptr<TiltThenMoveArmCommand> pickup_command_;
     std::shared_ptr<TiltThenMoveArmCommand> pickup_reverse_command_;
@@ -206,4 +212,6 @@ private:
     std::shared_ptr<MoveArmThenTiltCommand> score_mid_command_;
     std::shared_ptr<MoveArmThenTiltCommand> score_high_command_;
     std::shared_ptr<MoveArmThenTiltCommand> carry_command_;
+
+    std::shared_ptr<MoveArmThenTiltCommand> human_player_command_;
 };

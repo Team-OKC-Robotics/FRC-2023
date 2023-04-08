@@ -15,7 +15,7 @@ work = true
 # assumes our modules are located in a square, everything should be the same distance from the center
 # units are in meters
 x_disp = 0.216
-y_disp = 0.216
+y_disp = 0.416
 # stuff for swerve modules and odometry and stuff
 l2_gear_ratio = 6.75
 wheel_diameter = 4.0
@@ -40,7 +40,7 @@ kD = 0.0
 [swerve.steer_pid]
 kP = 0.005
 kI = 0.0
-kD = 0.0
+kD = 0.000005
 
 [swerve.heading_pid]
 kP = 0.04
@@ -61,26 +61,26 @@ tilted_threshold = 15.0
 reverse_threshold = 9.0
 pitch_threshold = 1.0
 drive_backward_speed = -0.2
-timeout = 1.3
+timeout = 1.4
 
 [arm]
 offset = -327
 lift_limit = 110
 extend_limit = 95
-max_output = 0.5
+max_output = 0.7
 arm_open_loop = 10
 extend_open_loop = 10
 
-# right in front of the robot to pick stuff up0
+# right in front of the robot to pick stuff up
 [arm.pickup]
-extend_setpoint = 50.0
-arm_setpoint = 33.0
-intake_setpoint = 45.0
+extend_setpoint = 30.0
+arm_setpoint = 43.0
+intake_setpoint = -45.0
 
 [arm.score_high]
-extend_setpoint = 60.0
-arm_setpoint = 110.0
-intake_setpoint = 88.0
+extend_setpoint = 65.0
+arm_setpoint = 105.0
+intake_setpoint = -40.0
 
 [arm.score_medium]
 extend_setpoint = 20.0
@@ -88,25 +88,35 @@ arm_setpoint = 94.0
 intake_setpoint = -40.0
 
 [arm.negative_pickup]
-extend_setpoint = 20.0
-arm_setpoint = -25.0
-intake_setpoint = -70.0
+extend_setpoint = 30.0
+arm_setpoint = -42.0
+intake_setpoint = 20.0
 
 [arm.negative_score_high]
-extend_setpoint = 50.0
-arm_setpoint = -110.0
-intake_setpoint = -68.0
+extend_setpoint = 65.0
+arm_setpoint = -105.0
+intake_setpoint = 40.0
 
 [arm.negative_score_medium]
-extend_setpoint = 15.0
-arm_setpoint = -100.0
+extend_setpoint = 20.0
+arm_setpoint = -90.0
 intake_setpoint = 52.0
 
+[arm.negative_human_player]
+extend_setpoint = 5.0
+arm_setpoint = -40.0
+intake_setpoint = -87.0
+
+[arm.human_player]
+extend_setpoint = 5.0
+arm_setpoint = 40.0
+intake_setpoint = 87.0
 
 [arm.lift_pid]
 kP = 0.05
 kI = 0
 kD = 0
+kF = 0.001
 
 [arm.extend_pid]
 kP = 0.06
@@ -127,6 +137,6 @@ kD = 0
 tilt_offset = -55.0
 
 [intake.wrist_pid]
-kP = 0.02
-kI = 0.0001
-kD = 0.0003
+kP = 0.005
+kI = 0.0
+kD = 0.0

@@ -16,12 +16,9 @@ enum ControlMode {
 };
 
 enum ArmControlState {
-    INIT,
-    STANDBY,
     CALIBRATING,
     EXTENDING,
-    ROTATING,
-    DONE
+    ROTATING
 };
 
 class Arm : public frc2::SubsystemBase {
@@ -45,6 +42,7 @@ public:
     bool SetControlMode(const ControlMode &mode);
     bool AutoControl();
     bool TestControl();
+    bool ManualControl();
     bool AllowCalibration();
     
 
@@ -73,6 +71,9 @@ private:
     // limits
     double lift_limit_;
     double extend_limit_;
+
+    double lift_power_;
+    double extend_power_;
 
     // logs
     wpi::log::DoubleLogEntry arm_lift_output_log_;
