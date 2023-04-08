@@ -62,6 +62,7 @@ private:
     ArmControlState control_state_;
     TeamOKC::ArmState state_;
     TeamOKC::ArmState desired_state_;
+    TeamOKC::ArmState test_state_;
 
     // control flags
     bool has_been_commanded_ = false;

@@ -31,7 +31,7 @@ ArmSetStateDpadCommand::ArmSetStateDpadCommand(std::shared_ptr<Arm> arm, std::sh
 void ArmSetStateDpadCommand::Initialize() {
     VOKC_CHECK(arm_ != nullptr);
 
-    VOKC_CALL(arm_->SetControlMode(Auto));
+    
 }
 
 void ArmSetStateDpadCommand::Execute() {

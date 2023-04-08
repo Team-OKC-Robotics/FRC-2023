@@ -21,7 +21,7 @@ ArmSetStateCommand::ArmSetStateCommand(std::shared_ptr<Arm> arm, TeamOKC::ArmSta
 void ArmSetStateCommand::Initialize() {
     VOKC_CHECK(arm_ != nullptr);
 
-    VOKC_CALL(arm_->SetControlMode(Auto));
+    
 }
 
 void ArmSetStateCommand::Execute() {

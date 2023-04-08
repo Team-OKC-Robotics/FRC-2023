@@ -87,12 +87,6 @@ void Robot::TestPeriodic() {
 }
 
 void Robot::TestInit() {
-    m_container.GetArm()->SetControlMode(Test);
-
-    teleop_command_ = m_container.GetDriveCommand();
-    VOKC_CALL(teleop_command_ != nullptr);
-    teleop_command_->Schedule();
-    VOKC_CHECK_MSG(false, "we are in fact reaching test init");
 }
 
 /**
