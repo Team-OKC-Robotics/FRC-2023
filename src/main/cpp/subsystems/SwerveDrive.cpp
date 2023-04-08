@@ -24,7 +24,14 @@ bool SwerveDrive::Init() {
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
     double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
     double steer_open_loop = RobotParams::GetParam("swerve.steer_open_loop", 1);
-
+    double drive_deadband = RobotParams::GetParam("swerve.drive_deadband", 0.05);
+    double strafe_deadband = RobotParams::GetParam("swerve.strafe_deadband", 0.03);
+    double turn_deadband = RobotParams::GetParam("swerve.turn_deadband", 0.2);
+    double left_front_drive_motor_output = RobotParams::GetParam("swerve.left_front_drive_motor_output", 2);
+    double left_back_drive_motor_output = RobotParams::GetParam("swerve.left_back_drive_motor_output", 2);
+    double right_front_drive_motor_output = RobotParams::GetParam("swerve.right_front_drive_motor_output", 2);
+    double right_back_drive_motor_output = RobotParams::GetParam("swerve.right_back_drive_motor_output", 2);
+    
     // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
         drive_max_output,
@@ -244,22 +251,22 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         right_back_turn -= 180;
         right_back_speed *= -1;
     }
-    if (left_front_speed > 1) {
+    if (abs(left_front_speed > 1)) {
         right_front_speed = right_front_speed/left_front_speed;
         left_back_speed = left_back_speed/left_front_speed;
         right_back_speed = right_back_speed/left_front_speed;
     }
-    if (left_back_speed > 1) {
+    if (abs(left_back_speed > 1)) {
         left_front_speed = left_front_speed/left_back_speed;
         right_front_speed = right_front_speed/left_back_speed;
         right_back_speed = right_back_speed/left_back_speed;
     }
-    if (right_front_speed > 1) {
+    if (abs(right_front_speed > 1)) {
         left_front_speed = left_front_speed/right_front_speed;
         left_back_speed = left_back_speed/right_front_speed;
         right_back_speed = right_back_speed/right_front_speed;
     }
-    if (right_back_speed > 1) {
+    if (abs(right_back_speed > 1)) {
         left_front_speed = left_front_speed/right_back_speed;
         left_back_speed = left_back_speed/right_back_speed;
         right_front_speed= right_front_speed/right_back_speed;
