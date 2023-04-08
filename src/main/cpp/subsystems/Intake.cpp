@@ -30,13 +30,6 @@ bool Intake::ManualControl() {
     return true;
 }
 
-
-bool Intake::AutoControl() {
-    OKC_CHECK(interface_ != nullptr);
-    
-   return true;
-}
-
 void Intake::SimulationPeriodic() {
     
 }
@@ -46,9 +39,6 @@ void Intake::Periodic() {
     switch (mode_) {
         case Manual:
             VOKC_CALL(this->ManualControl());
-            break;
-        case Auto:
-            VOKC_CALL(this->AutoControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");

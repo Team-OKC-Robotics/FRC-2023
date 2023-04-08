@@ -79,7 +79,7 @@ intake_setpoint = -45.0
 
 [arm.score_high]
 extend_setpoint = 65.0
-arm_setpoint = 105.0
+arm_setpoint = 65.0
 intake_setpoint = -40.0
 
 [arm.score_medium]
@@ -89,7 +89,7 @@ intake_setpoint = -40.0
 
 [arm.negative_pickup]
 extend_setpoint = 30.0
-arm_setpoint = -42.0
+arm_setpoint = -60.0
 intake_setpoint = 20.0
 
 [arm.negative_score_high]

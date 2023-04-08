@@ -208,7 +208,7 @@ bool Arm::AutoControl() {
             std::cout << "CALIBRATION COMPLETE" << std::endl;
         } else {
             // otherwise, we haven't hit it yet, so set the motor to a small negative power until we do
-            this->interface_->arm_extend_power = -0.1;
+            this->interface_->arm_extend_power = -0.2;
         }
     
         return true;
@@ -223,7 +223,7 @@ bool Arm::AutoControl() {
     // alright, we've made it thus far, so we need to get down to business and start moving
     if (control_state_ == ROTATING) {
         // bring the extension in whenever we rotate the arm, to reduce bounce
-        this->inches_pid_->SetSetpoint(0.5);
+        this->inches_pid_->SetSetpoint(1);
 
         // if we have brought the extension in
         if (abs(1.0 - state_.extension) < 1.0) {
@@ -292,6 +292,9 @@ void Arm::Periodic() {
             break;
         case Manual:
             VOKC_CALL(this->ManualControl());
+            break;
+        case Test:
+            VOKC_CALL(this->TestControl());
             break;
         default:
             VOKC_CHECK_MSG(false, "Unhandled enum");
