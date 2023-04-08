@@ -27,7 +27,12 @@ void IncrementArmPresetPositionCommand::Execute() {
     VOKC_CALL(arm_->IncrementRotation(increment_));
 }
 
-bool IncrementArmPresetPositionCommand::IsFinished() {
-    // Always end this command.
-    return true;
+
+    
+    bool IncrementArmPresetPositionCommand::IsFinished() {
+    bool at = false;
+
+    OKC_CALL(arm_->AtExtendSetpoint(&at));
+
+    return at;
 }
