@@ -7,6 +7,7 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double d
     max_speed_ = max_speed;
     heading_ = heading;
 
+
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());
     }

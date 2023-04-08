@@ -31,4 +31,5 @@ private:
     double dist_;
     double max_speed_;
     double heading_;
+    
 };

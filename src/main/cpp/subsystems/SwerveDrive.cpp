@@ -334,10 +334,10 @@ bool SwerveDrive::DriveAuto(double max_speed, double heading) {
 
     double turn_power = this->heading_pid_->Calculate(gyro_reading);
 
-    this->interface_->left_front_drive_motor_output = drive_power - turn_power;
-    this->interface_->left_back_drive_motor_output = drive_power - turn_power;
-    this->interface_->right_front_drive_motor_output = drive_power + turn_power;
-    this->interface_->right_back_drive_motor_output = drive_power + turn_power;
+    this->interface_->left_front_drive_motor_output = drive_power + turn_power;
+    this->interface_->left_back_drive_motor_output = drive_power + turn_power;
+    this->interface_->right_front_drive_motor_output = drive_power - turn_power;
+    this->interface_->right_back_drive_motor_output = drive_power - turn_power;
 
     // clamp the speed
     TeamOKC::Clamp(-max_speed, max_speed, &this->interface_->left_front_drive_motor_output);
