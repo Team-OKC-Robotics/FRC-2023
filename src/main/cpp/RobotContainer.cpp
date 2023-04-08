@@ -321,15 +321,6 @@ bool RobotContainer::InitCommands() {
     double negative_human_player_extension_ = RobotParams::GetParam("arm.negative_human_player.extend_setpoint", 1.0);
     double negative_human_player_rotation_ = RobotParams::GetParam("arm.negative_human_player.arm_setpoint", 0.0);
 
-    double human_player_extension_ = RobotParams::GetParam("arm.human_player.extend_setpoint", 1.0);
-    double human_player_rotation_ = RobotParams::GetParam("arm.human_player.arm_setpoint", 0.0);
-    double tilt_human_player = RobotParams::GetParam("arm.human_player.intake_setpoint", 0.0);
-
-    double negative_human_player_extension_ = RobotParams::GetParam("arm.negative_human_player.extend_setpoint", 1.0);
-    double negative_human_player_rotation_ = RobotParams::GetParam("arm.negative_human_player.arm_setpoint", 0.0);
-    double tilt_human_player_reverse_ = RobotParams::GetParam("arm.negative_human_player.intake_setpoint", 0.0);
-
-
     // autons
     score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
     score_preload_auto_ = std::make_shared<ScorePreloadedNoDriveAuto>(arm_, intake_);
@@ -363,9 +354,6 @@ bool RobotContainer::InitCommands() {
     intake_command = std::make_shared<IntakeCommand>(intake_, 0.7);
     other_intake_command = std::make_shared<IntakeCommand>(intake_, -0.7);
     stop_intake_command = std::make_shared<IntakeCommand>(intake_, -0.03);
-
-    // human player
-    human_player_command_ = std::make_shared<MoveArmThenTiltCommand>(tilt_human_player_command_, arm_human_player_command_);
 
     return true;
 }

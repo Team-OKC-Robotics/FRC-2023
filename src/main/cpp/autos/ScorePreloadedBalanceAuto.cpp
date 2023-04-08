@@ -12,9 +12,6 @@ ScorePreloadedBalanceAuto::ScorePreloadedBalanceAuto(std::shared_ptr<SwerveDrive
     double degrees = RobotParams::GetParam("arm.score_high.arm_setpoint", 0.0);
     double extend = RobotParams::GetParam("arm.score_high.extend_setpoint", 1.0);
 
-    double pickup_degrees = RobotParams::GetParam("arm.pickup.arm_setpoint", 0.0);
-    double pickup_extend = RobotParams::GetParam("arm.pickup.extend_setpoint", 1.0);
-
     double score_position = RobotParams::GetParam("arm.score_high.intake_setpoint", 0.0);
 
     AddCommands(
