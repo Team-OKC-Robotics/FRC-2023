@@ -83,13 +83,13 @@ arm_setpoint = 81.0
 intake_setpoint = -10.0
 
 [arm.score_medium]
-extend_setpoint = 20.0
+extend_setpoint = 25.0
 arm_setpoint = 94.0
 intake_setpoint = -40.0
 
 [arm.negative_pickup]
-extend_setpoint = -90.0
-arm_setpoint = -60.0
+extend_setpoint = 48.0
+arm_setpoint = -52.0
 intake_setpoint = 20.0
 
 [arm.negative_score_high]
@@ -111,6 +111,7 @@ intake_setpoint = -87.0
 extend_setpoint = 5.0
 arm_setpoint = 40.0
 intake_setpoint = 87.0
+
 
 [arm.lift_pid]
 kP = 0.05
