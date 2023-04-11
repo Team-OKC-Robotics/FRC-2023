@@ -19,7 +19,7 @@ public:
      *
      * @param swerve The swerve drive used by this command.
      */
-    explicit AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed, double strafe);
+    explicit AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed, double heading);
 
     void Initialize() override;
     void Execute() override;
@@ -30,5 +30,6 @@ private:
     std::shared_ptr<SwerveDrive> swerve_;
     double dist_;
     double max_speed_;
-    double strafe_;
+    double heading_;
+    
 };

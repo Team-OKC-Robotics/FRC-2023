@@ -1,11 +1,12 @@
 
 #include "commands/swerve/AutoDriveCommand.h"
 
-AutoDriveCommand::AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed, double strafe) {
+AutoDriveCommand::AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed, double heading) {
     swerve_ = swerve;
     dist_ = dist;
     max_speed_ = max_speed;
-    strafe_ = strafe;
+    heading_ = heading;
+
 
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());
@@ -23,7 +24,7 @@ void AutoDriveCommand::Initialize() {
 }
 
 void AutoDriveCommand::Execute() {
-    VOKC_CALL(swerve_->DriveAuto(max_speed_));
+    VOKC_CALL(swerve_->DriveAuto(max_speed_, heading_));
 }
 
 void AutoDriveCommand::End(bool interrupted) {
