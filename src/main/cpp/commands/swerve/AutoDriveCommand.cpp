@@ -1,10 +1,11 @@
 
 #include "commands/swerve/AutoDriveCommand.h"
 
-AutoDriveCommand::AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed) {
+AutoDriveCommand::AutoDriveCommand(std::shared_ptr<SwerveDrive> swerve, double dist, double max_speed, double strafe) {
     swerve_ = swerve;
     dist_ = dist;
     max_speed_ = max_speed;
+    strafe_ = strafe;
 
     if (swerve_ != nullptr) {
         this->AddRequirements(swerve_.get());

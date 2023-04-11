@@ -68,6 +68,8 @@ public:
     bool SetDistance(double dist);
     bool DriveAuto(double max_speed);
     bool AtDistSetpoint(bool *at);
+    
+    
 
     bool AutoBalance(double sign);
     bool AtBalanceSetpoint(bool *at);
@@ -80,6 +82,7 @@ public:
     bool GetHeading(double *heading);
 
     bool AtSetpoint(bool *at);
+    bool SetSteerOutput(double angle);
     
     bool ResetDriveEncoders();
     bool ResetSteerEncoders();

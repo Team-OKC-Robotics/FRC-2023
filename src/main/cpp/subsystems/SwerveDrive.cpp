@@ -350,7 +350,6 @@ bool SwerveDrive::DriveAuto(double max_speed) {
     OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
     OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
 
-
     return true;
 }
 
