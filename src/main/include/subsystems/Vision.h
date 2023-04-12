@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include <frc/controller/PIDController.h>
 
 #include "io/VisionIO.h"
 
@@ -12,12 +13,15 @@ public:
     void Periodic() override;
     void SimulationPeriodic() override;
 
-    bool GetConeError(double *error);
-    bool GetConeDistance(double *cone);
+    bool Reset();
+
     bool GetCubeDistance(double *cube);
     bool GetCubeAngle(double *angle);
-    bool ResetSubsystem();
 
+    bool GetCubeOutput(double *output);
+    bool AtSetpoint(bool *at);
 private:
     VisionSoftwareInterface *const interface_;
+
+    std::shared_ptr<frc::PIDController> vision_pid_;
 };

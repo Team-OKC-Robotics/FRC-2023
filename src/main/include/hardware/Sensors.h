@@ -53,4 +53,6 @@ typedef struct sensors_t {
 
     //intake sensord
     std::unique_ptr<rev::SparkMaxRelativeEncoder> intake_encoder;
+
+    std::unique_ptr<photonlib::PhotonCamera> photon_camera;
 } Sensors;

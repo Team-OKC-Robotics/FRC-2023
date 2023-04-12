@@ -140,3 +140,8 @@ tilt_offset = -55.0
 kP = 0.005
 kI = 0.0
 kD = 0.0
+
+[vision]
+kP = 0.01
+kI = 0.0
+kD = 0.0

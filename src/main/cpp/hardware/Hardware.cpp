@@ -126,3 +126,16 @@ bool SetupIntakeInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<I
 
     return true;
 }
+
+bool SetupVisionInterface(std::unique_ptr<Hardware> &hardware, std::shared_ptr<VisionHardwareInterface> &interface) {
+    std::unique_ptr<Actuators> &actuators = hardware->actuators;
+    std::unique_ptr<Sensors> &sensors = hardware->sensors;
+
+    VisionHardwareInterface vision_interface = {
+        sensors->photon_camera.get()
+    };
+
+    interface = std::make_shared<VisionHardwareInterface>(vision_interface);
+
+    return true;
+}

@@ -9,6 +9,7 @@
 #include "io/ArmIO.h"
 #include "io/ClawIO.h"
 #include "io/IntakeIO.h"
+#include "io/VisionIO.h"
 
 // Subsystem I/O
 
@@ -60,6 +61,6 @@ bool SetupIntakeInterface(
     std::shared_ptr<IntakeHardwareInterface> &interface);
 
 
-// bool SetupVisionTrackingInterface(
-//    std::unique_ptr<HardwareInterface> &hardware,
-//    std::shared_ptr<VisionTrackingHardware> *interface);
+bool SetupVisionInterface(
+   std::unique_ptr<HardwareInterface> &hardware,
+   std::shared_ptr<VisionHardware> *interface);

@@ -32,8 +32,8 @@ bool VisionIO::ProcessInputs() {
 
     if (result.HasTargets()) {
         photonlib::PhotonTrackedTarget target = result.GetBestTarget();
-        sw_interface_->error = target.GetYaw();
-        sw_interface_->cone = target.GetArea();
+        sw_interface_->cube_yaw = target.GetYaw();
+        sw_interface_->cube_dist = target.GetArea();
     }
 
     return true;

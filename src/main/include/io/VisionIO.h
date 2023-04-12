@@ -11,7 +11,6 @@
 
 typedef struct vision_hardware_interface_t {
     photonlib::PhotonCamera *const camera;
-    frc::Relay *const LEDs;
 } VisionHardwareInterface;
 
 typedef struct vision_config_t {
@@ -19,13 +18,8 @@ typedef struct vision_config_t {
 } VisionConfig;
 
 typedef struct vision_software_interface_t {
-    double error;
-    double cone;
-    double cube;
-    double angle;
-    bool reset_subsystem;
-    bool update_config;
-    VisionConfig vision_config;
+    double cube_yaw; 
+    double cube_dist;
 } VisionSoftwareInterface;
 
 class VisionIO : public frc2::SubsystemBase {
@@ -45,6 +39,7 @@ private:
 
     bool ProcessInputs();
     bool SetOutputs();
+
     VisionHardwareInterface *const hw_interface_;
     VisionSoftwareInterface *const sw_interface_;
 };

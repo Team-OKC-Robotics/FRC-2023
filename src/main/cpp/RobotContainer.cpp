@@ -15,6 +15,7 @@ RobotContainer::RobotContainer() {
     VOKC_CALL(this->InitSwerve());
     VOKC_CALL(this->InitArm());
     VOKC_CALL(this->InitIntake());
+    VOKC_CALL(this->InitVision());
 
     // Initialize the Gamepads
     VOKC_CALL(InitGamepads());
@@ -197,6 +198,9 @@ bool RobotContainer::InitSensors(const Actuators &actuators,
     OKC_CHECK(sensor_interface->arm_lift_encoder != nullptr);
 
     sensor_interface->intake_encoder = std::make_unique<rev::SparkMaxRelativeEncoder>(actuators.intake_motor->GetEncoder());
+
+    sensor_interface->photon_camera = std::make_unique<photonlib::PhotonCamera>("mmal_service.16");
+
     return true;
 }
 
@@ -257,6 +261,29 @@ bool RobotContainer::InitIntake() {
     return true;
 }
 
+bool RobotContainer::InitVision() {
+    OKC_CALL(SetupVisionInterface(hardware_, vision_hw_));
+
+    OKC_CHECK(hardware_ != nullptr);
+    OKC_CHECK(vision_hw_ != nullptr);
+
+    vision_sw_ = std::make_shared<VisionSoftwareInterface>();
+
+    OKC_CHECK(vision_sw_ != nullptr);
+
+    vision_io_ = std::make_shared<VisionIO>(vision_hw_.get(), vision_sw_.get());
+
+    OKC_CHECK(vision_io_ != nullptr);
+    OKC_CALL(vision_io_->Init());
+
+    vision_ = std::make_shared<Vision>(vision_sw_.get());
+
+    OKC_CHECK(vision_ != nullptr);
+
+    OKC_CALL(vision_->Init());
+
+    return true;
+}
 
 bool RobotContainer::InitGamepads() {
     // Get joystick IDs from parameters.toml
