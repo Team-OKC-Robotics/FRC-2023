@@ -81,7 +81,7 @@ public:
     bool GetHeading(double *heading);
 
     bool AtSetpoint(bool *at);
-    bool SetSteerOutput(double angle);
+   
     
     bool ResetDriveEncoders();
     bool ResetSteerEncoders();

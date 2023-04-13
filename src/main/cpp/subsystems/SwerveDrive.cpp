@@ -77,6 +77,7 @@ bool SwerveDrive::Init() {
     double distD = RobotParams::GetParam("swerve.dist_pid.kD", 0.0);
 
     dist_pid_ = std::make_shared<frc::PIDController>(distP, distI, distD);
+    //dist_pid_->SetTolerance(0.02);
 
     double limit = RobotParams::GetParam("swerve.slew_limit", 0.0);
 

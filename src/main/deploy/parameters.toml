@@ -27,7 +27,7 @@ steer_open_loop = 0.0
 slew_limit = 2
 
 [swerve.dist_pid]
-kP = 0.5
+kP = 0.6
 kI = 0.0
 kD = 0.0
 
@@ -43,7 +43,7 @@ kI = 0.0
 kD = 0.000005
 
 [swerve.heading_pid]
-kP = 0.04
+kP = 0.07
 kI = 0.0
 kD = 0.0
 
@@ -67,9 +67,9 @@ timeout = 1.4
 offset = -327
 lift_limit = 110
 extend_limit = 95
-max_output = 0.7
-arm_open_loop = 10
-extend_open_loop = 10
+max_output = 1
+arm_open_loop = 5
+extend_open_loop = 5
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
@@ -78,7 +78,7 @@ arm_setpoint = 38.0
 intake_setpoint = -45.0
 
 [arm.score_high]
-extend_setpoint = 35.0
+extend_setpoint = 34.5
 arm_setpoint = 81.0
 intake_setpoint = -10.0
 
