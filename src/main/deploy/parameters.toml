@@ -15,7 +15,7 @@ work = true
 # assumes our modules are located in a square, everything should be the same distance from the center
 # units are in meters
 x_disp = 0.216
-y_disp = 0.416
+y_disp = 0.216
 # stuff for swerve modules and odometry and stuff
 l2_gear_ratio = 6.75
 wheel_diameter = 4.0
@@ -67,17 +67,22 @@ timeout = 1.4
 offset = -327
 lift_limit = 110
 extend_limit = 95
-max_output = 1
-arm_open_loop = 5
-extend_open_loop = 5
+max_output = 0.8
+arm_open_loop = 7
+extend_open_loop = 7
 
 # right in front of the robot to pick stuff up
 [arm.pickup]
-extend_setpoint = 25.0
-arm_setpoint = 38.0
+extend_setpoint = 46.0
+arm_setpoint = 26.0
 intake_setpoint = -45.0
 
 [arm.score_high]
+extend_setpoint = 40.0
+arm_setpoint = 81.0
+intake_setpoint = -10.0
+
+[arm.score_high_auto]
 extend_setpoint = 34.5
 arm_setpoint = 81.0
 intake_setpoint = -10.0
@@ -94,7 +99,7 @@ intake_setpoint = 20.0
 
 [arm.negative_score_high]
 extend_setpoint = 50.0
-arm_setpoint = -95.0
+arm_setpoint = -107.0
 intake_setpoint = 40.0
 
 [arm.negative_score_medium]
@@ -114,7 +119,7 @@ intake_setpoint = 87.0
 
 
 [arm.lift_pid]
-kP = 0.05
+kP = 0.04
 kI = 0
 kD = 0
 kF = 0.001

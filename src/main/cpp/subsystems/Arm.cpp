@@ -18,7 +18,7 @@ bool Arm::Init() {
     double extend_kI = RobotParams::GetParam("arm.extend_pid.kI", 0.0);
     double extend_kD = RobotParams::GetParam("arm.extend_pid.kD", 0.0);
     inches_pid_ = std::make_shared<frc::PIDController>(extend_kP, extend_kI, extend_kD);
-    inches_pid_->SetTolerance(0.7, 2.0);
+    inches_pid_->SetTolerance(2.0, 5.0);
 
     // logs
     arm_lift_output_log_ = wpi::log::DoubleLogEntry(TeamOKC::log, "/arm/lift_output");
@@ -226,7 +226,7 @@ bool Arm::AutoControl() {
         this->inches_pid_->SetSetpoint(1);
 
         // if we have brought the extension in
-        if (abs(1.0 - state_.extension) < 1.0) {
+        if (this->inches_pid_->AtSetpoint()) {
             // then move the arm
             this->arm_pid_->SetSetpoint(this->desired_state_.rotation);
             this->interface_->arm_lift_power = this->arm_pid_->Calculate(this->interface_->arm_duty_cycle_encoder);
