@@ -21,9 +21,7 @@ public:
 
     bool SetIntakePower(double power);
   
-    bool SetControlMode(const ControlMode &mode);
-    bool ManualControl();
-    bool AutoControl();
+    
     bool AtSetpoint(bool *at);
 
     bool Reset();

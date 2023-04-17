@@ -29,7 +29,7 @@ class Claw : public frc2::SubsystemBase {
   bool Reset();
 
   bool SetManualPower(double power);
-  bool SetControlMode(ControlMode mode);
+ 
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.

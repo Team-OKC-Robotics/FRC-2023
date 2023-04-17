@@ -7,12 +7,6 @@ bool Intake::Init() {
     return true;
 }
 
-bool Intake::SetControlMode(const ControlMode &mode) {
-    mode_= mode;
-
-    return true;
-
-}
 
 
 bool Intake::SetIntakePower(double power) {
@@ -21,14 +15,6 @@ bool Intake::SetIntakePower(double power) {
     return true;
 }
 
-bool Intake::ManualControl() {
-    OKC_CHECK(interface_ != nullptr);
-
-    interface_->intake_power = intake_power_;
-   
-
-    return true;
-}
 
 void Intake::SimulationPeriodic() {
     
@@ -36,14 +22,8 @@ void Intake::SimulationPeriodic() {
 
 void Intake::Periodic() {
         
-    switch (mode_) {
-        case Manual:
-            VOKC_CALL(this->ManualControl());
-            break;
-        default:
-            VOKC_CHECK_MSG(false, "Unhandled enum");
-    }
-}
+ }
+
 
 
 
