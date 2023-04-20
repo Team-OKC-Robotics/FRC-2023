@@ -31,6 +31,7 @@ RobotContainer::RobotContainer() {
     m_chooser_->AddAutos(score_preload_backup_auto_);
     m_chooser_->AddAutos(score_preload_balance_auto_);
     m_chooser_->AddAutos(score_preload_auto_);
+    m_chooser_->AddAutos(score_two_auto_);
 }
 
 bool RobotContainer::ConfigureButtonBindings() {
@@ -325,6 +326,8 @@ bool RobotContainer::InitCommands() {
     score_preload_backup_auto_ = std::make_shared<ScorePreloadedAuto>(swerve_drive_, arm_, intake_);
     score_preload_auto_ = std::make_shared<ScorePreloadedNoDriveAuto>(arm_, intake_);
     score_preload_balance_auto_ = std::make_shared<ScorePreloadedBalanceAuto>(swerve_drive_, arm_, intake_);
+    score_two_auto_ = std::make_shared<ScoreTwoAuto>(swerve_drive_, arm_, intake_);
+
     
     // swerve commands
     swerve_teleop_command_ = std::make_shared<TeleOpSwerveCommand>(swerve_drive_, gamepad1_, 0.8, 0.5, false); // speed mod, open loop

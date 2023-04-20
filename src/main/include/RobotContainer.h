@@ -161,6 +161,7 @@ private:
     std::shared_ptr<ScorePreloadedAuto> score_preload_backup_auto_;
     std::shared_ptr<ScorePreloadedNoDriveAuto> score_preload_auto_;
     std::shared_ptr<ScorePreloadedBalanceAuto> score_preload_balance_auto_;
+    std::shared_ptr<ScoreTwoAuto> score_two_auto_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;

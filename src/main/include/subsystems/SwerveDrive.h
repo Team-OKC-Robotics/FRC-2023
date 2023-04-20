@@ -66,8 +66,9 @@ public:
     
     bool InitAuto(TeamOKC::Pose pos, bool keep_heading);
     bool SetDistance(double dist);
-    bool DriveAuto(double max_speed);
+    bool DriveAuto(double max_speed, double heading);
     bool AtDistSetpoint(bool *at);
+    bool SetSteerOutput(double angle);
 
     bool AutoBalance(double sign);
     bool AtBalanceSetpoint(bool *at);
@@ -80,6 +81,7 @@ public:
     bool GetHeading(double *heading);
 
     bool AtSetpoint(bool *at);
+   
     
     bool ResetDriveEncoders();
     bool ResetSteerEncoders();
