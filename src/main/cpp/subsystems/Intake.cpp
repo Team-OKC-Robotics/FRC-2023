@@ -21,8 +21,8 @@ void Intake::SimulationPeriodic() {
 }
 
 void Intake::Periodic() {
-        
- }
+    interface_->intake_power = intake_power_; 
+}
 
 
 
