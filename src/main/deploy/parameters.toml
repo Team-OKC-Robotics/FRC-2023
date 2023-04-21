@@ -87,7 +87,7 @@ extend_setpoint = 22.0
 arm_setpoint = 85.0
 intake_setpoint = -40.0
 
-[arm.score_high_auto]
+[arm.score_high_cone]
 extend_setpoint = 34.5
 arm_setpoint = 81.0
 intake_setpoint = -10.0
