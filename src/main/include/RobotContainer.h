@@ -61,6 +61,7 @@
 #include "autos/ScoreTwoAuto.h"
 #include "autos/ScoreConeDriveAuto.h"
 #include "autos/ScoreConeNoDriveAuto.h"
+#include "autos/ScoreMidCubeAuto.h"
 
 #include "Logging.h"
 
@@ -166,6 +167,7 @@ private:
     std::shared_ptr<ScoreTwoAuto> score_two_auto_;
     std::shared_ptr<ScoreConeDriveAuto> score_cone_backup_auto_;
     std::shared_ptr<ScoreConeNoDriveAuto> score_cone_no_drive_auto_;
+    std::shared_ptr<ScoreMidCubeAuto> score_mid_drive_auto_;
 
     // swerve drive
     std::shared_ptr<TeleOpSwerveCommand> swerve_teleop_command_;
