@@ -57,7 +57,7 @@ bool ArmIO::ProcessIO() {
    
     sw_interface_->arm_encoder = hw_interface_->arm_lift_encoder->GetPosition();
     sw_interface_->arm_extend_encoder = hw_interface_->arm_extend_encoder->GetPosition();
-    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  +  offset; // offset of 330
+    sw_interface_->arm_duty_cycle_encoder = hw_interface_->arm_duty_cycle_encoder->GetAbsolutePosition() * 360  +  offset;
 
     // angle wrapping
     if (sw_interface_->arm_duty_cycle_encoder < -180) {

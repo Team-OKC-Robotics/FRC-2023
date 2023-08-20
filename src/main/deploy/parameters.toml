@@ -20,8 +20,8 @@ y_disp = 0.216
 l2_gear_ratio = 6.75
 wheel_diameter = 4.0
 inches_to_meters = 0.0254 # yo unexpected 254!
-drive_max_output = 1
-drive_open_loop = 1
+drive_max_output = 0.5
+drive_open_loop = 0.3
 steer_max_output = 1
 steer_open_loop = 0.0
 slew_limit = 2
@@ -64,7 +64,7 @@ drive_backward_speed = -0.2
 timeout = 1.4
 
 [arm]
-offset = -27
+offset = -387 # yes this is correct it has to be more than 360 here if it's just -27 then the arm encoder wraps from 0 to 1 and it doesn't work on one side anymore
 lift_limit = 110
 extend_limit = 95
 max_output = 0.8
