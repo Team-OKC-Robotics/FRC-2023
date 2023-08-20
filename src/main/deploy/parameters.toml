@@ -64,7 +64,7 @@ drive_backward_speed = -0.2
 timeout = 1.4
 
 [arm]
-offset = -327
+offset = -27
 lift_limit = 110
 extend_limit = 95
 max_output = 0.8

@@ -60,6 +60,10 @@ namespace ArmUI {
     
     extern nt::GenericEntry *const nt_test_mode;
     extern nt::GenericEntry *const nt_manual_arm_mode;
+   
+
+     
+     
 
     // arm state
     extern nt::GenericEntry *const arm_control_state;
@@ -75,3 +79,4 @@ namespace IntakeUI {
     extern frc::ShuffleboardTab &nt_tab;
 
 }
+

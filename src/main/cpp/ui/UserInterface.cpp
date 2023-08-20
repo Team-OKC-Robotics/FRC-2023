@@ -1,4 +1,7 @@
 #include "ui/UserInterface.h"
+#include <frc/Encoder.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 namespace AutonUI {
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("Autos");
@@ -63,6 +66,9 @@ namespace ArmUI {
     nt::GenericEntry *const nt_test_mode = nt_tab.Add("test mode", false ).GetEntry();
     
 }
+    
+     
+     
 
 namespace ClawUI {
     frc::ShuffleboardTab &nt_tab = frc::Shuffleboard::GetTab("claw");

@@ -346,6 +346,8 @@ bool RobotContainer::InitCommands() {
     extendArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, 0.5); 
     retractArmCommand = std::make_shared<IncrementArmExtendCommand>(arm_, -0.5);
 
+ 
+
     raiseArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, 0.5);
     lowerArmCommand = std::make_shared<IncrementArmPresetPositionCommand>(arm_, -0.5);
 
