@@ -24,7 +24,14 @@ bool SwerveDrive::Init() {
     double drive_open_loop = RobotParams::GetParam("swerve.drive_open_loop", 1);
     double steer_max_output = RobotParams::GetParam("swerve.steer_max_output", 1);
     double steer_open_loop = RobotParams::GetParam("swerve.steer_open_loop", 1);
-
+    double drive_deadband = RobotParams::GetParam("swerve.drive_deadband", 0.05);
+    double strafe_deadband = RobotParams::GetParam("swerve.strafe_deadband", 0.03);
+    double turn_deadband = RobotParams::GetParam("swerve.turn_deadband", 0.2);
+    double left_front_drive_motor_output = RobotParams::GetParam("swerve.left_front_drive_motor_output", 2);
+    double left_back_drive_motor_output = RobotParams::GetParam("swerve.left_back_drive_motor_output", 2);
+    double right_front_drive_motor_output = RobotParams::GetParam("swerve.right_front_drive_motor_output", 2);
+    double right_back_drive_motor_output = RobotParams::GetParam("swerve.right_back_drive_motor_output", 2);
+    
     // update swerve drive config
     interface_->drive_config = SwerveDriveConfig {
         drive_max_output,
@@ -244,6 +251,26 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         right_back_turn -= 180;
         right_back_speed *= -1;
     }
+    if (abs(left_front_speed > 1)) {
+        right_front_speed = right_front_speed/left_front_speed;
+        left_back_speed = left_back_speed/left_front_speed;
+        right_back_speed = right_back_speed/left_front_speed;
+    }
+    if (abs(left_back_speed > 1)) {
+        left_front_speed = left_front_speed/left_back_speed;
+        right_front_speed = right_front_speed/left_back_speed;
+        right_back_speed = right_back_speed/left_back_speed;
+    }
+    if (abs(right_front_speed > 1)) {
+        left_front_speed = left_front_speed/right_front_speed;
+        left_back_speed = left_back_speed/right_front_speed;
+        right_back_speed = right_back_speed/right_front_speed;
+    }
+    if (abs(right_back_speed > 1)) {
+        left_front_speed = left_front_speed/right_back_speed;
+        left_back_speed = left_back_speed/right_back_speed;
+        right_front_speed= right_front_speed/right_back_speed;
+    }
 
     // keep the setpoints within [-180, 180]
     OKC_CALL(TeamOKC::WrapAngle(&left_front_turn));
@@ -264,14 +291,14 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
     // really nice convoluted deadband
     // this is to stop the swerve modules from immediately trying to center themselves instead of
     // coasting until receiving another instruction so we don't tip
-    if (abs(drive_) > 0.05 || abs(strafe_) > 0.05 || abs(turn_) > 0.3) {
+    if (abs(drive_) > 0.05 || abs(strafe_) > 0.03 || abs(turn_) > 0.2) {
         OKC_CALL(this->left_front_module_->SetAngle(left_front_turn));
         OKC_CALL(this->left_back_module_->SetAngle(left_back_turn));
         OKC_CALL(this->right_front_module_->SetAngle(right_front_turn));
         OKC_CALL(this->right_back_module_->SetAngle(right_back_turn));
     }
 
-    if (abs(drive_) < 0.05 && abs(strafe_) < 0.05 && abs(turn_) < 0.3) {
+    if (abs(drive_) < 0.05 && abs(strafe_) < 0.03 && abs(turn_) < 0.2) {
         this->interface_->left_front_drive_motor_output = 0.0;
         this->interface_->left_back_drive_motor_output = 0.0;
         this->interface_->right_front_drive_motor_output = 0.0;
@@ -287,11 +314,18 @@ bool SwerveDrive::VectorTeleOpDrive(const double &drive, const double &strafe, c
         this->interface_->right_front_drive_motor_output = cos(TeamOKC::Radians(right_front_module_->GetSteerError(&right_front_steer_error))) * right_front_speed;
         this->interface_->right_back_drive_motor_output = cos(TeamOKC::Radians(right_back_module_->GetSteerError(&right_back_steer_error))) * right_back_speed;
     }
+    if (abs(drive_) < 0.05 && abs(strafe_) < 0.03 && abs(turn_) > 0.2) {
+        this->interface_->left_front_drive_motor_output = turn_ * 2;
+        this->interface_->left_back_drive_motor_output= turn_ * 2;
+        this->interface_->right_front_drive_motor_output = turn_ * 2;
+        this->interface_->right_back_drive_motor_output = turn_ * 2; 
 
-    OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output));
+    }
+
+    OKC_CALL(this->left_front_module_->GetSteerOutput(&this->interface_->left_front_steer_motor_output)); 
     OKC_CALL(this->left_back_module_->GetSteerOutput(&this->interface_->left_back_steer_motor_output));
     OKC_CALL(this->right_front_module_->GetSteerOutput(&this->interface_->right_front_steer_motor_output));
-    OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output));
+    OKC_CALL(this->right_back_module_->GetSteerOutput(&this->interface_->right_back_steer_motor_output)); 
 
     OKC_CHECK(this->interface_ != nullptr);
 
