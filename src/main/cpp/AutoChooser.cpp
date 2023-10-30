@@ -7,15 +7,15 @@ void AutoChooser::AddAutos(Auto auto) {
     }
 }
 
-void addGamepad::(Joystick gamepad_) {
-    gamepad = gamepad_;
+void AutoChooser::addGamepad(frc::Joystick gamepad_) {
+    gamepad_ = gamepad_;
 }
-void Command::getAutoCommand() {
-        return autos.get(index);
+frc2::CommandBase AutoChooser::getAutoCommand() {
+        return autos.at(index);
 }
 
-void update::() {
-        int pov = gamepad.getPOV();
+void AutoChooser::update() {
+        int pov = gamepad.atPOV();
         if(pov == -1) {
             wasPressed = false;
         } else if (!wasPressed) {
@@ -38,4 +38,5 @@ void update::() {
             }
             decreaseAutoIndex.setBoolean(false);
         }
-    }
+}
+    

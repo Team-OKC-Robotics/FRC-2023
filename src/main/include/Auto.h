@@ -1,8 +1,9 @@
+#include <frc2/command/button/CommandJoystick.h>
 class Auto {  
-    return true;
+bool increaseAutoIndex;
+bool decreaseAutoIndex;
 }
-class Joystick {
-    bool Joystick
-    bool JoystickGamepad_
-    return true;
+class JoystickGamepad {
+    bool Joystick;
+    bool Joystickgamepad_;
 }
